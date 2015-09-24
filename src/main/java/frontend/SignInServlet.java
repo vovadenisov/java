@@ -24,33 +24,9 @@ public class SignInServlet extends HttpServlet {
     }
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-      //  String name = request.getParameter("name");
-      //  String password = request.getParameter("password");
-///////////////////////////////////////////////////////////////////////
-    //    System.out.println(name);
-    //    System.out.println(password);
-        System.out.println("Get");
-///////////////////////////////////////////////////////////////////////
-
         response.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> pageVariables = new HashMap<>();
-  //      UserProfile profile = accountService.getUser(name);
-  //      if (profile != null && profile.getPassword().equals(password)) {
-  //          pageVariables.put("loginStatus", "Login passed");
-
-////////////////////////////////////////////////////////////////////
-   //         System.out.println("Login passed");
-////////////////////////////////////////////////////////////////////
-
-   //     } else {
-   //         pageVariables.put("loginStatus", "Wrong login/password");
-
-////////////////////////////////////////////////////////////////
-   //         System.out.println("Wrong login/password");
-///////////////////////////////////////////////////////////////
-
-   //     }
-        if (accountService.checkSeassions(request.getRequestedSessionId())) {
+ /*       if (accountService.checkSeassions(request.getRequestedSessionId())) {
             System.out.println("tut");
             UserProfile userProfile = accountService.getCurrentUser(request.getRequestedSessionId());
             String name = userProfile.getLogin();
@@ -61,9 +37,9 @@ public class SignInServlet extends HttpServlet {
             response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
         }
         else {
-            System.out.println("ne tut");
+            System.out.println("ne tut");*/
             response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
-        }
+       // }
        // response.getWriter().println(PageGenerator.getPage("index.html", pageVariables));
     }
 
@@ -75,9 +51,8 @@ public class SignInServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> pageVariables = new HashMap<>();
         UserProfile profile = accountService.getUser(name);
-        if (accountService.checkSeassions(request.getRequestedSessionId())) {
+        if (!accountService.checkUserlogin(profile)) {
             if (profile != null && profile.getPassword().equals(password)) {
-                //  pageVariables.put("loginStatus", "Login passed");
                 pageVariables.put("name", name == null ? "" : name);
                 pageVariables.put("password", password == null ? "" : password);
                 pageVariables.put("login_status", "sucsess");
@@ -86,23 +61,18 @@ public class SignInServlet extends HttpServlet {
                 System.out.println(request.getAttribute("user"));
                 accountService.addSessions(request.getRequestedSessionId(), profile);
             } else {
-                // pageVariables.put("loginStatus", "Wrong login/password");
                 pageVariables.put("name", name == null ? "" : name);
                 pageVariables.put("password", password == null ? "" : password);
                 pageVariables.put("login_status", "wrong");
-                //response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 System.out.println("Wrong login/password");
             }
         }
-        else{
+       else{
             pageVariables.put("name", name == null ? "" : name);
             pageVariables.put("password", password == null ? "" : password);
-            pageVariables.put("login_status", "login");
-            //response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            System.out.println("Wrong login_user");
+            pageVariables.put("login_status", "already logged");
         }
         response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
-        //response.getWriter().println(PageGenerator.getPage("signin.html", pageVariables));
-       // response.setStatus(HttpServletResponse.SC_OK);
+
     }
 }

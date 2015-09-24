@@ -16,6 +16,19 @@ public class AccountService {
        return false;
     }
 
+    public boolean checkUserlogin(UserProfile user){
+        if(sessions.containsValue(user))
+            return true;
+        return false;
+    }
+    public int number_of_registered(){
+
+        return users.size();
+    }
+    public int number_of_sessions(){
+
+        return sessions.size();
+    }
     public boolean addUser(String userName, UserProfile userProfile) {
         if (users.containsKey(userName))
             return false;
@@ -35,6 +48,7 @@ public class AccountService {
        sessions.remove(sessionId);
        return true;
    }
+
     public void addSessions(String sessionId, UserProfile userProfile) {
         sessions.put(sessionId, userProfile);
     }

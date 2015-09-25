@@ -11,13 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.PrintWriter;
-import javax.servlet.Servlet;
 
 /**
  * @author v.chibrikov
  */
 public class SignInServlet extends HttpServlet {
+    public static final String signinPageURL = "/api/v1/auth/signin";
     private AccountService accountService;
     public SignInServlet(AccountService accountService) {
         this.accountService = accountService;
@@ -25,10 +24,15 @@ public class SignInServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         response.setStatus(HttpServletResponse.SC_OK);
+        System.out.println(request.getSession());
         Map<String, Object> pageVariables = new HashMap<>();
- /*       if (accountService.checkSeassions(request.getRequestedSessionId())) {
+        System.out.println("session");
+        System.out.println(request.getSession().getId());
+        System.out.println("check session");
+        System.out.println(accountService.checkSeassions(request.getSession().getId()));
+        if (accountService.checkSeassions(request.getSession().getId())) {
             System.out.println("tut");
-            UserProfile userProfile = accountService.getCurrentUser(request.getRequestedSessionId());
+            UserProfile userProfile = accountService.getCurrentUser(request.getSession().getId());
             String name = userProfile.getLogin();
             String password = userProfile.getPassword();
             pageVariables.put("name", name == null ? "" : name);
@@ -37,9 +41,9 @@ public class SignInServlet extends HttpServlet {
             response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
         }
         else {
-            System.out.println("ne tut");*/
+            System.out.println("ne tut");
             response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
-       // }
+        }
        // response.getWriter().println(PageGenerator.getPage("index.html", pageVariables));
     }
 
@@ -51,7 +55,11 @@ public class SignInServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> pageVariables = new HashMap<>();
         UserProfile profile = accountService.getUser(name);
-        if (!accountService.checkUserlogin(profile)) {
+        if (!accountService.checkSeassions(request.getSession().getId())) {
+            System.out.println("session");
+            System.out.println(request.getSession());
+            System.out.println("check session");
+            System.out.println(accountService.checkSeassions(request.getSession().getId()));
             if (profile != null && profile.getPassword().equals(password)) {
                 pageVariables.put("name", name == null ? "" : name);
                 pageVariables.put("password", password == null ? "" : password);
@@ -59,7 +67,7 @@ public class SignInServlet extends HttpServlet {
                 System.out.println("Login passed");
                 request.setAttribute("user", profile);
                 System.out.println(request.getAttribute("user"));
-                accountService.addSessions(request.getRequestedSessionId(), profile);
+                accountService.addSessions(request.getSession().getId(), profile);
             } else {
                 pageVariables.put("name", name == null ? "" : name);
                 pageVariables.put("password", password == null ? "" : password);

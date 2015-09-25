@@ -1,8 +1,8 @@
 package frontend;
 
 import main.AccountService;
-import main.UserProfile;
 import templater.PageGenerator;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,15 +13,16 @@ import java.util.Map;
 
 public class LogoutServlet extends HttpServlet {
     private AccountService accountService;
-
+    public static final String logoutPageURL = "/api/v1/auth/logout";
     public LogoutServlet(AccountService accountService) {
         this.accountService = accountService;
     }
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
+        System.out.println(request.getRequestedSessionId());
         pageVariables.put("name", accountService.UserSession(request.getRequestedSessionId()));
-        boolean status = accountService.removeSeassions(request.getRequestedSessionId());
+        boolean status = accountService.removeSeassions(request.getSession().getId());
         if(status)
             pageVariables.put("logout_status", "true");
         else

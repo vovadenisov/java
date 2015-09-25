@@ -37,9 +37,9 @@ public class AccountService {
     }
 
     public boolean checkSeassions(String sessionId){
-        if (!sessions.containsKey(sessionId))
-            return false;
-        return true;
+        if (sessions.containsKey(sessionId))
+            return true;
+        return false;
     }
 
    public boolean removeSeassions(String sessionId){

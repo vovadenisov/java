@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.PrintWriter;
 
 /**
  * Created by v.chibrikov on 13.09.2014.
@@ -52,12 +51,23 @@ public class SignUpServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         System.out.println("Get");
-        String name = request.getParameter("name");
-        String password = request.getParameter("password");
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put("signUpStatus", "");
-        response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));
         response.setStatus(HttpServletResponse.SC_OK);
+        if (accountService.checkSeassions(request.getSession().getId())) {
+            System.out.println("tut");
+            UserProfile userProfile = accountService.getCurrentUser(request.getSession().getId());
+            String name = userProfile.getLogin();
+            String password = userProfile.getPassword();
+            pageVariables.put("name", name == null ? "" : name);
+            pageVariables.put("password", password == null ? "" : password);
+            pageVariables.put("login_status", "login");
+            response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
+        }
+        else {
+            response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));
+        }
+
     }
 
 

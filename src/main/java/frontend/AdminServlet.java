@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class AdminServlet extends HttpServlet {
    private AccountService accountService;
-
+    public static final String adminPageURL = "/api/v1/auth/admin";
     public AdminServlet(AccountService accountService) {
         this.accountService = accountService;
     }

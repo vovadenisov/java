@@ -16,6 +16,7 @@ import java.util.Map;
  * @author v.chibrikov
  */
 public class SignInServlet extends HttpServlet {
+    public static final String signinPageURL = "/api/v1/auth/signin";
     private AccountService accountService;
     public SignInServlet(AccountService accountService) {
         this.accountService = accountService;
@@ -23,6 +24,7 @@ public class SignInServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         response.setStatus(HttpServletResponse.SC_OK);
+        System.out.println(request.getSession());
         Map<String, Object> pageVariables = new HashMap<>();
         System.out.println("session");
         System.out.println(request.getSession().getId());

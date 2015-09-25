@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class SignUpServlet extends HttpServlet {
     private AccountService accountService;
-
+    public static final String signupPageURL = "/api/v1/auth/signup";
     public SignUpServlet(AccountService accountService) {
         this.accountService = accountService;
     }
@@ -25,10 +25,10 @@ public class SignUpServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Post");
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
+        System.out.println(request.getRequestedSessionId());
         Map<String, Object> pageVariables = new HashMap<>();
         if (accountService.addUser(name, new UserProfile(name, password, ""))) {
             pageVariables.put("name", name == null ? "" : name);
@@ -51,6 +51,12 @@ public class SignUpServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         System.out.println("Get");
+/*<<<<<<< Updated upstream
+=======
+        System.out.println(request.getRequestedSessionId());
+        String name = request.getParameter("name");
+        String password = request.getParameter("password");
+>>>>>>> Stashed changes*/
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put("signUpStatus", "");
         response.setStatus(HttpServletResponse.SC_OK);

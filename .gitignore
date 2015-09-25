@@ -3,3 +3,5 @@
 *.imi
 /out
 /target
+.vagrant/
+vagrantfile

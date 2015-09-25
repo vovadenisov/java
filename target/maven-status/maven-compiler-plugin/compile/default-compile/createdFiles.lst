@@ -1,0 +1,8 @@
+main/AccountService.class
+frontend/SignUpServlet.class
+frontend/SignInServlet.class
+main/UserProfile.class
+templater/PageGenerator.class
+frontend/AdminServlet.class
+frontend/LogoutServlet.class
+main/Main.class

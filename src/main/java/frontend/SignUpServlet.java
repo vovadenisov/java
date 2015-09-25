@@ -12,9 +12,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by v.chibrikov on 13.09.2014.
- */
+
 public class SignUpServlet extends HttpServlet {
     private AccountService accountService;
     public static final String signupPageURL = "/api/v1/auth/signup";
@@ -28,7 +26,6 @@ public class SignUpServlet extends HttpServlet {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
-        System.out.println(request.getRequestedSessionId());
         Map<String, Object> pageVariables = new HashMap<>();
         if (accountService.addUser(name, new UserProfile(name, password, ""))) {
             pageVariables.put("name", name == null ? "" : name);
@@ -50,7 +47,6 @@ public class SignUpServlet extends HttpServlet {
     }
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Get");
 /*<<<<<<< Updated upstream
 =======
         System.out.println(request.getRequestedSessionId());
@@ -67,7 +63,7 @@ public class SignUpServlet extends HttpServlet {
             String password = userProfile.getPassword();
             pageVariables.put("name", name == null ? "" : name);
             pageVariables.put("password", password == null ? "" : password);
-            pageVariables.put("login_status", "login");
+            pageVariables.put("login_status", "already logged");
             response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
         }
         else {

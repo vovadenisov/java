@@ -38,6 +38,7 @@ public class SignInServlet extends HttpServlet {
     }
 
     @Override
+    @SuppressWarnings("all")
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
 
@@ -51,17 +52,15 @@ public class SignInServlet extends HttpServlet {
                 pageVariables.put("name", name == null ? "" : name);
                 pageVariables.put("password", password == null ? "" : password);
                 pageVariables.put("login_status", "sucsess");
-               // System.out.println("Login passed");
                 request.setAttribute("user", profile);
                 accountService.addSessions(request.getSession().getId(), profile);
             } else {
                 pageVariables.put("name", name == null ? "" : name);
                 pageVariables.put("password", password == null ? "" : password);
                 pageVariables.put("login_status", "Wrong login/password");
-             //   System.out.println("Wrong login/password");
             }
         }
-       else{
+        else{
             pageVariables.put("name", name == null ? "" : name);
             pageVariables.put("password", password == null ? "" : password);
             pageVariables.put("login_status", "already logged");

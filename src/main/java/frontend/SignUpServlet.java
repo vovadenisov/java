@@ -19,7 +19,6 @@ public class SignUpServlet extends HttpServlet {
     public SignUpServlet(AccountService accountService) {
         this.accountService = accountService;
     }
-    Map<String, Object> pageVariables = new HashMap<>();
 
     @Override
     public void doPost(HttpServletRequest request,
@@ -46,15 +45,10 @@ public class SignUpServlet extends HttpServlet {
         response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));
 
     }
+
     @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-/*<<<<<<< Updated upstream
-=======
-        System.out.println(request.getRequestedSessionId());
-        String name = request.getParameter("name");
-        String password = request.getParameter("password");
->>>>>>> Stashed changes*/
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put("signUpStatus", "");
         response.setStatus(HttpServletResponse.SC_OK);
@@ -73,40 +67,4 @@ public class SignUpServlet extends HttpServlet {
         }
 
     }
-
-
-   /* public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String password = request.getParameter("password");
-
-        Map<String, Object> pageVariables = new HashMap<>();
-        if (accountService.addUser(name, new UserProfile(name, password, ""))) {
-            pageVariables.put("signUpStatus", "New user created");
-        } else {
-            pageVariables.put("signUpStatus", "User with name: " + name + " already exists");
-        }
-
-       // response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));
-        response.getWriter().println(PageGenerator.getPage("signup.html", pageVariables));
-        response.setStatus(HttpServletResponse.SC_OK);
-    }
-    public void doPost(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("name");
-        String password = request.getParameter("password");
-
-        Map<String, Object> pageVariables = new HashMap<>();
-        if (accountService.addUser(name, new UserProfile(name, password, ""))) {
-            pageVariables.put("signUpStatus", "New user created");
-        } else {
-            pageVariables.put("signUpStatus", "User with name: " + name + " already exists");
-        }
-
-
-        // response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));
-        response.getWriter().println(PageGenerator.getPage("signup.html", pageVariables));
-        response.setStatus(HttpServletResponse.SC_OK);
-    }*/
-
 }

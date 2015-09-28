@@ -15,12 +15,13 @@ import java.util.Map;
 
 public class SignUpServlet extends HttpServlet {
     private AccountService accountService;
-    public static final String signupPageURL = "/api/v1/auth/signup";
+    public static final String SIGNUP_PAGE_URL = "/api/v1/auth/signup";
     public SignUpServlet(AccountService accountService) {
         this.accountService = accountService;
     }
     Map<String, Object> pageVariables = new HashMap<>();
 
+    @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("name");
@@ -45,6 +46,7 @@ public class SignUpServlet extends HttpServlet {
         response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));
 
     }
+    @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 /*<<<<<<< Updated upstream

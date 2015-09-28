@@ -13,11 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignInServlet extends HttpServlet {
-    public static final String signinPageURL = "/api/v1/auth/signin";
+    public static final String SIGNIN_PAGE_URL = "/api/v1/auth/signin";
     private AccountService accountService;
     public SignInServlet(AccountService accountService) {
         this.accountService = accountService;
     }
+    @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         response.setStatus(HttpServletResponse.SC_OK);
@@ -36,6 +37,7 @@ public class SignInServlet extends HttpServlet {
         }
     }
 
+    @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
 

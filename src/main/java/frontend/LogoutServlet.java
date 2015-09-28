@@ -13,10 +13,11 @@ import java.util.Map;
 
 public class LogoutServlet extends HttpServlet {
     private AccountService accountService;
-    public static final String logoutPageURL = "/api/v1/auth/logout";
+    public static final String LOGOUT_PAGE_URL = "/api/v1/auth/logout";
     public LogoutServlet(AccountService accountService) {
         this.accountService = accountService;
     }
+    @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();

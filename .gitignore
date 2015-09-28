@@ -5,4 +5,4 @@
 /target
 .vagrant/
 vagrantfile
-tp_java.xml
+tp_java.xml*

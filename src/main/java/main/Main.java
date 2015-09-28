@@ -14,11 +14,12 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import javax.servlet.Servlet;
 
 /**
- * Created by alla on 16.09.15.
+ * Created by alla edited by nastya on 16.09.15.
  *
  */
+
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws NumberFormatException, InterruptedException {
         if (args.length != 1) {
             System.out.append("Use port as the first argument");
             System.exit(1);
@@ -29,7 +30,7 @@ public class Main {
         System.out.append("Starting at port: ").append(portString).append('\n');
 
         AccountService accountService = new AccountService();
-        accountService.addUser("Admin", new UserProfile("Admin", "1234" ,"admin@mail.ru"));
+        accountService.addUser("Admin", new UserProfile("Admin", "1234", "admin@mail.ru"));
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new SignInServlet(accountService)), SignInServlet.signinPageURL );
         context.addServlet(new ServletHolder(new SignUpServlet(accountService)), SignUpServlet.signupPageURL );
@@ -45,7 +46,11 @@ public class Main {
         Server server = new Server(port);
         server.setHandler(handlers);
 
-        server.start();
+        try {
+            server.start();
+        } catch(Exception e) {
+            throw new RuntimeException("error", e);
+        }
         server.join();
     }
 }

@@ -10,10 +10,14 @@ public class AccountService {
     private Map<String, UserProfile> users = new HashMap<>();
     private Map<String, UserProfile> sessions = new HashMap<>();
 
+    @SuppressWarnings("all")
     public boolean checkUser(String userName){
-       if(users.containsKey(userName))
+       if(users.containsKey(userName)) {
            return true;
-       return false;
+       }
+       else {
+           return false;
+       }
     }
 
     public boolean checkUserlogin(UserProfile user){

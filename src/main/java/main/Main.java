@@ -11,8 +11,6 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-import javax.servlet.Servlet;
-
 /**
  * Created by alla on 16.09.15.
  *
@@ -31,10 +29,10 @@ public class Main {
         AccountService accountService = new AccountService();
         accountService.addUser("Admin", new UserProfile("Admin", "1234" ,"admin@mail.ru"));
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(new SignInServlet(accountService)), SignInServlet.signinPageURL );
-        context.addServlet(new ServletHolder(new SignUpServlet(accountService)), SignUpServlet.signupPageURL );
-        context.addServlet(new ServletHolder(new LogoutServlet(accountService)), LogoutServlet.logoutPageURL);
-        context.addServlet(new ServletHolder(new AdminServlet(accountService)), AdminServlet.adminPageURL);
+        context.addServlet(new ServletHolder(new SignInServlet(accountService)), SignInServlet.SIGNIN_PAGE_URL );
+        context.addServlet(new ServletHolder(new SignUpServlet(accountService)), SignUpServlet.SIGNUP_PAGE_URL );
+        context.addServlet(new ServletHolder(new LogoutServlet(accountService)), LogoutServlet.LOGOUT_PAGE_URL);
+        context.addServlet(new ServletHolder(new AdminServlet(accountService)), AdminServlet.ADMIN_PAGE_URL);
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
         resource_handler.setResourceBase("public_html");

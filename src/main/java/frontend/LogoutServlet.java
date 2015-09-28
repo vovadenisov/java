@@ -17,6 +17,7 @@ public class LogoutServlet extends HttpServlet {
     public LogoutServlet(AccountService accountService) {
         this.accountService = accountService;
     }
+    @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();

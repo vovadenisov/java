@@ -21,6 +21,7 @@ public class SignUpServlet extends HttpServlet {
     }
     Map<String, Object> pageVariables = new HashMap<>();
 
+    @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("name");
@@ -45,6 +46,7 @@ public class SignUpServlet extends HttpServlet {
         response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));
 
     }
+    @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 /*<<<<<<< Updated upstream

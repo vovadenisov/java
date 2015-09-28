@@ -18,6 +18,7 @@ public class SignInServlet extends HttpServlet {
     public SignInServlet(AccountService accountService) {
         this.accountService = accountService;
     }
+    @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         response.setStatus(HttpServletResponse.SC_OK);
@@ -36,6 +37,7 @@ public class SignInServlet extends HttpServlet {
         }
     }
 
+    @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
 

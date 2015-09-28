@@ -21,9 +21,7 @@ public class AccountService {
     }
 
     public boolean checkUserlogin(UserProfile user){
-        if(sessions.containsValue(user))
-            return true;
-        return false;
+        return sessions.containsValue(user);
     }
     public int numberOfRegistered(){
 
@@ -41,9 +39,7 @@ public class AccountService {
     }
 
     public boolean checkSeassions(String sessionId){
-        if (sessions.containsKey(sessionId))
-            return true;
-        return false;
+        return sessions.containsKey(sessionId);
     }
 
    public boolean removeSeassions(String sessionId){

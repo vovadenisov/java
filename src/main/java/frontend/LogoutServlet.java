@@ -21,7 +21,7 @@ public class LogoutServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
-        pageVariables.put("name", accountService.UserSession(request.getRequestedSessionId()));
+        pageVariables.put("name", accountService.userSession(request.getRequestedSessionId()));
         boolean status = accountService.removeSeassions(request.getSession().getId());
         if(status)
             pageVariables.put("logout_status", "true");

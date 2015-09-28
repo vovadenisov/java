@@ -23,8 +23,8 @@ public class AdminServlet extends HttpServlet {
                       HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
         response.setStatus(HttpServletResponse.SC_OK);
-        pageVariables.put("registr", accountService.number_of_registered());
-        pageVariables.put("login", accountService.number_of_sessions());
+        pageVariables.put("registr", accountService.numberOfRegistered());
+        pageVariables.put("login", accountService.numberOfSessions());
         String timeString = request.getParameter("shutdown");
         if (timeString != null) {
             System.out.println("");

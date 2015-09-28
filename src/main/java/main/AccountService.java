@@ -21,11 +21,11 @@ public class AccountService {
             return true;
         return false;
     }
-    public int number_of_registered(){
+    public int numberOfRegistered(){
 
         return users.size();
     }
-    public int number_of_sessions(){
+    public int numberOfSessions(){
 
         return sessions.size();
     }
@@ -61,7 +61,7 @@ public class AccountService {
         return users.get(userName);
     }
 
-    public String UserSession(String sessionId) {
+    public String userSession(String sessionId) {
         if (!sessions.containsKey(sessionId))
             return "";
         return sessions.get(sessionId).getLogin();

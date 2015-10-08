@@ -1,8 +1,8 @@
 {
 status: 200,
 body: {
-name: "${name}",
-password: "${password}"
-login: "${login_status}"
+login: "${login}",
+password: "${password}",
+login_status: "${login_status}"
 }
 }

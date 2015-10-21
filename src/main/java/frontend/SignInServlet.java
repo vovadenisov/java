@@ -2,6 +2,7 @@ package frontend;
 
 import main.AccountService;
 import main.UserProfile;
+import org.json.simple.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.json.simple.JSONObject;
 
 public class SignInServlet extends HttpServlet {
     public static final String SIGNIN_PAGE_URL = "/api/v1/auth/signin";
@@ -23,6 +23,7 @@ public class SignInServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json");
         Map<String, Object> pageVariables = new HashMap<>();
         System.out.println("get");
         if (accountService.checkSeassions(request.getSession().getId())) {

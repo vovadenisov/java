@@ -21,6 +21,7 @@ public class AccountService {
     public boolean checkUserlogin(UserProfile user){
         return sessions.containsValue(user);
     }
+
     public int numberOfRegistered(){
 
         return users.size();

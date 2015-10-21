@@ -2,6 +2,7 @@ package frontend;
 
 import main.AccountService;
 import main.UserProfile;
+import org.json.simple.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.json.simple.JSONObject;
 
 
 public class SignUpServlet extends HttpServlet {
@@ -52,6 +52,7 @@ public class SignUpServlet extends HttpServlet {
             System.out.println("User with name: " + name + " already exists");
         }
         response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json");
         System.out.println(json.toJSONString());
         response.getWriter().println(json);
       //  response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.json.simple.JSONObject;
 
 
 public class SignUpServlet extends HttpServlet {
@@ -27,11 +28,16 @@ public class SignUpServlet extends HttpServlet {
         String password = request.getParameter("password");
         String email = request.getParameter("email");
         Map<String, Object> pageVariables = new HashMap<>();
+        JSONObject json = new JSONObject();
         if (accountService.addUser(name, new UserProfile(name, password, ""))) {
             pageVariables.put("name", name == null ? "" : name);
             pageVariables.put("password", password == null ? "" : password);
             pageVariables.put("email", email == null ? "" : email);
             pageVariables.put("signup_status", "New user created name: " + name);
+            json.put("login", name == null ? "" : name);
+            json.put("password", password == null ? "" : password);
+            json.put("status", 200);
+            json.put("login_status", "true");
             System.out.println("New user created name: " + name);
 
         } else {
@@ -39,10 +45,16 @@ public class SignUpServlet extends HttpServlet {
             pageVariables.put("password", password == null ? "" : password);
             pageVariables.put("email", email == null ? "" : email);
             pageVariables.put("signup_status", "User with name: " + name + " already exists");
+            json.put("login", name == null ? "" : name);
+            json.put("password", password == null ? "" : password);
+            json.put("status", 200);
+            json.put("login_status", "false");
             System.out.println("User with name: " + name + " already exists");
         }
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));
+        System.out.println(json.toJSONString());
+        response.getWriter().println(json);
+      //  response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));
 
     }
 

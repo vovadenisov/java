@@ -1,4 +1,5 @@
 main/AccountService.class
+main/Time.class
 frontend/SignUpServlet.class
 frontend/SignInServlet.class
 main/UserProfile.class

@@ -1,17 +1,13 @@
 package main;
 
-import frontend.AdminServlet;
-import frontend.LogoutServlet;
-import frontend.SignInServlet;
-import frontend.SignUpServlet;
-import frontend.GameServlet;
-import frontend.FindGameServlet;
+import frontend.*;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+
 
 /**
  * Created by alla edited by nastya on 16.09.15.
@@ -30,14 +26,21 @@ public class Main {
         System.out.append("Starting at port: ").append(portString).append('\n');
 
         AccountService accountService = new AccountService();
+        RoomService roomService = new RoomService();
+        UsersReadyToGameService usersReadyToGameService = new UsersReadyToGameService();
+
+
         accountService.addUser("Admin", new UserProfile("Admin", "1234", "admin@mail.ru"));
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new SignInServlet(accountService)), SignInServlet.SIGNIN_PAGE_URL );
         context.addServlet(new ServletHolder(new SignUpServlet(accountService)), SignUpServlet.SIGNUP_PAGE_URL );
         context.addServlet(new ServletHolder(new LogoutServlet(accountService)), LogoutServlet.LOGOUT_PAGE_URL);
-        context.addServlet(new ServletHolder(new LogoutServlet(accountService)), GameServlet.GAME_PAGE_URL);
-        context.addServlet(new ServletHolder(new LogoutServlet(accountService)), FindGameServlet.FIND_GAME_URL);
+        context.addServlet(new ServletHolder(new GameServlet(accountService)), GameServlet.GAME_PAGE_URL);
+        context.addServlet(new ServletHolder(new FindGameServlet(accountService, usersReadyToGameService, roomService)), FindGameServlet.FIND_GAME_URL);
         context.addServlet(new ServletHolder(new AdminServlet(accountService)), AdminServlet.ADMIN_PAGE_URL);
+        context.addServlet(new ServletHolder(new GetReadyUserServlet(usersReadyToGameService, accountService)), GetReadyUserServlet.GET_USER_URL);
+        context.addServlet(new ServletHolder(new StartNewGame(usersReadyToGameService, accountService, roomService)), StartNewGame.INVITE_URL);
+
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
         resource_handler.setResourceBase("public_html");

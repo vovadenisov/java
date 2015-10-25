@@ -2,7 +2,6 @@ package frontend;
 
 import main.AccountService;
 import main.UserProfile;
-//import org.json.simple.JSONObject;
 import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
@@ -69,6 +68,7 @@ public class SignInServletTest {
     }
     @Test
     public void testDoPostAlreadyLoggedUser() throws Exception {
+        when(accountService.checkUser(username)).thenReturn(true);
         when(accountService.checkUserlogin(testUser)).thenReturn(true);
         when(accountService.getUser(username)).thenReturn(testUser);
         signIn.doPost(request, response);
@@ -78,17 +78,37 @@ public class SignInServletTest {
         verify(request, never()).setAttribute("user", testUser);
         verify(accountService, never()).addSessions(request.getSession().getId(), testUser);
         JSONObject obj = new JSONObject(stringWriter.toString());
-        assertEquals("username", username, obj.get("login"));
-        assertEquals("password", password, obj.get("password"));
-        assertEquals("username", 200, obj.get("status"));
-        assertEquals("username", false, obj.get("login_status"));
-        assertEquals("username", "already logged", obj.get("error_massage"));
+        assertEquals("testDoPostAlreadyLoggedUser. Checking username", username, obj.get("login"));
+        assertEquals("testDoPostAlreadyLoggedUser. Checking password", password, obj.get("password"));
+        assertEquals("testDoPostAlreadyLoggedUser. Checking status", 200, obj.get("status"));
+        assertEquals("testDoPostAlreadyLoggedUser. Checking login status", false, obj.get("login_status"));
+        assertEquals("testDoPostAlreadyLoggedUser. Checking error massage", "already logged", obj.get("error_massage"));
     }
 
     @Test
     public void testDoPostDoesNotExist() throws Exception {
-        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(false);
-        when(accountService.getUser(username)).thenReturn(null);
+        when(accountService.checkUser(username)).thenReturn(false);
+        signIn.doPost(request, response);
+        verify(request).getParameter("name");
+        verify(request).getParameter("password");
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+        verify(accountService, never()).getUser(username);
+        verify(accountService, never()).checkUserlogin(testUser);
+        verify(request, never()).setAttribute("user", testUser);
+        verify(accountService, never()).addSessions(request.getSession().getId(), testUser);
+        JSONObject obj = new JSONObject(stringWriter.toString());
+        assertEquals("username", username, obj.get("login"));
+        assertEquals("password", password, obj.get("password"));
+        assertEquals("status", 200, obj.get("status"));
+        assertEquals("login_status1", false, obj.get("login_status"));
+        assertEquals("username", "User with this name does not exist", obj.get("error_massage"));
+    }
+    @Test
+    public void testDoPostWrongLoginPassword() throws Exception {
+        when(accountService.checkUser(username)).thenReturn(true);
+        when(accountService.checkUserlogin(testUser)).thenReturn(false);
+        when(request.getParameter("password")).thenReturn("wrong_password");
+        when(accountService.getUser(username)).thenReturn(testUser);
         signIn.doPost(request, response);
         verify(request).getParameter("name");
         verify(request).getParameter("password");
@@ -97,29 +117,14 @@ public class SignInServletTest {
         verify(accountService, never()).addSessions(request.getSession().getId(), testUser);
         JSONObject obj = new JSONObject(stringWriter.toString());
         assertEquals("username", username, obj.get("login"));
-        assertEquals("password", password, obj.get("password"));
-        assertEquals("status", 200, obj.get("status"));
-        assertEquals("login_status1", false, obj.get("login_status"));
-        assertEquals("username", "Wrong login/password", obj.get("error_massage"));
-    }
-    @Test
-    public void testDoPostWrongLoginPassword() throws Exception {
-        when(accountService.checkUserlogin(testUser)).thenReturn(false);
-        when(accountService.getUser(username)).thenReturn(testUser);
-        when(request.getParameter("password")).thenReturn("wrong_password");
-        signIn.doPost(request, response);
-        verify(request).getParameter("name");
-        verify(request).getParameter("password");
-        verify(response).setStatus(HttpServletResponse.SC_OK);
-        JSONObject obj = new JSONObject(stringWriter.toString());
-        assertEquals("username", username, obj.get("login"));
         assertEquals("status", 200, obj.get("status"));
         assertEquals("login_status2", obj.get("login_status"), false);
         assertEquals("username", "Wrong login/password", obj.get("error_massage"));
     }
     @Test
     public void testDoPostSucsess() throws Exception {
-        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(false);
+        when(accountService.checkUser(username)).thenReturn(true);
+        when(accountService.checkUserlogin(testUser)).thenReturn(false);
         when(accountService.getUser(username)).thenReturn(testUser);
         signIn.doPost(request, response);
         verify(request).getParameter("name");

@@ -24,15 +24,17 @@ public class SignInServlet extends HttpServlet {
                       HttpServletResponse response) throws ServletException, IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> pageVariables = new HashMap<>();
-        System.out.println("get");
         if (accountService.checkSeassions(request.getSession().getId())) {
+            JSONObject json = new JSONObject();
             UserProfile userProfile = accountService.getCurrentUser(request.getSession().getId());
             String name = userProfile.getLogin();
             String password = userProfile.getPassword();
-            pageVariables.put("name", name == null ? "" : name);
-            pageVariables.put("password", password == null ? "" : password);
-            pageVariables.put("login_status", "already logged");
-            response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
+            json.put("login", name == null ? "" : name);
+            json.put("password", password == null ? "" : password);
+            json.put("status", 200);
+            json.put("login_status", false);
+            json.put("error_massage", "Already logged");
+            response.getWriter().println(json);
         }
         else {
             response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
@@ -47,46 +49,37 @@ public class SignInServlet extends HttpServlet {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         response.setStatus(HttpServletResponse.SC_OK);
-        Map<String, Object> pageVariables = new HashMap<>();
         UserProfile profile = accountService.getUser(name);
         JSONObject json = new JSONObject();
-        if (!accountService.checkSeassions(request.getSession().getId()) && !accountService.checkUserlogin(profile)) {
+        if (!accountService.checkUserlogin(profile)) {
             if (profile != null && profile.getPassword().equals(password)) {
                 json.put("login", name == null ? "" : name);
                 json.put("password", password == null ? "" : password);
                 json.put("status", 200);
-                json.put("login_status", "true");
-                pageVariables.put("login", name == null ? "" : name);
-                pageVariables.put("password", password == null ? "" : password);
-                pageVariables.put("login_status", "sucsess");
+                json.put("login_status", true);
+                json.put("error_massage", "");
                 request.setAttribute("user", profile);
                 accountService.addSessions(request.getSession().getId(), profile);
-                System.out.println("1");
+                System.out.println("sucsess");
             } else {
-                pageVariables.put("login", name == null ? "" : name);
-                pageVariables.put("password", password == null ? "" : password);
-                pageVariables.put("login_status", "Wrong login/password");
                 json.put("login", name == null ? "" : name);
                 json.put("password", password == null ? "" : password);
                 json.put("status", 200);
-                json.put("login_status", "false");
-                System.out.println("2");
+                json.put("login_status", false);
+                json.put("error_massage", "Wrong login/password");
+                System.out.println("Wrong login/password");
             }
         }
         else{
-            pageVariables.put("login", name == null ? "" : name);
-            pageVariables.put("password", password == null ? "" : password);
-            pageVariables.put("login_status", "already logged");
             json.put("login", name == null ? "" : name);
             json.put("password", password == null ? "" : password);
             json.put("status", 200);
-            json.put("login_status", "false");
-            System.out.println("3");
+            json.put("login_status", false);
+            json.put("error_massage", "already logged");
+            System.out.println("already logged");
         }
         System.out.println("post");
         System.out.println(json.toJSONString());
         response.getWriter().println(json);
-        //response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
-
     }
 }

@@ -23,4 +23,23 @@ public class UserProfile {
     public String getEmail() {
         return email;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        UserProfile other = (UserProfile) obj;
+        if (login != other.getLogin())
+            return false;
+        if (email != other.getEmail())
+            return false;
+        if (password != other.getPassword())
+            return false;
+        return true;
+    }
+
 }

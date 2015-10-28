@@ -1,6 +1,8 @@
 package frontend;
 import main.AccountService;
+import main.UserProfile;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import templater.PageGenerator;
 
@@ -26,9 +28,19 @@ public class GameServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
-        System.out.println("here");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println(PageGenerator.getPage("Game.html", pageVariables));
+        JSONObject json = new JSONObject();
+        if(request.getParameter("room") != null) {
+            String room_id = request.getParameter("room");
+            if (request.getParameter("start") != null) {
+                //запуск игры. установить начальное время в комнате по id
+                UserProfile user = accountService.getCurrentUser(request.getSession().getId());
+
+            }
+        }
+        else{
+            response.getWriter().println(PageGenerator.getPage("Game.html", pageVariables));
+        }
     }
 
     @Override

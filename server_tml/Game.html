@@ -10,19 +10,22 @@
 <body>
 <div class="hiden">
     <input type="text" id="room">
-    <input type="text" id="my_score">
     <input type="text" id="enemy_score">
 </div>
 <div class="wrapper">
     <div class="header">
-        <div class = "user current_user margin offset35"><p class="current_user">login</p></div>
-        <div class = "score margin offset35"><h2 class="score_container">0/0</h2></div>
-        <div class = "user enemy margin"><p class="oponent">login</p></div>
+        <div class = "user margin offset35"><p class="current_user">login</p></div>
+        <div class = "score margin offset35"><span class="my_score">0</span><span>/</span><span class="enemy_score">0</span></div>
+        <div class = "user margin"><p class="enemy">login</p></div>
+    </div>
+    <div class="ready_block">
+        <div id="ready" class="blue button"><h2>ready</h2></div>
     </div>
     <div class="game_block" >
-        <div class="blue button"><h2>PUSH</h2></div>
-        <div class="red button"><h2>DON'T PUSH</h2></div>
+        <div id="increment" class="blue button"><h2>PUSH</h2></div>
+        <div id="decrement" class="red button"><h2>DON'T PUSH</h2></div>
     </div>
+    <div class="rezult_block"></div>
 </div>
 </body>
 </html>

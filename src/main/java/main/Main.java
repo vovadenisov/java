@@ -30,7 +30,7 @@ public class Main {
         UsersReadyToGameService usersReadyToGameService = new UsersReadyToGameService();
 
 
-        accountService.addUser("Admin", new UserProfile("Admin", "1234", "admin@mail.ru"));
+        accountService.addUser("Admin", "1234", "admin@mail.ru");
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new SignInServlet(accountService)), SignInServlet.SIGNIN_PAGE_URL );
         context.addServlet(new ServletHolder(new SignUpServlet(accountService)), SignUpServlet.SIGNUP_PAGE_URL );
@@ -40,6 +40,8 @@ public class Main {
         context.addServlet(new ServletHolder(new AdminServlet(accountService)), AdminServlet.ADMIN_PAGE_URL);
         context.addServlet(new ServletHolder(new GetReadyUserServlet(usersReadyToGameService, accountService)), GetReadyUserServlet.GET_USER_URL);
         context.addServlet(new ServletHolder(new StartNewGame(usersReadyToGameService, accountService, roomService)), StartNewGame.INVITE_URL);
+        context.addServlet(new ServletHolder(new GameInfoServlet(accountService, usersReadyToGameService, roomService)), GameInfoServlet.GAME_INFO_URL);
+
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);

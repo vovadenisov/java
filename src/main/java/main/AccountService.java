@@ -42,9 +42,10 @@ public class AccountService {
         return sessions.size();
     }
 
-    public boolean addUser(String userName, UserProfile userProfile) {
+    public boolean addUser(String userName, String password, String email) {
         if (users.containsKey(userName))
             return false;
+        UserProfile userProfile = new UserProfile(userName, password, email, users.size());
         users.put(userName, userProfile);
         return true;
     }

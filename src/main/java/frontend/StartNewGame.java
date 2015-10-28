@@ -54,7 +54,7 @@ public class StartNewGame extends HttpServlet {
                     if (game_room.addTeam(current_user_team) && game_room.addTeam(invite_user_team)) {
                         System.out.println("put_team_in_room");
                         roomService.putRoom(game_room);
-                        json.put("game_status", "OK");
+                        json.put("game_status", true);
                         usersReadyToGameService.popUserReady(invite_user);
                         usersReadyToGameService.popUserReady(current_user);
                         response.getWriter().println(json);
@@ -72,7 +72,7 @@ public class StartNewGame extends HttpServlet {
                 }
             }
             else{
-                json.put("game_status","request_user_not_find");
+                json.put("game_status",false);
                 response.getWriter().println(json);
             }
         }

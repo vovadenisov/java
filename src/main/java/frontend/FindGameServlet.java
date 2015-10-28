@@ -19,7 +19,7 @@ public class FindGameServlet extends HttpServlet {
     private AccountService accountService;
     private UsersReadyToGameService usersReadyToGameService;
     private RoomService roomService;
-    public static final String FIND_GAME_URL = "/api/v1/auth/find_game";
+    public static final String FIND_GAME_URL = "/api/v1/auth/find_rival";
 
     public FindGameServlet(AccountService accountService, UsersReadyToGameService usersReadyToGameService, RoomService roomService) {
         this.accountService = accountService;
@@ -68,7 +68,6 @@ public class FindGameServlet extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
         //если юзера нет
-        System.out.println("find_post");
         if(!accountService.checkSeassions(request.getSession().getId())) {
             response.setHeader("location", SignInServlet.SIGNIN_PAGE_URL);
         }

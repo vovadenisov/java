@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Objects;
+
 /**
  * Created by usr on 25.10.15.
  */
@@ -21,5 +23,10 @@ public class Score {
         return team;
     }
 
-
+    public Boolean isTeam(Team team){
+        if(Objects.equals(team, this.team)) {
+            return true;
+        }
+        return false;
+    }
 }

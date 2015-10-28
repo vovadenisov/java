@@ -32,43 +32,28 @@ public class GetReadyUserServlet extends HttpServlet {
         //получаем юзеров, готовых к игре
         Set<UserProfile> users_ready = usersReadyToGameService.getUserReady();
 
-        //тестирование
-        System.out.println("in_get_get_user");
-        for (UserProfile user : users_ready){
-            System.out.println(user.getLogin());
-        }
-
         //текущий юзер
         UserProfile current_user = accountService.getCurrentUser(request.getSession().getId());
 
         //убрать из юзеров, готовых к игре самого юзера
         users_ready.remove(current_user);
 
-        //тестирование
-        System.out.println("in_get_get_user2");
-        for (UserProfile user : users_ready){
-            System.out.println(user.getLogin());
-        }
 
         //контейнер для юзеров, которых будем отдавать
         JSONArray user_login_list = new JSONArray();
-        JSONObject user_object = new JSONObject();
         //наполнение контейнера
         for (UserProfile user : users_ready) {
-            user_login_list.add(user.getLogin());
+            JSONObject user_object = new JSONObject();
+            user_object.put("id",user.getId());
+            user_object.put("name",user.getLogin());
+            System.out.println(user_object);
+            user_login_list.add(user_object.clone());
+            user_object.clear();
         }
-
-        System.out.println(user_login_list.toString());
-
         JSONObject json = new JSONObject();
         //в json складываем юзеров, готовых к игре
-        json.put("current_user", current_user.getLogin().toString());
-        json.put("user_count", user_login_list.size());
         json.put("users", user_login_list);
 
-        System.out.println("post");
-        System.out.println(json.toJSONString());
-        //отправляем json
         response.getWriter().println(json);
 
     }

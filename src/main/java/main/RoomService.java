@@ -34,6 +34,16 @@ public class RoomService {
     }
 
 
+
+    public Integer getRoomWithUser(UserProfile user){
+        for (Map.Entry<Integer, Room> room : rooms.entrySet()) {
+            if (room.getValue().getUsers().contains(user)) {
+                return room.getKey();
+            }
+        }
+        return -1;
+    }
+
 //    public Set<UserProfile> getAllUserInGame(){
 //        if (isChenged){
 //            isChenged = false;

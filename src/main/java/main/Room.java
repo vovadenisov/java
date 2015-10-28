@@ -1,27 +1,40 @@
  package main;
 
-import javafx.util.Pair;
+import java.util.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-/**
- * Created by usr on 21.10.15.
- */
+ /**
+  * Created by usr on 21.10.15.
+  */
 public class Room {
     private Map<Integer, Team> teams = new HashMap<>();
-    private Set< Pair<Team, Integer> > score = new HashSet<>();
+    private Set<Score> score = new HashSet<>();
+    private long time = 0;
 
-    public void IncrimentScore(Team team_score){
-        for (Pair<Team, Integer> teamScore : score){
+    public void setStartTime (long time){
+        Date date = new Date();
+        this.time = date.getTime();
+    }
 
+    public boolean isFinish(){
+        Date data = new Date();
+        return this.time + 10000 < data.getTime();
+    }
+
+    public void incrimentScore(Team team){
+        for (Score team_score : score) {
+            if (team_score.isTeam(team)) {
+                team_score.incrementScore();
+            }
         }
     }
 
-    public void getTeamUser(String user_name){
-
+    public Integer getTeamUser(UserProfile user){
+        for (Map.Entry<Integer, Team> teamEntry : teams.entrySet()){
+            if (teamEntry.getValue().getMembers().contains(user)){
+                return teamEntry.getKey();
+            }
+        }
+        return -1;
     }
 
     public boolean addTeam(Team newTeam){
@@ -44,5 +57,23 @@ public class Room {
             users.addAll(team.getValue().getMembers());
         }
         return users;
+    }
+
+    public Set<UserProfile> getMyTeamUsers(UserProfile user){
+        for (Map.Entry<Integer, Team> team : teams.entrySet()){
+            if(team.getValue().getMembers().contains(user)){
+               return  team.getValue().getMembers();
+            }
+        }
+        return null;
+    }
+
+    public Set<UserProfile> getEnemyTeamUsers(UserProfile user){
+        for (Map.Entry<Integer, Team> team : teams.entrySet()){
+            if(!team.getValue().getMembers().contains(user)){
+                return  team.getValue().getMembers();
+            }
+        }
+        return null;
     }
 }

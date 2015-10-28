@@ -29,7 +29,7 @@ public class SignUpServlet extends HttpServlet {
         String email = request.getParameter("email");
         Map<String, Object> pageVariables = new HashMap<>();
         JSONObject json = new JSONObject();
-        if (accountService.addUser(name, new UserProfile(name, password, ""))) {
+        if (accountService.addUser(name, password, email)) {
             pageVariables.put("name", name == null ? "" : name);
             pageVariables.put("password", password == null ? "" : password);
             pageVariables.put("email", email == null ? "" : email);

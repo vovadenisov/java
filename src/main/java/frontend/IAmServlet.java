@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class IAmServlet extends HttpServlet {
     private AccountService accountService;
-    public static final String ADMIN_PAGE_URL = "/api/v1/auth/curruser";
+    public static final String I_AM_URL = "/api/v1/auth/curruser";
 
     public IAmServlet(AccountService accountService) {
         this.accountService = accountService;

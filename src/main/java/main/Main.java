@@ -41,7 +41,7 @@ public class Main {
         context.addServlet(new ServletHolder(new GetReadyUserServlet(usersReadyToGameService, accountService)), GetReadyUserServlet.GET_USER_URL);
         context.addServlet(new ServletHolder(new StartNewGame(usersReadyToGameService, accountService, roomService)), StartNewGame.INVITE_URL);
         context.addServlet(new ServletHolder(new GameInfoServlet(accountService, usersReadyToGameService, roomService)), GameInfoServlet.GAME_INFO_URL);
-
+        context.addServlet(new ServletHolder(new IAmServlet(accountService)), IAmServlet.I_AM_URL );
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);

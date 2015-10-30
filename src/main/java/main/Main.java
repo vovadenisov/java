@@ -10,6 +10,13 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import parser.ConfigParser;
+import parser.XmlParser;
+import java.io.IOException;
+import java.util.Map;
+import org.xml.sax.*;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Created by alla edited by nastya on 16.09.15.
@@ -17,15 +24,14 @@ import org.eclipse.jetty.servlet.ServletHolder;
  */
 
 public class Main {
-    public static void main(String[] args) throws NumberFormatException, InterruptedException {
-        if (args.length != 1) {
-            System.out.append("Use port as the first argument");
-            System.exit(1);
-
-        }
-        String portString = args[0];
+    public static void main(String[] args) throws NumberFormatException, InterruptedException, IOException, SAXException, ParserConfigurationException{
+        ConfigParser configParser = new ConfigParser();
+        String portString = configParser.getPort();
         int port = Integer.valueOf(portString);
         System.out.append("Starting at port: ").append(portString).append('\n');
+        XmlParser handler = new XmlParser();
+        Map A = handler.getMap();
+        System.out.println(A);
 
         AccountService accountService = new AccountService();
         accountService.addUser("Admin", new UserProfile("Admin", "1234", "admin@mail.ru"));

@@ -18,20 +18,34 @@ public class AccountService {
        }
     }
 
+    public String getSessinonId(UserProfile requestUser){
+
+        for(Map.Entry<String, UserProfile> entry : sessions.entrySet()) {
+            if(entry.getValue().equals(requestUser)){
+                return entry.getKey();
+            }
+        }
+        return "";
+    }
+
     public boolean checkUserlogin(UserProfile user){
         return sessions.containsValue(user);
     }
+
     public int numberOfRegistered(){
 
         return users.size();
     }
+
     public int numberOfSessions(){
 
         return sessions.size();
     }
-    public boolean addUser(String userName, UserProfile userProfile) {
+
+    public boolean addUser(String userName, String password, String email) {
         if (users.containsKey(userName))
             return false;
+        UserProfile userProfile = new UserProfile(userName, password, email, users.size());
         users.put(userName, userProfile);
         return true;
     }
@@ -40,12 +54,12 @@ public class AccountService {
         return sessions.containsKey(sessionId);
     }
 
-   public boolean removeSeassions(String sessionId){
+    public boolean removeSeassions(String sessionId){
        if (!sessions.containsKey(sessionId))
            return false;
        sessions.remove(sessionId);
        return true;
-   }
+    }
 
     public void addSessions(String sessionId, UserProfile userProfile) {
         sessions.put(sessionId, userProfile);

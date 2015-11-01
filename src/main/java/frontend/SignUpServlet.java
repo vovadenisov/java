@@ -2,6 +2,7 @@ package frontend;
 
 import main.AccountService;
 import main.UserProfile;
+import org.json.simple.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.json.simple.JSONObject;
 
 
 public class SignUpServlet extends HttpServlet {
@@ -29,7 +29,7 @@ public class SignUpServlet extends HttpServlet {
         String email = request.getParameter("email");
         Map<String, Object> pageVariables = new HashMap<>();
         JSONObject json = new JSONObject();
-        if (accountService.addUser(name, new UserProfile(name, password, ""))) {
+        if (accountService.addUser(name, password, email)) {
             pageVariables.put("name", name == null ? "" : name);
             pageVariables.put("password", password == null ? "" : password);
             pageVariables.put("email", email == null ? "" : email);
@@ -52,6 +52,7 @@ public class SignUpServlet extends HttpServlet {
             System.out.println("User with name: " + name + " already exists");
         }
         response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json");
         System.out.println(json.toJSONString());
         response.getWriter().println(json);
       //  response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));

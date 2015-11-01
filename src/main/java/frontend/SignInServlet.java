@@ -2,6 +2,7 @@ package frontend;
 
 import main.AccountService;
 import main.UserProfile;
+import org.json.simple.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.json.simple.JSONObject;
 
 public class SignInServlet extends HttpServlet {
     public static final String SIGNIN_PAGE_URL = "/api/v1/auth/signin";
@@ -24,7 +24,6 @@ public class SignInServlet extends HttpServlet {
                       HttpServletResponse response) throws ServletException, IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> pageVariables = new HashMap<>();
-        System.out.println("get");
         if (accountService.checkSeassions(request.getSession().getId())) {
             UserProfile userProfile = accountService.getCurrentUser(request.getSession().getId());
             String name = userProfile.getLogin();
@@ -32,9 +31,9 @@ public class SignInServlet extends HttpServlet {
             pageVariables.put("name", name == null ? "" : name);
             pageVariables.put("password", password == null ? "" : password);
             pageVariables.put("login_status", "already logged");
+            response.setContentType("application/json");
             response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
-        }
-        else {
+        } else {
             response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
         }
     }
@@ -50,6 +49,7 @@ public class SignInServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         UserProfile profile = accountService.getUser(name);
         JSONObject json = new JSONObject();
+        response.setContentType("application/json");
         if (!accountService.checkSeassions(request.getSession().getId()) && !accountService.checkUserlogin(profile)) {
             if (profile != null && profile.getPassword().equals(password)) {
                 json.put("login", name == null ? "" : name);
@@ -61,7 +61,6 @@ public class SignInServlet extends HttpServlet {
                 pageVariables.put("login_status", "sucsess");
                 request.setAttribute("user", profile);
                 accountService.addSessions(request.getSession().getId(), profile);
-                System.out.println("1");
             } else {
                 pageVariables.put("login", name == null ? "" : name);
                 pageVariables.put("password", password == null ? "" : password);
@@ -70,7 +69,6 @@ public class SignInServlet extends HttpServlet {
                 json.put("password", password == null ? "" : password);
                 json.put("status", 200);
                 json.put("login_status", "false");
-                System.out.println("2");
             }
         }
         else{
@@ -81,10 +79,7 @@ public class SignInServlet extends HttpServlet {
             json.put("password", password == null ? "" : password);
             json.put("status", 200);
             json.put("login_status", "false");
-            System.out.println("3");
         }
-        System.out.println("post");
-        System.out.println(json.toJSONString());
         response.getWriter().println(json);
         //response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
 

@@ -49,6 +49,7 @@ public class SignInServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         UserProfile profile = accountService.getUser(name);
         JSONObject json = new JSONObject();
+        response.setContentType("application/json");
         if (!accountService.checkSeassions(request.getSession().getId()) && !accountService.checkUserlogin(profile)) {
             if (profile != null && profile.getPassword().equals(password)) {
                 json.put("login", name == null ? "" : name);

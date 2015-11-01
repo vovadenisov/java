@@ -33,6 +33,7 @@ public class GameInfoServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         UserProfile current_user = accountService.getCurrentUser(request.getSession().getId());
+        response.setContentType("application/json");
         if (roomService.userInRoom(current_user)){
             response.setStatus(HttpServletResponse.SC_OK);
             Integer room_id = roomService.getRoomWithUser(current_user);

@@ -26,6 +26,7 @@ public class IAmServlet extends HttpServlet {
         JSONObject pageVariables = new JSONObject();
         if (accountService.checkSeassions(request.getSession().getId())){
             response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
             pageVariables.put("current_user", accountService.getCurrentUser(request.getSession().getId()).getLogin());
             pageVariables.put("current_user_id", accountService.getCurrentUser(request.getSession().getId()).getId());
             response.getWriter().println(pageVariables);

@@ -50,11 +50,8 @@ public class GetReadyUserServlet extends HttpServlet {
             user_login_list.add(user_object.clone());
             user_object.clear();
         }
-        JSONObject json = new JSONObject();
-        //в json складываем юзеров, готовых к игре
-        json.put("users", user_login_list);
-
-        response.getWriter().println(json);
+        response.setContentType("application/json");
+        response.getWriter().println(user_login_list);
 
     }
 

@@ -9,6 +9,31 @@ public class Room {
     private Map<Integer, Team> teams = new HashMap<>();
     private Set<Score> score = new HashSet<>();
     private long time = 0;
+    private Boolean status = true;
+    private Team winer = null;
+
+    public boolean getStatus(){
+        return status;
+    }
+
+    public Team getWiner(){
+        return winer;
+    }
+
+    public boolean addEvent(String event, UserProfile user){
+        if (Objects.equals("push", event)){
+            if (status){
+                status = false;
+                for( Team team : getTeams()){
+                    if (team.getMembers().contains(user)){
+                        winer = team;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 
     public void setStartTime (long time){
         Date date = new Date();

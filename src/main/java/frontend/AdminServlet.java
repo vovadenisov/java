@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.json.JSONObject;
 
 public class AdminServlet extends HttpServlet {
    private AccountService accountService;
@@ -21,10 +22,11 @@ public class AdminServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Object> pageVariables = new HashMap<>();
         response.setStatus(HttpServletResponse.SC_OK);
-        pageVariables.put("registr", accountService.numberOfRegistered());
-        pageVariables.put("login", accountService.numberOfSessions());
+        JSONObject json = new JSONObject();
+        json.put("status", HttpServletResponse.SC_OK);
+        json.put("registered", accountService.numberOfRegistered());
+        json.put("online", accountService.numberOfSessions());
         String timeString = request.getParameter("shutdown");
         if (timeString != null) {
             System.out.println("");
@@ -34,8 +36,7 @@ public class AdminServlet extends HttpServlet {
             System.out.print("\nShutdown");
             System.exit(0);
         }
-        pageVariables.put("status", "run");
-        response.getWriter().println(PageGenerator.getPage("adminresponse.txt", pageVariables));
+        response.getWriter().println(json);
     }
 
 }

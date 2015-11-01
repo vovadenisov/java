@@ -27,35 +27,28 @@ public class SignUpServlet extends HttpServlet {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
-        Map<String, Object> pageVariables = new HashMap<>();
         JSONObject json = new JSONObject();
-        if (accountService.addUser(name, new UserProfile(name, password, ""))) {
-            pageVariables.put("name", name == null ? "" : name);
-            pageVariables.put("password", password == null ? "" : password);
-            pageVariables.put("email", email == null ? "" : email);
-            pageVariables.put("signup_status", "New user created name: " + name);
+        if (accountService.addUser(name, new UserProfile(name, password, email))) {
             json.put("login", name == null ? "" : name);
             json.put("password", password == null ? "" : password);
+            json.put("email", email == null ? "" : email);
             json.put("status", 200);
-            json.put("login_status", "true");
+            json.put("login_status", true);
+            json.put("error_massage", "New user created name: " + name);
             System.out.println("New user created name: " + name);
 
         } else {
-            pageVariables.put("name", name == null ? "" : name);
-            pageVariables.put("password", password == null ? "" : password);
-            pageVariables.put("email", email == null ? "" : email);
-            pageVariables.put("signup_status", "User with name: " + name + " already exists");
             json.put("login", name == null ? "" : name);
             json.put("password", password == null ? "" : password);
+            json.put("email", email == null ? "" : email);
             json.put("status", 200);
-            json.put("login_status", "false");
+            json.put("login_status", false);
+            json.put("error_massage", "User with name: " + name + " already exists");
             System.out.println("User with name: " + name + " already exists");
         }
         response.setStatus(HttpServletResponse.SC_OK);
         System.out.println(json.toJSONString());
         response.getWriter().println(json);
-      //  response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));
-
     }
 
     @Override
@@ -64,15 +57,20 @@ public class SignUpServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put("signUpStatus", "");
         response.setStatus(HttpServletResponse.SC_OK);
+        JSONObject json = new JSONObject();
         if (accountService.checkSeassions(request.getSession().getId())) {
-            System.out.println("tut");
             UserProfile userProfile = accountService.getCurrentUser(request.getSession().getId());
             String name = userProfile.getLogin();
             String password = userProfile.getPassword();
-            pageVariables.put("name", name == null ? "" : name);
-            pageVariables.put("password", password == null ? "" : password);
-            pageVariables.put("login_status", "already logged");
-            response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
+            String email = userProfile.getEmail();
+            json.put("login", name);
+            json.put("password", password);
+            json.put("email", email);
+            json.put("status", 200);
+            json.put("login_status", false);
+            json.put("error_massage", "User with name: " + name + " already exists");
+            System.out.println(json.toJSONString());
+            response.getWriter().println(json);
         }
         else {
             response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));

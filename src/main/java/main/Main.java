@@ -7,6 +7,11 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import parser.ConfigParser;
+import parser.XMLReader;
+
+import java.io.IOException;
+import java.util.Map;
 
 
 /**
@@ -15,15 +20,14 @@ import org.eclipse.jetty.servlet.ServletHolder;
  */
 
 public class Main {
-    public static void main(String[] args) throws NumberFormatException, InterruptedException {
-        if (args.length != 1) {
-            System.out.append("Use port as the first argument");
-            System.exit(1);
-
-        }
-        String portString = args[0];
+    public static void main(String[] args) throws NumberFormatException, InterruptedException, IOException {
+        ConfigParser configParser = new ConfigParser();
+        String portString = configParser.getPort();
         int port = Integer.valueOf(portString);
         System.out.append("Starting at port: ").append(portString).append('\n');
+        XMLReader xmlReader = new XMLReader();
+        Map A = xmlReader.readXML("data/mechanic.xml");
+        System.out.println(A);
 
         AccountService accountService = new AccountService();
         RoomService roomService = new RoomService();

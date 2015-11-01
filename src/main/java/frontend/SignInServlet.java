@@ -46,42 +46,48 @@ public class SignInServlet extends HttpServlet {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         response.setStatus(HttpServletResponse.SC_OK);
-        Map<String, Object> pageVariables = new HashMap<>();
-        UserProfile profile = accountService.getUser(name);
         JSONObject json = new JSONObject();
-        response.setContentType("application/json");
-        if (!accountService.checkSeassions(request.getSession().getId()) && !accountService.checkUserlogin(profile)) {
-            if (profile != null && profile.getPassword().equals(password)) {
+        if (accountService.checkUser(name)){
+            UserProfile profile = accountService.getUser(name);
+            if (!accountService.checkUserlogin(profile)){
+                System.out.println(profile.getPassword());
+                if(profile.getPassword().equals(password)){
+                    json.put("login", name == null ? "" : name);
+                    json.put("password", password == null ? "" : password);
+                    json.put("status", 200);
+                    json.put("login_status", true);
+                    json.put("error_massage", "");
+                    request.setAttribute("user", profile);
+                    accountService.addSessions(request.getSession().getId(), profile);
+                    System.out.println("sucsess");
+                }else {
+                    json.put("login", name == null ? "" : name);
+                    json.put("password", password == null ? "" : password);
+                    json.put("status", 200);
+                    json.put("login_status", false);
+                    json.put("error_massage", "Wrong login/password");
+                    System.out.println("Wrong login/password");
+                }
+
+            }else {
                 json.put("login", name == null ? "" : name);
                 json.put("password", password == null ? "" : password);
                 json.put("status", 200);
-                json.put("login_status", "true");
-                pageVariables.put("login", name == null ? "" : name);
-                pageVariables.put("password", password == null ? "" : password);
-                pageVariables.put("login_status", "sucsess");
-                request.setAttribute("user", profile);
-                accountService.addSessions(request.getSession().getId(), profile);
-            } else {
-                pageVariables.put("login", name == null ? "" : name);
-                pageVariables.put("password", password == null ? "" : password);
-                pageVariables.put("login_status", "Wrong login/password");
-                json.put("login", name == null ? "" : name);
-                json.put("password", password == null ? "" : password);
-                json.put("status", 200);
-                json.put("login_status", "false");
+                json.put("login_status", false);
+                json.put("error_massage", "already logged");
+                System.out.println("already logged");
             }
-        }
-        else{
-            pageVariables.put("login", name == null ? "" : name);
-            pageVariables.put("password", password == null ? "" : password);
-            pageVariables.put("login_status", "already logged");
+
+        }else {
             json.put("login", name == null ? "" : name);
             json.put("password", password == null ? "" : password);
             json.put("status", 200);
-            json.put("login_status", "false");
+            json.put("login_status", false);
+            json.put("error_massage", "User with this name does not exist");
+            System.out.println("User with this name does not exist");
         }
+        System.out.println("post");
+        System.out.println(json.toJSONString());
         response.getWriter().println(json);
-        //response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
-
     }
 }

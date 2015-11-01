@@ -12,6 +12,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import parser.ConfigParser;
 import parser.XmlParser;
+import parser.XMLReader;
 import java.io.IOException;
 import java.util.Map;
 import org.xml.sax.*;
@@ -29,8 +30,8 @@ public class Main {
         String portString = configParser.getPort();
         int port = Integer.valueOf(portString);
         System.out.append("Starting at port: ").append(portString).append('\n');
-        XmlParser handler = new XmlParser();
-        Map A = handler.getMap();
+        XMLReader xmlReader = new XMLReader();
+        Map A = xmlReader.readXML("data/mechanic.xml");
         System.out.println(A);
 
         AccountService accountService = new AccountService();

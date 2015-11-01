@@ -15,19 +15,9 @@ import java.util.HashMap;
  * Created by alla on 26.10.15.
  */
 public class XmlParser extends DefaultHandler{
-        private static final String MECHANIC_FILE = "data/mechanic.xml";
         private String thisElement = "";
         private Map<String, String> fields;
         private static final String[] keys = {"param1", "param2", "param3"};
-
-        public Map<String, String> getMap() throws SAXException, ParserConfigurationException, IOException
-        {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser parser = factory.newSAXParser();
-            parser.parse(new File(MECHANIC_FILE), this);
-            Map A = this.getParam();
-            return A;
-        }
         public Map<String, String> getParam(){
             return fields;
         }

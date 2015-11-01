@@ -14,29 +14,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignInServlet extends HttpServlet {
-    public static final String SIGNIN_PAGE_URL = "/api/v1/auth/signin";
-    private AccountService accountService;
-    public SignInServlet(AccountService accountService) {
-        this.accountService = accountService;
-    }
-    @Override
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-        response.setStatus(HttpServletResponse.SC_OK);
-        Map<String, Object> pageVariables = new HashMap<>();
-        if (accountService.checkSeassions(request.getSession().getId())) {
-            UserProfile userProfile = accountService.getCurrentUser(request.getSession().getId());
-            String name = userProfile.getLogin();
-            String password = userProfile.getPassword();
-            pageVariables.put("name", name == null ? "" : name);
-            pageVariables.put("password", password == null ? "" : password);
-            pageVariables.put("login_status", "already logged");
-            response.setContentType("application/json");
-            response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
-        } else {
-            response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
+        public static final String SIGNIN_PAGE_URL = "/api/v1/auth/signin";
+        private AccountService accountService;
+        public SignInServlet(AccountService accountService) {
+            this.accountService = accountService;
         }
-    }
+        @Override
+        public void doGet(HttpServletRequest request,
+                          HttpServletResponse response) throws ServletException, IOException {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
+            Map<String, Object> pageVariables = new HashMap<>();
+            if (accountService.checkSeassions(request.getSession().getId())) {
+                JSONObject json = new JSONObject();
+                UserProfile userProfile = accountService.getCurrentUser(request.getSession().getId());
+                String name = userProfile.getLogin();
+                String password = userProfile.getPassword();
+                json.put("login", name == null ? "" : name);
+                json.put("password", password == null ? "" : password);
+                json.put("status", 200);
+                json.put("login_status", false);
+                json.put("error_massage", "Already logged");
+                response.getWriter().println(json);
+            }
+            else {
+                response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
+            }
+        }
 
     @Override
     @SuppressWarnings("all")

@@ -1,5 +1,5 @@
 package frontend;
-/*
+
 import main.AccountService;
 import main.UserProfile;
 import main.Time;
@@ -18,10 +18,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.json.JSONObject;
-*/
+
 /**
  * Created by alla on 25.10.15.
- *//*
+ */
 public class AdminServletTest {
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
@@ -33,11 +33,12 @@ public class AdminServletTest {
     private final String username = "test_username";
     private final String password = "test_password";
     private final String email = "test_email@mail";
+    private final Integer id = 1;
     private AdminServlet admin;
     private UserProfile testUser;
     @Before
     public void initialization() throws Exception {
-        testUser = new UserProfile(username, password, email);
+        testUser = new UserProfile(username, password, email, id);
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
         admin = new AdminServlet(accountService);
@@ -55,4 +56,4 @@ public class AdminServletTest {
         assertEquals("Incorrect number of online users", 1, obj.get("online"));
         assertEquals("Wrong status", 200, obj.get("status"));
     }
-}*/
+}

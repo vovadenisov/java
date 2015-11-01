@@ -22,7 +22,7 @@ import java.io.StringWriter;
  * Created by alla on 23.10.15.
  */
 
-/**
+
 public class SignInServletTest {
     private UserProfile testUser;
     private final HttpServletRequest request = mock(HttpServletRequest.class);
@@ -32,6 +32,7 @@ public class SignInServletTest {
     private final String username = "test_username";
     private final String password = "test_password";
     private final String email = "test_email@mail";
+    private final Integer id = 1;
     private final StringWriter stringWriter = new StringWriter();
     final PrintWriter writer = new PrintWriter(stringWriter);
     private SignInServlet signIn;
@@ -45,7 +46,7 @@ public class SignInServletTest {
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
         signIn = new SignInServlet(accountService);
-        testUser = new UserProfile(username, password, email);
+        testUser = new UserProfile(username, password, email, id);
     }
     @Test
     public void testDoGetAnonim() throws Exception {
@@ -62,7 +63,7 @@ public class SignInServletTest {
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(accountService).getCurrentUser(request.getSession().getId());
         JSONObject obj = new JSONObject(stringWriter.toString());
-        assertEquals("username", username, obj.get("login"));
+            assertEquals("username", username, obj.get("login"));
         assertEquals("password", password, obj.get("password"));
         assertEquals("username", 200, obj.get("status"));
         assertEquals("username", false, obj.get("login_status"));
@@ -142,4 +143,3 @@ public class SignInServletTest {
         assertEquals("username", "", obj.get("error_massage"));
     }
 }
-*/

@@ -51,31 +51,24 @@ public class AccountServiceTest {
         accountService.removeSeassions(testSession);
         assertEquals("testNumberOfSessions().expect 0", 0, accountService.numberOfSessions());
     }
-/*
+
     @Test
-    public void testAddUser() throws Exception {
-        String[] test_user_data = new String[]{"Test1", "test_password1", "test1@mail.ru"};
-        UserProfile user = new UserProfile(test_user_data[0], test_user_data[1], test_user_data[2]);
-        int size = accountService.numberOfRegistered();
-        assertTrue("testAddUser().User hasn't added!", accountService.addUser(user.getLogin(), user));
-        assertFalse("testAddUser().False, User already exists!", accountService.addUser(user.getLogin(), user));
-        assertEquals("testAddUser().User hasn't added!", user, accountService.getUser(test_user_data[0]));
-        assertEquals("testAddUser().user is not added", size + 1, accountService.numberOfRegistered());
-    }
-*/
-    @Test
-    public void testGetUser() throws Exception {
-        assertNotNull("testGetUser().function does not give an existing object", accountService.getUser(username));
-        assertNull("testGetUser().function gives a non-existent object", accountService.getUser("Test1"));
-        assertEquals("testGetUser().not a valid response", testUser, accountService.getUser(username));
-    }
- /*   @Test
     public void testNumberOfRegistered() throws Exception {
         assertEquals("testNumberOfRegistered().expect 1", 1, accountService.numberOfRegistered());
         String[] test_user_data = new String[]{"Test1", "test_password1", "test1@mail.ru"};
-        accountService.addUser(test_user_data[0], new UserProfile(test_user_data[0], test_user_data[1], test_user_data[2],1 ));
+        accountService.addUser(test_user_data[0], test_user_data[1], test_user_data[2]);
         assertEquals("testNumberOfRegistered().expect 2", 2, accountService.numberOfRegistered());
-    }*/
+    }
+
+    @Test
+    public void testAddUser() throws Exception {
+        String[] test_user_data = new String[]{"Test1", "test_password1", "test1@mail.ru"};
+        int size = accountService.numberOfRegistered();
+        assertTrue("testAddUser().User hasn't added!", accountService.addUser(test_user_data[0],test_user_data[1], test_user_data[2]));
+        assertFalse("testAddUser().False, User already exists!", accountService.addUser(username, password, email));
+        assertEquals("testAddUser().user is not added", size + 1, accountService.numberOfRegistered());
+    }
+
     @Test
     public void testRemoveSeassions() throws Exception {
         assertFalse("testRemoveSeassions().testRemoveSeassions", accountService.removeSeassions(testSession));
@@ -84,4 +77,13 @@ public class AccountServiceTest {
         assertTrue("testRemoveSeassions().testRemoveSeassions", accountService.removeSeassions(testSession));
         assertEquals("testRemoveSeassions().testRemoveSeassions", 0, accountService.numberOfSessions());
     }
+    @Test
+    public void testGetUser() throws Exception {
+        assertNotNull("testGetUser().function does not give an existing object", accountService.getUser(username));
+        assertNull("testGetUser().function gives a non-existent object", accountService.getUser("Test1"));
+        assertEquals("testGetUser().not a valid response", testUser.getLogin(), accountService.getUser(username).getLogin());
+        assertEquals("testGetUser().not a valid response", testUser.getEmail(), accountService.getUser(username).getEmail());
+        assertEquals("testGetUser().not a valid response", testUser.getPassword(), accountService.getUser(username).getPassword());
+    }
+
 }

@@ -11,6 +11,7 @@ import parser.ConfigParser;
 import parser.XMLReader;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.util.Map;
 
 
@@ -26,15 +27,15 @@ public class Main {
         int port = Integer.valueOf(portString);
         System.out.append("Starting at port: ").append(portString).append('\n');
         XMLReader xmlReader = new XMLReader();
-        Map A = xmlReader.readXML("data/mechanic.xml");
-        System.out.println(A);
-
+        UserProfile Admin = (UserProfile)xmlReader.readXML("data/some.xml");
+        System.out.println(Admin.getLogin());
+        System.out.println(Admin.getEmail());
+        System.out.println(Admin.getPassword());
+        System.out.println(Admin.getId());
         AccountService accountService = new AccountService();
         RoomService roomService = new RoomService();
         UsersReadyToGameService usersReadyToGameService = new UsersReadyToGameService();
-
-
-        accountService.addUser("Admin", "1234", "admin@mail.ru");
+        accountService.addUser(Admin.getLogin(), Admin.getPassword(), Admin.getEmail());
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new SignInServlet(accountService)), SignInServlet.SIGNIN_PAGE_URL );
         context.addServlet(new ServletHolder(new SignUpServlet(accountService)), SignUpServlet.SIGNUP_PAGE_URL );

@@ -1,6 +1,7 @@
 package frontend;
 
 import main.AccountService;
+import org.json.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -20,14 +21,18 @@ public class LogoutServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Object> pageVariables = new HashMap<>();
-        pageVariables.put("name", accountService.userSession(request.getRequestedSessionId()));
-        boolean status = accountService.removeSeassions(request.getSession().getId());
-        if(status)
-            pageVariables.put("logout_status", "true");
-        else
-            pageVariables.put("logout_status", "false");
-        response.getWriter().println(PageGenerator.getPage("logoutresponse.txt", pageVariables));
+        JSONObject json = new JSONObject();
+        json.put("status", 200);
+        String name =  accountService.userSession(request.getRequestedSessionId());
+        if(name != ""){
+            json.put("login", name);
+            json.put("logout_status", accountService.removeSeassions(request.getSession().getId()));
+            json.put("error_message", "correct");
+        } else {
+            json.put("login", "anonim");
+            json.put("logout_status", false);
+            json.put("error_message", "incorrect");
+        }
+        response.getWriter().println(json);
     }
-
 }

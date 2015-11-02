@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by alla on 25.10.15.
  */
-/*
+
     public class LogoutServletTest {
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
@@ -58,4 +58,4 @@ import static org.mockito.Mockito.when;
         assertEquals("testDoGetSuccess(). Wrong logOut status", false, obj.get("logout_status"));
         assertEquals("testDoGetSuccess(). Wrong error message", "incorrect", obj.get("error_message"));
     }
-}*/
+}

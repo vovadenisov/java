@@ -55,7 +55,7 @@ public class SignUpServlet extends HttpServlet {
         response.setContentType("application/json");
         System.out.println(json.toJSONString());
         response.getWriter().println(json);
-      //  response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));
+        //  response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));
 
     }
 

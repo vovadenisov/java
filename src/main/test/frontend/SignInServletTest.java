@@ -63,7 +63,7 @@ public class SignInServletTest {
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(accountService).getCurrentUser(request.getSession().getId());
         JSONObject obj = new JSONObject(stringWriter.toString());
-            assertEquals("username", username, obj.get("login"));
+        assertEquals("username", username, obj.get("login"));
         assertEquals("password", password, obj.get("password"));
         assertEquals("username", 200, obj.get("status"));
         assertEquals("username", false, obj.get("login_status"));

@@ -13,7 +13,6 @@ public class UserProfile {
         this.email = email;
         this.id = id;
     }
-
     public Integer getId(){return id;}
 
     public String getLogin() {

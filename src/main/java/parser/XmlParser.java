@@ -2,6 +2,8 @@ package parser;
 
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.*;
+
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import reflection.Reflection;
@@ -11,20 +13,22 @@ import java.lang.reflect.Field;
  */
 public class XmlParser extends DefaultHandler{
         private String thisElement = "";
-        private Map<String, String> fields;
+       // private Map<String, Object> fields;
+        private ArrayList<Object> fields;
         private Object object;
-        public Map<String, String> getParam(){
+        public ArrayList<Object> getParam(){
             return fields;
         }
         public Object getObject(){ return object;}
         @Override
         public void startDocument() throws SAXException
         {
-            fields = new HashMap<>();
+            fields = new ArrayList<>();
         }
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
         {
+
             if(qName.equals("class")){
                 String className = attributes.getValue(0);
                 object = Reflection.createObject(className);
@@ -44,6 +48,7 @@ public class XmlParser extends DefaultHandler{
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException
         {
+            fields.add(object);
             thisElement = "";
         }
         @Override

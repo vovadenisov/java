@@ -8,7 +8,7 @@ public class Reflection {
     public static Object createObject(String className) {
         try {
             Constructor c = Class.forName(className).getConstructor(String.class, String.class, String.class, Integer.class);
-            Object object = c.newInstance("a", "a", "a", 1);
+            Object object = c.newInstance("", "", "", 1);
             return object;
         } catch (Exception e) {
             e.printStackTrace();

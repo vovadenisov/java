@@ -1,48 +1,55 @@
 package main;
 
-import junit.framework.TestCase;
-import java.util.*;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import com.sun.tools.javac.util.StringUtils;
-/**
- * Created by alla on 01.11.15.
- */
-public class RoomTest extends TestCase {
-    private Room room;
 
-    @Before
-    public void initialization() throws Exception {
-        room = new Room();
+import static org.junit.Assert.*;
+
+/**
+ * Created by alla on 02.11.15.
+ */
+public class RoomTest {
+
+    @Test
+    public void testSetStartTime() throws Exception {
+
     }
 
+    @Test
+    public void testIsFinish() throws Exception {
 
+    }
+
+    @Test
     public void testIncrimentScore() throws Exception {
 
     }
 
+    @Test
     public void testGetTeamUser() throws Exception {
 
     }
 
+    @Test
     public void testAddTeam() throws Exception {
 
     }
 
+    @Test
     public void testGetTeams() throws Exception {
 
     }
 
+    @Test
     public void testGetUsers() throws Exception {
 
     }
 
+    @Test
     public void testGetMyTeamUsers() throws Exception {
 
     }
 
+    @Test
     public void testGetEnemyTeamUsers() throws Exception {
 
     }

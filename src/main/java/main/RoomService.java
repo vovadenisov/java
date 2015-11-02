@@ -20,13 +20,20 @@ public class RoomService {
         return newRoom.hashCode();
     }
 
+    public void pushEvent(String event, UserProfile user){
+        if (event == "push"){
+            Integer id = getRoomWithUser(user);
+            rooms.get(id).addEvent("push", user);
+        }
+    }
+
     public Room getRoom(Integer id){
         return rooms.get(id);
     }
 
     public Boolean userInRoom(UserProfile user){
         for (Map.Entry<Integer, Room> room : rooms.entrySet()) {
-            if (room.getValue().getUsers().contains(user)) {
+            if (room.getValue().getUsers().contains(user) && room.getValue().getStatus()) {
                 return true;
             }
         }
@@ -37,7 +44,7 @@ public class RoomService {
 
     public Integer getRoomWithUser(UserProfile user){
         for (Map.Entry<Integer, Room> room : rooms.entrySet()) {
-            if (room.getValue().getUsers().contains(user)) {
+            if (room.getValue().getUsers().contains(user) && room.getValue().getStatus()) {
                 return room.getKey();
             }
         }

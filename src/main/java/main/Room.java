@@ -73,7 +73,11 @@ public class Room {
 
 
     public Set<Team> getTeams(){
-        return (Set<Team>)teams.values();
+        Set<Team> valueSet = new HashSet<Team>();
+        for(Integer team : teams.keySet()){
+            valueSet.add(teams.get(team));
+        }
+        return valueSet;
     }
 
     public Set<UserProfile> getUsers(){

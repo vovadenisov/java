@@ -38,7 +38,6 @@ public class SignUpServlet extends HttpServlet {
             json.put("password", password == null ? "" : password);
             json.put("status", 200);
             json.put("login_status", "true");
-            System.out.println("New user created name: " + name);
 
         } else {
             pageVariables.put("name", name == null ? "" : name);
@@ -49,11 +48,9 @@ public class SignUpServlet extends HttpServlet {
             json.put("password", password == null ? "" : password);
             json.put("status", 200);
             json.put("login_status", "false");
-            System.out.println("User with name: " + name + " already exists");
         }
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
-        System.out.println(json.toJSONString());
         response.getWriter().println(json);
         //  response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));
 
@@ -66,7 +63,6 @@ public class SignUpServlet extends HttpServlet {
         pageVariables.put("signUpStatus", "");
         response.setStatus(HttpServletResponse.SC_OK);
         if (accountService.checkSeassions(request.getSession().getId())) {
-            System.out.println("tut");
             UserProfile userProfile = accountService.getCurrentUser(request.getSession().getId());
             String name = userProfile.getLogin();
             String password = userProfile.getPassword();

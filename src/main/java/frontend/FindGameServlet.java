@@ -75,7 +75,6 @@ public class FindGameServlet extends HttpServlet {
             //если юзер авторизован, то добавить его в список игроков
             response.setStatus(HttpServletResponse.SC_OK);
             Map<String, Object> pageVariables = new HashMap<>();
-            System.out.println("post");
             //получаем юзера
             UserProfile userProfile = accountService.getCurrentUser(request.getSession().getId());
             //добавляем юзера в игроков

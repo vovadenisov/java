@@ -35,6 +35,9 @@ public class Main {
 
 
         accountService.addUser("Admin", "1234", "admin@mail.ru");
+        accountService.addUser("aaa", "12345", "aaa@mail.ru");
+        accountService.addUser("bbb", "12345", "bbb@mail.ru");
+
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new SignInServlet(accountService)), SignInServlet.SIGNIN_PAGE_URL );
         context.addServlet(new ServletHolder(new SignUpServlet(accountService)), SignUpServlet.SIGNUP_PAGE_URL );

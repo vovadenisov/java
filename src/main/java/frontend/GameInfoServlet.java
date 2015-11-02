@@ -43,11 +43,12 @@ public class GameInfoServlet extends HttpServlet {
             for (UserProfile user : enemy_user) {
                 json.put("id", user.getId());
                 json.put("name", user.getLogin());
-                user_list.add(json);
+                user_list.add(json.clone());
                 json.clear();
             }
             json.put("users",user_list);
             json.put("room_id", room_id);
+            response.getWriter().println(json);
         }
         else{
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);

@@ -15,18 +15,7 @@ public class UsersReadyToGameService {
     }
 
     public void addUserToReady(UserProfile user){
-
-        System.out.println(users.hashCode());
-        System.out.println("addUserReady");
-        for (UserProfile new_user : users){
-            System.out.println(new_user.getLogin());
-        }
-        System.out.println("addUser");
         this.users.add(user);
-        System.out.println("afterUserAdd");
-        for (UserProfile new_user : users){
-            System.out.println(new_user.getLogin());
-        }
     }
 
     public Set<UserProfile> getUserReady(){

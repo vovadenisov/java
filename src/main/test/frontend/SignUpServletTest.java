@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by alla on 24.10.15.
  */
+
 /**
 public class SignUpServletTest {
     private UserProfile testUser;

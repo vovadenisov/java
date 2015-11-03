@@ -54,7 +54,6 @@ public class SignInServlet extends HttpServlet {
         if (accountService.checkUser(name)){
             UserProfile profile = accountService.getUser(name);
             if (!accountService.checkUserlogin(profile)){
-                System.out.println(profile.getPassword());
                 if(profile.getPassword().equals(password)){
                     json.put("login", name == null ? "" : name);
                     json.put("password", password == null ? "" : password);
@@ -63,14 +62,12 @@ public class SignInServlet extends HttpServlet {
                     json.put("error_massage", "");
                     request.setAttribute("user", profile);
                     accountService.addSessions(request.getSession().getId(), profile);
-                    System.out.println("sucsess");
                 }else {
                     json.put("login", name == null ? "" : name);
                     json.put("password", password == null ? "" : password);
                     json.put("status", 200);
                     json.put("login_status", false);
                     json.put("error_massage", "Wrong login/password");
-                    System.out.println("Wrong login/password");
                 }
 
             }else {
@@ -79,7 +76,6 @@ public class SignInServlet extends HttpServlet {
                 json.put("status", 200);
                 json.put("login_status", false);
                 json.put("error_massage", "already logged");
-                System.out.println("already logged");
             }
 
         }else {
@@ -88,10 +84,7 @@ public class SignInServlet extends HttpServlet {
             json.put("status", 200);
             json.put("login_status", false);
             json.put("error_massage", "User with this name does not exist");
-            System.out.println("User with this name does not exist");
         }
-        System.out.println("post");
-        System.out.println(json.toJSONString());
         response.getWriter().println(json);
     }
 }

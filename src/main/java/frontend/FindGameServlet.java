@@ -33,7 +33,6 @@ public class FindGameServlet extends HttpServlet {
         //если юзера нет
         if(!accountService.checkSeassions(request.getSession().getId())) {
             response.setStatus(HttpServletResponse.SC_FOUND);
-            response.setHeader("Location", SignInServlet.SIGNIN_PAGE_URL);
         }
         else {
             if (request.getParameter("is_game") == null) {
@@ -75,7 +74,6 @@ public class FindGameServlet extends HttpServlet {
             //если юзер авторизован, то добавить его в список игроков
             response.setStatus(HttpServletResponse.SC_OK);
             Map<String, Object> pageVariables = new HashMap<>();
-            System.out.println("post");
             //получаем юзера
             UserProfile userProfile = accountService.getCurrentUser(request.getSession().getId());
             //добавляем юзера в игроков

@@ -1,5 +1,6 @@
 package main;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -8,20 +9,10 @@ import static org.junit.Assert.*;
  * Created by alla on 02.11.15.
  */
 public class RoomTest {
-
-    @Test
-    public void testSetStartTime() throws Exception {
-
-    }
-
-    @Test
-    public void testIsFinish() throws Exception {
-
-    }
-
-    @Test
-    public void testIncrimentScore() throws Exception {
-
+    private Room room;
+    @Before
+    public void initialization() throws Exception {
+        room = new Room();
     }
 
     @Test

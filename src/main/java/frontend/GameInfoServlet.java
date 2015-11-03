@@ -34,7 +34,7 @@ public class GameInfoServlet extends HttpServlet {
                       HttpServletResponse response) throws ServletException, IOException {
         UserProfile current_user = accountService.getCurrentUser(request.getSession().getId());
         response.setContentType("application/json");
-        if (roomService.userInRoom(current_user)){
+        if (current_user != null && roomService.userInRoom(current_user)){
             response.setStatus(HttpServletResponse.SC_OK);
             Integer room_id = roomService.getRoomWithUser(current_user);
             Set<UserProfile> enemy_user = roomService.getRoom(room_id).getEnemyTeamUsers(current_user);

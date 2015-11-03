@@ -9,19 +9,14 @@ import java.util.Set;
  */
 public class Team {
     private Integer teamSize;
-    private static Integer minSize = 2;
+    private static Integer minSize = 1;
     private Set<UserProfile> members = new HashSet<>();
 
     public void setTeamSize(Integer size){
         teamSize = size;
     }
     public Integer getTeamSize(){
-        if (teamSize != null){
-            return teamSize;
-        }
-        else{
-            return minSize;
-        }
+        return teamSize;
     }
     public Boolean addMembers(UserProfile member){
         if (members.size() < teamSize) {

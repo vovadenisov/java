@@ -46,7 +46,6 @@ public class GetReadyUserServlet extends HttpServlet {
             JSONObject user_object = new JSONObject();
             user_object.put("id",user.getId());
             user_object.put("name",user.getLogin());
-            System.out.println(user_object);
             user_login_list.add(user_object.clone());
             user_object.clear();
         }

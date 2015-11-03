@@ -40,9 +40,7 @@ public class StartNewGame extends HttpServlet {
                 UserProfile current_user = accountService.getCurrentUser(request.getSession().getId());
                 UserProfile invite_user = accountService.getUser(user_name);
                 Team current_user_team = new Team();
-                current_user_team.setTeamSize(1);
                 Team invite_user_team = new Team();
-                invite_user_team.setTeamSize(1);
                 if (current_user_team.addMembers(current_user) && invite_user_team.addMembers(invite_user)) {
                     Room game_room = new Room();
                     if (game_room.addTeam(current_user_team) && game_room.addTeam(invite_user_team)) {

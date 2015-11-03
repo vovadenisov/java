@@ -28,15 +28,13 @@ public class Main {
         System.out.append("Starting at port: ").append(portString).append('\n');
         XMLReader xmlReader = new XMLReader();
         UserProfile Admin = (UserProfile)xmlReader.readXML("data/some.xml");
-        System.out.println(Admin.getLogin());
-        System.out.println(Admin.getEmail());
-        System.out.println(Admin.getPassword());
-        System.out.println(Admin.getId());
+        UserProfile User = (UserProfile)xmlReader.readXML("data/user.xml");
         AccountService accountService = new AccountService();
         RoomService roomService = new RoomService();
         UsersReadyToGameService usersReadyToGameService = new UsersReadyToGameService();
 
         accountService.addUser(Admin.getLogin(), Admin.getPassword(), Admin.getEmail());
+        accountService.addUser(User.getLogin(), User.getPassword(), User.getEmail());
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new SignInServlet(accountService)), SignInServlet.SIGNIN_PAGE_URL );
         context.addServlet(new ServletHolder(new SignUpServlet(accountService)), SignUpServlet.SIGNUP_PAGE_URL );

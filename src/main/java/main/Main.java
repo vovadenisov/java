@@ -10,6 +10,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import parser.ConfigParser;
 import parser.XMLReader;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.Map;
@@ -27,16 +28,13 @@ public class Main {
         int port = Integer.valueOf(portString);
         System.out.append("Starting at port: ").append(portString).append('\n');
         XMLReader xmlReader = new XMLReader();
-        UserProfile Admin = (UserProfile)xmlReader.readXML("data/some.xml");
-        System.out.println(Admin.getLogin());
-        System.out.println(Admin.getEmail());
-        System.out.println(Admin.getPassword());
-        System.out.println(Admin.getId());
+        UserProfile Admin = (UserProfile)xmlReader.readXML("data" + File.separator +  "some.xml");
+        UserProfile User = (UserProfile)xmlReader.readXML("data" + File.separator + "user.xml");
         AccountService accountService = new AccountService();
         RoomService roomService = new RoomService();
         UsersReadyToGameService usersReadyToGameService = new UsersReadyToGameService();
-
         accountService.addUser(Admin.getLogin(), Admin.getPassword(), Admin.getEmail());
+        accountService.addUser(User.getLogin(), User.getPassword(), User.getEmail());
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new SignInServlet(accountService)), SignInServlet.SIGNIN_PAGE_URL );
         context.addServlet(new ServletHolder(new SignUpServlet(accountService)), SignUpServlet.SIGNUP_PAGE_URL );
@@ -48,7 +46,6 @@ public class Main {
         context.addServlet(new ServletHolder(new StartNewGame(usersReadyToGameService, accountService, roomService)), StartNewGame.INVITE_URL);
         context.addServlet(new ServletHolder(new GameInfoServlet(accountService, usersReadyToGameService, roomService)), GameInfoServlet.GAME_INFO_URL);
         context.addServlet(new ServletHolder(new IAmServlet(accountService)), IAmServlet.I_AM_URL );
-
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
         resource_handler.setResourceBase("public_html");

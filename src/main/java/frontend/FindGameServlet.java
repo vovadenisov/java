@@ -33,7 +33,6 @@ public class FindGameServlet extends HttpServlet {
         //если юзера нет
         if(!accountService.checkSeassions(request.getSession().getId())) {
             response.setStatus(HttpServletResponse.SC_FOUND);
-            response.setHeader("Location", SignInServlet.SIGNIN_PAGE_URL);
         }
         else {
             if (request.getParameter("is_game") == null) {

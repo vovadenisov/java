@@ -2,6 +2,8 @@ package frontend;
 
 import main.AccountService;
 import main.UserProfile;
+import org.json.JSONObject;
+import templater.PageGenerator;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,46 +43,8 @@ public class FindGameServletTest {
         findGameServlet = new FindGameServlet(accountService, usersReadyToGameService, roomService);
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
+        testUser = new UserProfile(username, password, email, id);
     }
-
-    /*
-     @Override
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-        //если юзера нет
-        if(!accountService.checkSeassions(request.getSession().getId())) {
-            response.setStatus(HttpServletResponse.SC_FOUND);
-            response.setHeader("Location", SignInServlet.SIGNIN_PAGE_URL);
-        }
-        else {
-            if (request.getParameter("is_game") == null) {
-                Map<String, Object> pageVariables = new HashMap<>();
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().println(PageGenerator.getPage("find_list.html", pageVariables));
-            }
-            if (request.getParameter("is_game") != null){
-                UserProfile current_user = accountService.getCurrentUser(request.getSession().getId());
-                Boolean find = false;
-                JSONObject json = new JSONObject();
-                for (int counter = 0; counter < 10; counter++){
-                    if (roomService.userInRoom(current_user)){
-                        response.setStatus(HttpServletResponse.SC_OK);
-                        json.put("game_status",1);
-                        response.getWriter().println(json);
-                        find = true;
-                        break;
-                    }
-                    Time.sleep(1000);
-                }
-                if (!find){
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    json.put("game_status",0);
-                    response.getWriter().println(json);
-                }
-            }
-        }
-    }
-     */
     @Test
     public void testDoGetAnonim() throws Exception {
         when(accountService.checkSeassions(request.getSession().getId())).thenReturn(false);
@@ -90,8 +54,45 @@ public class FindGameServletTest {
     }
 
     @Test
-    public void testDoPost() throws Exception {
+    public void testDoGetIsGameUserInRoomTrue() throws Exception {
+        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(true);
+        when(request.getParameter("is_game")).thenReturn("game");
+        when(accountService.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
+        when(roomService.userInRoom(testUser)).thenReturn(true);
+        findGameServlet.doGet(request, response);
+        verify(response, never()).setStatus(HttpServletResponse.SC_FOUND);
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+        JSONObject obj = new JSONObject(stringWriter.toString());
+        assertEquals("game_status", 1, obj.get("game_status"));
+    }
+    @Test
+    public void testDoGetIsGameUserInRoomFalse() throws Exception {
+        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(true);
+        when(request.getParameter("is_game")).thenReturn("game");
+        when(accountService.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
+        when(roomService.userInRoom(testUser)).thenReturn(false);
+        findGameServlet.doGet(request, response);
+        verify(response, never()).setStatus(HttpServletResponse.SC_FOUND);
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+        JSONObject obj = new JSONObject(stringWriter.toString());
+        assertEquals("game_status", 0, obj.get("game_status"));
+    }
+    @Test
+    public void testDoPostAnonim() throws Exception {
+        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(false);
+        findGameServlet.doPost(request, response);
+        verify(response).setHeader("location", SignInServlet.SIGNIN_PAGE_URL);
+        verify(response, never()).setStatus(HttpServletResponse.SC_OK);
+    }
 
-
+    @Test
+    public void testDoPostSuccsess() throws Exception {
+        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(true);
+        when(accountService.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
+        findGameServlet.doPost(request, response);
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+        verify(usersReadyToGameService).addUserToReady(testUser);
+        JSONObject obj = new JSONObject(stringWriter.toString());
+        assertEquals("status", "OK", obj.get("status"));
     }
 }

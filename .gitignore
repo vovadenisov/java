@@ -7,3 +7,6 @@
 .vagrant/
 vagrantfile
 tp_java.xml*
+/src/main/java/cfg
+/src/main/java/data
+/src/main/java/public_html

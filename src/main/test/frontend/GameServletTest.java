@@ -111,9 +111,8 @@ public class GameServletTest {
     public void testDoGetRoomExistStartExist() throws Exception {
         when(request.getParameter("room")).thenReturn("1");
         when(request.getParameter("start")).thenReturn("start");
+        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(true);
         gameServlet.doGet(request, response);
         verify(response).setStatus(HttpServletResponse.SC_OK);
-        verify(accountService).getCurrentUser(request.getSession().getId());
-
     }
 }

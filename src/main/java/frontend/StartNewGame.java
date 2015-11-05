@@ -42,8 +42,8 @@ public class StartNewGame extends HttpServlet {
                 Team current_user_team = new Team();
                 Team invite_user_team = new Team();
                 if (current_user_team.addMembers(current_user) && invite_user_team.addMembers(invite_user)) {
-                    Room game_room = new Room();
-                    if (game_room.addTeam(current_user_team) && game_room.addTeam(invite_user_team)) {
+                    Room game_room = new Room(current_user_team);
+                    if (game_room.addTeam(invite_user_team)) {
                         roomService.putRoom(game_room);
                         json.put("game_status", true);
                         usersReadyToGameService.popUserReady(invite_user);

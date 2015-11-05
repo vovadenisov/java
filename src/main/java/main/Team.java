@@ -2,6 +2,7 @@ package main;
 
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -32,4 +33,5 @@ public class Team {
     public Set<UserProfile> getMembers(){
         return members;
     }
+
 }

@@ -12,6 +12,12 @@ public class Room {
     private Boolean status = true;
     private Team winer = null;
 
+    public Room(Team team){
+        Score score = new Score(team);
+        teams.put(team.hashCode(), team);
+        this.score.add(score);
+    }
+
     public boolean getStatus(){
         return status;
     }
@@ -27,11 +33,12 @@ public class Room {
                 for( Team team : getTeams()){
                     if (team.getMembers().contains(user)){
                         winer = team;
+                        return true;
                     }
                 }
             }
         }
-        return true;
+        return false;
     }
 
 
@@ -63,6 +70,11 @@ public class Room {
     }
 
     public boolean addTeam(Team newTeam){
+        for(UserProfile user : newTeam.getMembers()){
+            if(this.getUsers().contains(user)){
+                return false;
+            }
+        }
         if (teams.size() < 2) {
             teams.put(newTeam.hashCode(), newTeam);
             return true;

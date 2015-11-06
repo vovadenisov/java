@@ -5,7 +5,9 @@ import org.junit.Test;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
@@ -17,6 +19,8 @@ public class RoomTest {
     private Room room;
     private UserProfile testUser;
     private Team team;
+    private Team team2;
+    private UserProfile testUser2;
     private Score score;
     private final String username = "Test";
     private final String password = "test_password";
@@ -31,6 +35,8 @@ public class RoomTest {
         room = new Room(team);
         room.addTeam(team);
         score = new Score(team);
+        team2 = new Team();
+        testUser2 = new UserProfile("username", "pass", "email", 1);
     }
 
     @Test
@@ -58,30 +64,62 @@ public class RoomTest {
     }
     @Test
     public void testAddTeamFalse() throws Exception {
-        Team team2 = new Team();
         team2.addMembers(testUser);
         assertFalse(room.addTeam(team2));
     }
     @Test
     public void testAddTeamTrue() throws Exception {
-        Team team2 = new Team();
-        UserProfile testUser2 = new UserProfile("username", "pass", "email", 1);
         team2.addMembers(testUser2);
         assertTrue(room.addTeam(team2));
     }
 
     @Test
     public void testGetTeams() throws Exception {
-
+        Set<Team> expectedSet = new HashSet<Team>();
+        expectedSet.add(team);
+        int expectedSize = expectedSet.size();
+        assertEquals(expectedSize, room.getTeams().size());
+        assertArrayEquals(expectedSet.toArray(), room.getTeams().toArray());
+        team2.addMembers(testUser2);
+        room.addTeam(team2);
+        expectedSet.add(team2);
+        expectedSize = expectedSet.size();
+        assertEquals(expectedSize, room.getTeams().size());
+        assertArrayEquals(expectedSet.toArray(), room.getTeams().toArray());
     }
 
     @Test
     public void testGetUsers() throws Exception {
-
+        Set<UserProfile> expectedUsers = new HashSet<>();
+        expectedUsers.add(testUser);
+        assertArrayEquals(expectedUsers.toArray(), room.getUsers().toArray());
+        team2.addMembers(testUser2);
+        room.addTeam(team2);
+        expectedUsers.add(testUser2);
+        assertArrayEquals(expectedUsers.toArray(), room.getUsers().toArray());
     }
 
     @Test
     public void testGetMyTeamUsers() throws Exception {
+        Set<UserProfile> expectedSet = new HashSet<>();
+        expectedSet.add(testUser);
+        team2.addMembers(testUser2);
+        room.addTeam(team2);
+        assertArrayEquals(expectedSet.toArray(), room.getMyTeamUsers(testUser).toArray());
+        expectedSet.remove(testUser);
+        expectedSet.add(testUser2);
+        assertArrayEquals(expectedSet.toArray(), room.getMyTeamUsers(testUser2).toArray());
+    }
 
+    @Test
+    public void testGetEnemyTeamUsers() throws Exception {
+        Set<UserProfile> expectedSet = new HashSet<>();
+        expectedSet.add(testUser);
+        team2.addMembers(testUser2);
+        room.addTeam(team2);
+        assertArrayEquals(expectedSet.toArray(), room.getEnemyTeamUsers(testUser2).toArray());
+        expectedSet.remove(testUser);
+        expectedSet.add(testUser2);
+        assertArrayEquals(expectedSet.toArray(), room.getEnemyTeamUsers(testUser).toArray());
     }
 }

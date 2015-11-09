@@ -21,9 +21,11 @@ public class RoomService {
     }
 
     public Boolean pushEvent(String event, UserProfile user, Integer id){
-        if (event == "push"){
-            rooms.get(id).addEvent("push", user);
-            return true;
+        if (!rooms.isEmpty()) {
+            if (event == "push") {
+                rooms.get(id).addEvent("push", user);
+                return true;
+            }
         }
         return false;
     }

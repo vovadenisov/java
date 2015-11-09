@@ -20,10 +20,12 @@ public class RoomService {
         return newRoom.hashCode();
     }
 
-    public void pushEvent(String event, UserProfile user, Integer id){
+    public Boolean pushEvent(String event, UserProfile user, Integer id){
         if (event == "push"){
             rooms.get(id).addEvent("push", user);
+            return true;
         }
+        return false;
     }
 
     public Room getRoom(Integer id){

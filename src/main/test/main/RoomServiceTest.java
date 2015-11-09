@@ -1,15 +1,11 @@
 package main;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import org.junit.Test;
-import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
-import javax.servlet.http.HttpSession;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 
 /**
@@ -35,5 +31,10 @@ public class RoomServiceTest {
         Integer response_not_added = -1;
         assertNotNull("testPutRoom()", roomService.putRoom(room));
         assertEquals("testPutRoom()", response_not_added, roomService.putRoom(room));
+    }
+
+    @Test
+    public void testPushEvent() throws Exception{
+
     }
 }

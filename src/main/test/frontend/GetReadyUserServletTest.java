@@ -1,6 +1,8 @@
 package frontend;
 
 import main.AccountService;
+import main.UserProfile;
+import main.UsersReadyToGameService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,14 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import main.UserProfile;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
-
 import java.util.HashSet;
 import java.util.Set;
-import main.UsersReadyToGameService;
+
+import static org.mockito.Mockito.*;
+
+//import org.json.simple.JSONArray;
+
 /**
  * Created by alla on 02.11.15.
  */
@@ -45,9 +46,27 @@ public class GetReadyUserServletTest {
     }
 
     @Test
-    public void testDoGet() throws Exception {
+    public void testDoGetAnonimus() throws Exception {
+        users_ready.add(testUser);
+        when(usersReadyToGameService.getUserReady()).thenReturn(users_ready);
+        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(false);
+        getReadyUserServlet.doGet(request, response);
+        verify(response).setStatus(HttpServletResponse.SC_FORBIDDEN);
+        verify(response, never()).setStatus(HttpServletResponse.SC_OK);
+
+    }
+
+    @Test
+    public void testDo() throws Exception {
         users_ready.add(testUser);
         when(usersReadyToGameService.getUserReady()).thenReturn(users_ready);
         when(accountService.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
+        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(true);
+        getReadyUserServlet.doGet(request, response);
+        verify(response, never()).setStatus(HttpServletResponse.SC_FORBIDDEN);
+        verify(response).setStatus(HttpServletResponse.SC_OK);
+        verify(response).setContentType("application/json");
+
     }
+
 }

@@ -33,7 +33,6 @@ public class GameServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
-        System.out.println("in_game");
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
         JSONObject json = new JSONObject();
@@ -51,9 +50,6 @@ public class GameServlet extends HttpServlet {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 } else {
                     String room_id = request.getParameter("room_id");
-                    System.out.println(room_id);
-                    System.out.println("to int");
-                    System.out.println(Integer.parseInt(room_id));
                     JSONArray winners_list = new JSONArray();
                     if (!roomService.getRoom(Integer.parseInt(room_id)).getStatus()) {
                         for (UserProfile users : roomService.getRoom(Integer.parseInt(room_id)).getWiner().getMembers()) {

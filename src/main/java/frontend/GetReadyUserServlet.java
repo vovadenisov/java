@@ -32,26 +32,30 @@ public class GetReadyUserServlet extends HttpServlet {
         //получаем юзеров, готовых к игре
         Set<UserProfile> users_ready = usersReadyToGameService.getUserReady();
 
-        //текущий юзер
-        UserProfile current_user = accountService.getCurrentUser(request.getSession().getId());
+        if (accountService.checkSeassions(request.getSession().getId())) {
+            UserProfile current_user = accountService.getCurrentUser(request.getSession().getId());
+            //убрать из юзеров, готовых к игре самого юзера
+            users_ready.remove(current_user);
+            //текущий юзер
 
-        //убрать из юзеров, готовых к игре самого юзера
-        users_ready.remove(current_user);
 
-
-        //контейнер для юзеров, которых будем отдавать
-        JSONArray user_login_list = new JSONArray();
-        //наполнение контейнера
-        for (UserProfile user : users_ready) {
-            JSONObject user_object = new JSONObject();
-            user_object.put("id",user.getId());
-            user_object.put("name",user.getLogin());
-            user_login_list.add(user_object.clone());
-            user_object.clear();
+            //контейнер для юзеров, которых будем отдавать
+            JSONArray user_login_list = new JSONArray();
+            //наполнение контейнера
+            for (UserProfile user : users_ready) {
+                JSONObject user_object = new JSONObject();
+                user_object.put("id", user.getId());
+                user_object.put("name", user.getLogin());
+                user_login_list.add(user_object.clone());
+                user_object.clear();
+            }
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
+            response.getWriter().println(user_login_list);
         }
-        response.setContentType("application/json");
-        response.getWriter().println(user_login_list);
-
+        else{
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        }
     }
 
 }

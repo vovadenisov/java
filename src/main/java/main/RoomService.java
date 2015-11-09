@@ -54,19 +54,4 @@ public class RoomService {
         return -1;
     }
 
-//    public Set<UserProfile> getAllUserInGame(){
-//        if (isChenged){
-//            isChenged = false;
-//            userInGame = allUserInGame();
-//        }
-//        return userInGame;
-//    }
-
-//    private Set<UserProfile> allUserInGame(){
-//        Set<UserProfile> allUsers = new HashSet<>();
-//        for(Map.Entry<Integer, Room> entry : rooms.entrySet()) {
-//            allUsers.addAll(entry.getValue().getUsers());
-//        }
-//        return allUsers;
-//    }
 }

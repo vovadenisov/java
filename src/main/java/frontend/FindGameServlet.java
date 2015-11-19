@@ -1,7 +1,7 @@
 package frontend;
 
 import main.*;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -30,7 +30,6 @@ public class FindGameServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        //если юзера нет
         if(!accountService.checkSeassions(request.getSession().getId())) {
             response.setStatus(HttpServletResponse.SC_FOUND);
         }
@@ -41,11 +40,11 @@ public class FindGameServlet extends HttpServlet {
                 response.getWriter().println(PageGenerator.getPage("find_list.html", pageVariables));
             }
             if (request.getParameter("is_game") != null){
-                UserProfile current_user = accountService.getCurrentUser(request.getSession().getId());
+                UserProfile currentUser = accountService.getCurrentUser(request.getSession().getId());
                 Boolean find = false;
                 JSONObject json = new JSONObject();
                 for (int counter = 0; counter < 10; counter++){
-                    if (roomService.userInRoom(current_user)){
+                    if (roomService.userInRoom(currentUser)){
                         response.setStatus(HttpServletResponse.SC_OK);
                         json.put("game_status",1);
                         response.getWriter().println(json);
@@ -66,17 +65,13 @@ public class FindGameServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        //если юзера нет
         if(!accountService.checkSeassions(request.getSession().getId())) {
             response.setHeader("location", SignInServlet.SIGNIN_PAGE_URL);
         }
         else {
-            //если юзер авторизован, то добавить его в список игроков
             response.setStatus(HttpServletResponse.SC_OK);
             Map<String, Object> pageVariables = new HashMap<>();
-            //получаем юзера
             UserProfile userProfile = accountService.getCurrentUser(request.getSession().getId());
-            //добавляем юзера в игроков
             usersReadyToGameService.addUserToReady(userProfile);
             JSONObject json = new JSONObject();
             json.put("status", "OK");

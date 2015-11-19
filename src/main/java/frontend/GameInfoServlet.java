@@ -3,9 +3,8 @@ package frontend;
 import main.AccountService;
 import main.RoomService;
 import main.UserProfile;
-import main.UsersReadyToGameService;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,42 +18,37 @@ import java.util.Set;
  */
 public class GameInfoServlet extends HttpServlet {
     private AccountService accountService;
-    private UsersReadyToGameService usersReadyToGameService;
     private RoomService roomService;
     public static final String GAME_INFO_URL = "/api/v1/auth/game_status";
 
-    public GameInfoServlet(AccountService accountService, UsersReadyToGameService usersReadyToGameService, RoomService roomService) {
+    public GameInfoServlet(AccountService accountService, RoomService roomService) {
         this.accountService = accountService;
-        this.usersReadyToGameService = usersReadyToGameService;
         this.roomService = roomService;
     }
 
     @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        UserProfile current_user = accountService.getCurrentUser(request.getSession().getId());
+        UserProfile currentUser = accountService.getCurrentUser(request.getSession().getId());
         response.setContentType("application/json");
-        if (current_user != null && roomService.userInRoom(current_user)){
+        if (currentUser != null && roomService.userInRoom(currentUser)){
             response.setStatus(HttpServletResponse.SC_OK);
-            Integer room_id = roomService.getRoomWithUser(current_user);
-            Set<UserProfile> enemy_user = roomService.getRoom(room_id).getEnemyTeamUsers(current_user);
-            JSONObject json = new JSONObject();
-            JSONArray user_list = new JSONArray();
-            for (UserProfile user : enemy_user) {
-                json.put("id", user.getId());
-                json.put("name", user.getLogin());
-                user_list.add(json.clone());
-                json.clear();
+            Integer roomId = roomService.getRoomWithUser(currentUser);
+            Set<UserProfile> enemyUser = roomService.getRoom(roomId).getEnemyTeamUsers(currentUser);
+            JSONArray userList = new JSONArray();
+            for (UserProfile user : enemyUser) {
+                JSONObject enemyUserJson = new JSONObject();
+                enemyUserJson.put("id", user.getId());
+                enemyUserJson.put("name", user.getLogin());
+                userList.put(enemyUserJson.toString());
             }
-            json.put("users",user_list);
-            json.put("room_id", room_id);
-            response.getWriter().println(json);
+            JSONObject currentUserJson = new JSONObject();
+            currentUserJson.put("users",userList);
+            currentUserJson.put("room_id", roomId);
+            response.getWriter().println(currentUserJson);
         }
         else{
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         }
-        //пустой запрос возвращаем: 200, если игра есть, имя противника, id комнаты
-        //если комнаты нет то 403
-
     }
 }

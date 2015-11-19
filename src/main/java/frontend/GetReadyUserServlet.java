@@ -3,8 +3,8 @@ package frontend;
 import main.AccountService;
 import main.UserProfile;
 import main.UsersReadyToGameService;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -29,29 +29,21 @@ public class GetReadyUserServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
 
-        //получаем юзеров, готовых к игре
-        Set<UserProfile> users_ready = usersReadyToGameService.getUserReady();
+        Set<UserProfile> userReady = usersReadyToGameService.getUserReady();
 
         if (accountService.checkSeassions(request.getSession().getId())) {
-            UserProfile current_user = accountService.getCurrentUser(request.getSession().getId());
-            //убрать из юзеров, готовых к игре самого юзера
-            users_ready.remove(current_user);
-            //текущий юзер
-
-
-            //контейнер для юзеров, которых будем отдавать
-            JSONArray user_login_list = new JSONArray();
-            //наполнение контейнера
-            for (UserProfile user : users_ready) {
-                JSONObject user_object = new JSONObject();
-                user_object.put("id", user.getId());
-                user_object.put("name", user.getLogin());
-                user_login_list.add(user_object.clone());
-                user_object.clear();
+            UserProfile currentUser = accountService.getCurrentUser(request.getSession().getId());
+            userReady.remove(currentUser);
+            JSONArray userLoginList = new JSONArray();
+            for (UserProfile user : userReady) {
+                JSONObject userObject = new JSONObject();
+                userObject.put("id", user.getId());
+                userObject.put("name", user.getLogin());
+                userLoginList.put(userObject);
             }
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");
-            response.getWriter().println(user_login_list);
+            response.getWriter().println(userLoginList);
         }
         else{
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);

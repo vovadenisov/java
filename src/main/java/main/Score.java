@@ -24,9 +24,6 @@ public class Score {
     }
 
     public Boolean isTeam(Team team){
-        if(Objects.equals(team, this.team)) {
-            return true;
-        }
-        return false;
+        return Objects.equals(team, this.team);
     }
 }

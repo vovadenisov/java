@@ -2,27 +2,25 @@ package main;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by usr on 21.10.15.
  */
 public class RoomService {
     private Map<Integer, Room> rooms = new HashMap<>();
-//    private Boolean isChenged = false;
-//    private Set<UserProfile> userInGame = new HashSet<>();
 
     public Integer putRoom(Room newRoom){
         if (rooms.containsValue(newRoom)){
             return -1;
         }
-//        isChenged = true;
         rooms.put(newRoom.hashCode(), newRoom);
         return newRoom.hashCode();
     }
 
     public Boolean pushEvent(String event, UserProfile user, Integer id){
         if (!rooms.isEmpty()) {
-            if (event == "push") {
+            if (Objects.equals(event, "push")) {
                 rooms.get(id).addEvent("push", user);
                 return true;
             }

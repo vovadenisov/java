@@ -2,9 +2,8 @@ package frontend;
 import main.AccountService;
 import main.RoomService;
 import main.UserProfile;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -42,21 +41,21 @@ public class GameServlet extends HttpServlet {
         else{
             UserProfile user = accountService.getCurrentUser(request.getSession().getId());
             if (request.getParameter("push") != null) {
-                String room_id = request.getParameter("room_id");
-                roomService.pushEvent("push", user, Integer.parseInt(room_id));
+                String roomId = request.getParameter("room_id");
+                roomService.pushEvent("push", user, Integer.parseInt(roomId));
             }
             if (Objects.equals(request.getParameter("is_game_progress"), "true")) {
                 if (!accountService.checkSeassions(request.getSession().getId())) {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 } else {
-                    String room_id = request.getParameter("room_id");
-                    JSONArray winners_list = new JSONArray();
-                    if (!roomService.getRoom(Integer.parseInt(room_id)).getStatus()) {
-                        for (UserProfile users : roomService.getRoom(Integer.parseInt(room_id)).getWiner().getMembers()) {
-                            winners_list.add(users.getLogin());
+                    String roomId = request.getParameter("room_id");
+                    JSONArray winnersList = new JSONArray();
+                    if (!roomService.getRoom(Integer.parseInt(roomId)).getStatus()) {
+                        for (UserProfile users : roomService.getRoom(Integer.parseInt(roomId)).getWiner().getMembers()) {
+                            winnersList.put(users.getLogin());
                         }
                         json.put("is_game_progress", false);
-                        json.put("winers", winners_list);
+                        json.put("winers", winnersList);
                     } else {
                         json.put("is_game_progress", true);
                     }
@@ -64,14 +63,5 @@ public class GameServlet extends HttpServlet {
                 }
             }
         }
-    }
-
-    @Override
-    public void doPost(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        JSONArray array = (JSONArray)JSONValue.parse(request.getParameter("notes"));
     }
 }

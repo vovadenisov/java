@@ -13,9 +13,9 @@ public class Room {
     private Team winer = null;
 
     public Room(Team team){
-        Score score = new Score(team);
+        Score teamScore = new Score(team);
         teams.put(team.hashCode(), team);
-        this.score.add(score);
+        this.score.add(teamScore);
     }
 
     public boolean getStatus(){
@@ -53,9 +53,9 @@ public class Room {
     }
 
     public void incrimentScore(Team team){
-        for (Score team_score : score) {
-            if (team_score.isTeam(team)) {
-                team_score.incrementScore();
+        for (Score teamScore : score) {
+            if (teamScore.isTeam(team)) {
+                teamScore.incrementScore();
             }
         }
     }

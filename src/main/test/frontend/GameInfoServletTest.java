@@ -1,10 +1,6 @@
 package frontend;
 
-import main.AccountService;
-import main.RoomService;
-import main.UserProfile;
-import main.UsersReadyToGameService;
-import main.Room;
+import main.*;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
@@ -52,7 +47,7 @@ public class GameInfoServletTest {
     public void initialization() throws Exception {
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
-        gameInfoServlet = new GameInfoServlet(accountService, usersReadyToGameService, roomService);
+        gameInfoServlet = new GameInfoServlet(accountService, roomService);
         testUser = new UserProfile(username, password, email, id);
         enemyUser = new UserProfile(enemyUsername, enemyPassword, enemyEmail, enemyId);
         enemy_user = new HashSet<>();

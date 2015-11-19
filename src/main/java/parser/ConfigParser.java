@@ -8,9 +8,8 @@ import java.util.Properties;
  */
 public class ConfigParser {
     private static final String CONFIG_FILE = "cfg/server.properties";
-    public static String  host;
-    public static String port;
-    private static FileInputStream fis;
+    private static String host;
+    private static String port;
 
     public ConfigParser() throws IOException{
         loadConfig();
@@ -18,20 +17,26 @@ public class ConfigParser {
 
     public static void loadConfig() throws IOException{
         try {
-            fis = new FileInputStream(CONFIG_FILE);
+            FileInputStream fis = new FileInputStream(CONFIG_FILE);
             Properties properties = new Properties();
             properties.load(fis);
             fis.close();
             port = properties.getProperty("port");
             host = properties.getProperty("host");
-        } catch (IOException e){
-            /*
-                printStackTrace () - чтобы печатать информацию относительно исключения,
-                как оно произошло и какой строке кода.
-             */
+        } catch (IOException e) {
             e.printStackTrace();
+            throw e;
         }
     }
+
+    public static void setHost(String host) {
+        ConfigParser.host = host;
+    }
+
+    public static void setPort(String port) {
+        ConfigParser.port = port;
+    }
+
     public String getPort(){ return port;}
     public String getHost() {return host; }
 }

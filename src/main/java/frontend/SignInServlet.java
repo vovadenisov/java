@@ -2,7 +2,7 @@ package frontend;
 
 import main.AccountService;
 import main.UserProfile;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;

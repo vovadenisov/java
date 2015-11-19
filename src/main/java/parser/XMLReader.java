@@ -1,25 +1,17 @@
 package parser;
 
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.*;
+import org.xml.sax.SAXException;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
+
 /**
  * Created by alla on 01.11.15.
  */
 public class XMLReader {
-    public  Object readXML(String fileName) {
+    public  Object readXML(String fileName) throws IOException, SAXException, ParserConfigurationException {
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser parser = factory.newSAXParser();
@@ -29,8 +21,7 @@ public class XMLReader {
         }
         catch (Exception e){
             e.printStackTrace();
+            throw e;
         }
-        return null;
     }
-
 }

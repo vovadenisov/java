@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * Created by alla on 11.11.15.
  */
-@WebServlet(name = "GameWebSocketServlet", urlPatterns = {"/api/v1/auth/gameplay"})
+@WebServlet(name = "GameWebSocketServlet", urlPatterns = {"/api/v1/auth/game"})
 public class GameWebSocketServlet extends WebSocketServlet {
     public static final String GAME_WEB_SOCKET_URL = "/api/v1/auth/gameplay";
     private final static int IDLE_TIME = 60 * 1000;
@@ -32,14 +32,6 @@ public class GameWebSocketServlet extends WebSocketServlet {
         this.gameWebSocketService = gameWebSocketService;
         this.roomService  = roomService;
     }
- /*   public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("gamesoket " + request.getSession().getId());
-        Map<String, Object> pageVariables = new HashMap<>();
-        String name = accountService.getCurrentUser(request.getSession().getId()).getLogin();
-        pageVariables.put("myName", name);
-        response.getWriter().println(PageGenerator.getPage("game_2.html", pageVariables));
-    }*/
     @Override
     public void configure(WebSocketServletFactory factory) {
         System.out.println("GameWebSocketServlet configure");

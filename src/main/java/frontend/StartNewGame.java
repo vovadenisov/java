@@ -37,6 +37,7 @@ public class StartNewGame extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         else{
+            System.out.println(user_name + " " + request.getSession().getId());
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");
             JSONObject json = new JSONObject();

@@ -19,7 +19,7 @@ import java.util.HashMap;
  * Created by alla on 01.11.15.
  */
 public class XMLReader {
-    public  Object readXML(String fileName) {
+    public  Object readXML(String fileName) throws Exception{
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser parser = factory.newSAXParser();
@@ -29,8 +29,8 @@ public class XMLReader {
         }
         catch (Exception e){
             e.printStackTrace();
+            throw e;
         }
-        return null;
     }
 
 }

@@ -61,7 +61,9 @@ public class SignInServlet extends HttpServlet {
                     json.put("login_status", true);
                     json.put("error_massage", "");
                     request.setAttribute("user", profile);
+                    System.out.println("sessionSignin" + request.getSession().getId());
                     accountService.addSessions(request.getSession().getId(), profile);
+                    System.out.println(accountService.getSessinonId(profile));
                 }else {
                     json.put("login", name == null ? "" : name);
                     json.put("password", password == null ? "" : password);

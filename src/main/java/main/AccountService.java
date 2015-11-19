@@ -7,8 +7,18 @@ import java.util.Map;
 public class AccountService {
     private Map<String, UserProfile> users = new HashMap<>();
     private Map<String, UserProfile> sessions = new HashMap<>();
-
+    private UserProfile anonim;
+    private static Integer n_anonim = 1;
     @SuppressWarnings("all")
+    private UserProfile getAnonim(String SessionId){
+        String name = "anonim" + String.valueOf(n_anonim);
+        n_anonim = ++n_anonim;
+        String email = name + "@mail.ru";
+        String pass = "12345";
+        addUser(name, pass, email);
+        addSessions(SessionId, getUser(name));
+        return getCurrentUser(SessionId);
+    }
     public boolean checkUser(String userName){
        if(users.containsKey(userName)) {
            return true;
@@ -66,7 +76,10 @@ public class AccountService {
     }
 
     public UserProfile getCurrentUser(String sessionId){
-        return sessions.get(sessionId);
+        if(checkSeassions(sessionId)) {
+            return sessions.get(sessionId);
+        }
+        return null;
     }
 
     public UserProfile getUser(String userName) {
@@ -81,4 +94,5 @@ public class AccountService {
     public UserProfile getSessions(String sessionId) {
         return sessions.get(sessionId);
     }
+
 }

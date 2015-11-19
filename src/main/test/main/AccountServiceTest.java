@@ -123,4 +123,5 @@ public class AccountServiceTest {
         accountService.addSessions(testSession, testUser);
         assertEquals(testUser, accountService.getSessions(testSession));
     }
+
 }

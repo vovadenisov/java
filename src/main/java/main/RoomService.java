@@ -1,5 +1,7 @@
 package main;
 
+import websocket.GameWebSocketService;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,16 +10,23 @@ import java.util.Map;
  */
 public class RoomService {
     private Map<Integer, Room> rooms = new HashMap<>();
-//    private Boolean isChenged = false;
-//    private Set<UserProfile> userInGame = new HashSet<>();
+    private static final int STEP_TIME = 200;
+    private static final int GAME_TIME = 20000;
+    private static final int GAME_RAUND = 10000;
+    private static final int USER_STEP_TIME = 100000;
+    private int numberOfLevels = 1;
+    private GameWebSocketService gameWebSocketService;
+    private Team waiter;
 
     public Integer putRoom(Room newRoom){
         if (rooms.containsValue(newRoom)){
             return -1;
         }
-//        isChenged = true;
         rooms.put(newRoom.hashCode(), newRoom);
         return newRoom.hashCode();
+    }
+    public void removeRoom(Integer roomId){
+        rooms.remove(roomId);
     }
 
     public Boolean pushEvent(String event, UserProfile user, Integer id){
@@ -52,6 +61,33 @@ public class RoomService {
             }
         }
         return -1;
+    }
+    public Team getTeam(UserProfile user){
+        if(userInRoom(user)){
+            Room room = getRoom(getRoomWithUser(user));
+            return room.getTeam(user);
+        }
+        return null;
+    }
+
+    public void Start(){
+        System.out.println("RUN");
+        while (true) {
+            for (Map.Entry<Integer, Room> room : rooms.entrySet()) {
+                if(room.getValue().getGame()) {
+                    System.out.println("The room time :" + room.getValue().getTime());
+                        if(room.getValue().getTime() > GAME_RAUND ){
+                            room.getValue().userStep(room.getValue().getStep() + 1);
+                            if(room.getValue().getLevel()%2 >= numberOfLevels){
+                                room.getValue().endGame();
+                                this.removeRoom(room.getKey());
+                            }
+                        }
+
+                }
+            }
+            Time.sleep(100);
+        }
     }
 
 }

@@ -54,50 +54,6 @@ public class GameServletTest {
         verify(request, never()).getParameter("start");
     }
 
-    /*
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Object> pageVariables = new HashMap<>();
-        System.out.println("in_game");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        JSONObject json = new JSONObject();
-        UserProfile user = accountService.getCurrentUser(request.getSession().getId());
-        if (request.getParameter("push") != null) {
-            String room_id = request.getParameter("room_id");
-            System.out.println(room_id);
-            System.out.println("to int");
-            System.out.println(Integer.parseInt(room_id));
-
-            roomService.pushEvent("push", user, Integer.parseInt(room_id));
-        }
-        if (Objects.equals(request.getParameter("is_game_progress"), "true")){
-            if (!accountService.checkSeassions(request.getSession().getId())){
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            }
-            else {
-                String room_id = request.getParameter("room_id");
-                System.out.println(room_id);
-                System.out.println("to int");
-                System.out.println(Integer.parseInt(room_id));
-                JSONArray winners_list = new JSONArray();
-                if (!roomService.getRoom(Integer.parseInt(room_id)).getStatus()) {
-                    for (UserProfile users : roomService.getRoom(Integer.parseInt(room_id)).getWiner().getMembers()) {
-                        winners_list.add(users.getLogin());
-                    }
-                    json.put("is_game_progress", false);
-                    json.put("winers", winners_list);
-                } else {
-                    json.put("is_game_progress", true);
-                }
-                System.out.println("print");
-                System.out.println(json);
-                response.getWriter().println(json);
-            }
-        }
-    }
-
-     */
     @Test
     public void testDoGetRoomExistNoStart() throws Exception {
         when(request.getParameter("room")).thenReturn("1");

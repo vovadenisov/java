@@ -2,6 +2,7 @@ package frontend;
 
 import main.*;
 import org.json.simple.JSONObject;
+import websocket.GameWebSocketService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,17 +17,21 @@ public class StartNewGame extends HttpServlet {
     private UsersReadyToGameService usersReadyToGameService;
     private AccountService accountService;
     private RoomService roomService;
+    private GameWebSocketService gameWebSocketService;
     public static final String INVITE_URL = "/api/v1/auth/invite";
 
-    public StartNewGame(UsersReadyToGameService usersReadyToGameService, AccountService accountService, RoomService roomService) {
+    public StartNewGame(UsersReadyToGameService usersReadyToGameService, AccountService accountService, RoomService roomService,
+                         GameWebSocketService gameWebSocketService) {
         this.roomService = roomService;
         this.usersReadyToGameService = usersReadyToGameService;
         this.accountService = accountService;
+        this.gameWebSocketService = gameWebSocketService;
     }
 
     @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("StartNewGame");
         String user_name = request.getParameter("user");
         if (user_name == null){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -42,7 +47,7 @@ public class StartNewGame extends HttpServlet {
                 Team current_user_team = new Team();
                 Team invite_user_team = new Team();
                 if (current_user_team.addMembers(current_user) && invite_user_team.addMembers(invite_user)) {
-                    Room game_room = new Room(current_user_team);
+                    Room game_room = new Room(current_user_team, gameWebSocketService);
                     if (game_room.addTeam(invite_user_team)) {
                         roomService.putRoom(game_room);
                         json.put("game_status", true);

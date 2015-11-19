@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import main.UsersReadyToGameService;
 import org.json.JSONObject;
 import main.RoomService;
+import websocket.GameWebSocketService;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -42,13 +43,14 @@ public class StartNewGameTest {
     private final String invitePassword = "invite_password";
     private final String inviteEmail = "invite_email@mail";
     private final Integer inviteId = 2;
+    private final GameWebSocketService gameWebSocketService = mock(GameWebSocketService.class);
 
-    @Before
+   @Before
     public void initialization() throws Exception {
         when(response.getWriter()).thenReturn(writer);
         when(request.getSession()).thenReturn(session);
         testUser = new UserProfile(username, password, email, id);
-        startNewGame = new StartNewGame(usersReadyToGameService, accountService, roomService);
+        startNewGame = new StartNewGame(usersReadyToGameService, accountService, roomService, gameWebSocketService);
     }
     @Test
     public void testDoGetNoUserInRequest() throws Exception {

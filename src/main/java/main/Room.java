@@ -1,21 +1,52 @@
  package main;
 
+import websocket.GameWebSocketService;
+
+import java.sql.Blob;
 import java.util.*;
 
  /**
   * Created by usr on 21.10.15.
   */
 public class Room {
+     private Team winer = null;
     private Map<Integer, Team> teams = new HashMap<>();
+     private GameWebSocketService gameWebSocketService;
     private Set<Score> score = new HashSet<>();
     private long time = 0;
     private Boolean status = true;
-    private Team winer = null;
+     private Boolean game = false;
+     private int level;
+     private int step;
+     private UserProfile first;
+     private UserProfile second;
+     private UserProfile current;
+     public void stepGame(UserProfile user, String data){
+         System.out.println(user.getLogin() + " say " + data);
+         gameWebSocketService.notifyStepGame(user);
+     }
 
-    public Room(Team team){
+     public void stepGameBin(UserProfile user, byte buf[]){
+         System.out.println(user.getLogin() + " say " + buf);
+         gameWebSocketService.notifyStepGameBinary(user, buf);
+     }
+
+     public Boolean getGame(){return game;}
+     public void setGame(Boolean game){this.game = game;}
+
+     public int getStep(){return step;}
+     public void setStep(int step){this.step = step;}
+
+     public int getLevel(){return this.level;}
+     public void setLevel(int level){this.level = level;}
+
+    public Room(Team team, GameWebSocketService gameWebSocketService ){
         Score score = new Score(team);
         teams.put(team.hashCode(), team);
         this.score.add(score);
+        step = 0;
+        level = 0;
+        this.gameWebSocketService = gameWebSocketService;
     }
 
     public boolean getStatus(){
@@ -42,7 +73,7 @@ public class Room {
     }
 
 
-    public void setStartTime (long time){
+    public void setStartTime (){
         Date date = new Date();
         this.time = date.getTime();
     }
@@ -60,14 +91,7 @@ public class Room {
         }
     }
 
-    public Integer getTeamUser(UserProfile user){
-        for (Map.Entry<Integer, Team> teamEntry : teams.entrySet()){
-            if (teamEntry.getValue().getMembers().contains(user)){
-                return teamEntry.getKey();
-            }
-        }
-        return -1;
-    }
+
 
     public boolean addTeam(Team newTeam){
         for(UserProfile user : newTeam.getMembers()){
@@ -83,6 +107,44 @@ public class Room {
     }
 
 
+     public void startGameInRoom() {
+         if(teams.size() == 2 && gameWebSocketService.userSocketsSize() == 2){
+             starGame();
+         }
+     }
+
+     private void starGame() {
+         Team first = (Team)getTeams().toArray()[0];
+         Team second = (Team)getTeams().toArray()[1];
+         this.first = (UserProfile)first.getMembers().toArray()[0];
+         this.second = (UserProfile)second.getMembers().toArray()[0];
+         gameWebSocketService.notifyStartGame(this.first, this.second.getLogin());
+         gameWebSocketService.notifyStartGame(this.second, this.first.getLogin());
+         this.current = this.first;
+         setGame(true);
+         userStep(1);
+         System.out.println(getTime());
+     }
+
+     public void userStep(int step){
+         setStartTime();
+         if( step == getStep()){
+             return;
+         }
+         setStep(step);
+         ++this.level;
+         System.out.println("LEVEL " + level);
+         if(current.equals(first)){
+             current = second;
+         }else {
+             current = first;
+         }
+         currentUser();
+     }
+
+     public void currentUser(){
+         gameWebSocketService.notifyCurrentUser(current);
+     }
 
     public Set<Team> getTeams(){
         Set<Team> valueSet = new HashSet<Team>();
@@ -117,4 +179,21 @@ public class Room {
         }
         return null;
     }
+     public Team getTeam(UserProfile user){
+         for (Map.Entry<Integer, Team> team : teams.entrySet()) {
+             if (team.getValue().checkUser(user)) {
+                 return team.getValue();
+             }
+         }
+         return null;
+     }
+
+     public long getTime(){
+         return new Date().getTime() - time;
+     }
+
+   public void endGame(){
+       gameWebSocketService.notifyGameOver();
+     }
+
 }

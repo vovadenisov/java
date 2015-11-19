@@ -10,6 +10,7 @@ import java.util.Set;
  */
 public class Team {
     private Integer teamSize = 1;
+    private final Integer HashCode = this.hashCode();
     private Set<UserProfile> members = new HashSet<>();
 
     public void setTeamSize(Integer size){
@@ -29,7 +30,9 @@ public class Team {
         }
         return false;
     }
-
+    public boolean checkUser(UserProfile user){
+        return members.contains(user);
+    }
     public Set<UserProfile> getMembers(){
         return members;
     }

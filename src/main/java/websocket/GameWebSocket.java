@@ -44,7 +44,7 @@ public class GameWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) throws IOException{
-        System.out.println("onMessage " + user.getLogin());
+        System.out.println("onMessage " + user.getLogin() + data);
         try {
             session.getRemote().sendString(data);
         }catch (Exception e){

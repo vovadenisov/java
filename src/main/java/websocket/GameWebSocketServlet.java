@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * Created by alla on 11.11.15.
  */
-@WebServlet(name = "GameWebSocketServlet", urlPatterns = {"/api/v1/auth/game"})
+@WebServlet(name = "GameWebSocketServlet", urlPatterns = {"/api/v1/auth/gameplay"})
 public class GameWebSocketServlet extends WebSocketServlet {
     public static final String GAME_WEB_SOCKET_URL = "/api/v1/auth/gameplay";
     private final static int IDLE_TIME = 60 * 1000;

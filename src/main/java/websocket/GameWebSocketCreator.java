@@ -24,8 +24,19 @@ public class GameWebSocketCreator implements WebSocketCreator{
         this.roomService = roomService;
     }
     @Override
-    public Object createWebSocket(ServletUpgradeRequest request, ServletUpgradeResponse response) {
+    public Object createWebSocket(ServletUpgradeRequest request, ServletUpgradeResponse response) throws NullPointerException{
+       // System.out.println("GameWebSocketCreator createWebSocket" + ses);
         String sessionId =request.getHttpServletRequest().getSession().getId();
-        return new GameWebSocket(accountService.getCurrentUser(sessionId), gameWebSocketService, roomService);
+        System.out.println("GameWebSocketCreator createWebSocket" + sessionId);
+        try {
+           UserProfile currentUser =  accountService.getCurrentUser(sessionId);
+            return new GameWebSocket(currentUser, gameWebSocketService, roomService);
+        }catch (NullPointerException e){
+            e.printStackTrace();
+            System.out.println("No user");
+            throw e;
+
+        }
+     //   return new GameWebSocket(accountService.getCurrentUser(sessionId), gameWebSocketService, roomService);
     }
 }

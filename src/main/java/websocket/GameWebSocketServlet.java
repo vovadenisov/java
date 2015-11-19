@@ -32,16 +32,17 @@ public class GameWebSocketServlet extends WebSocketServlet {
         this.gameWebSocketService = gameWebSocketService;
         this.roomService  = roomService;
     }
-    public void doGet(HttpServletRequest request,
+ /*   public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         System.out.println("gamesoket " + request.getSession().getId());
         Map<String, Object> pageVariables = new HashMap<>();
         String name = accountService.getCurrentUser(request.getSession().getId()).getLogin();
         pageVariables.put("myName", name);
         response.getWriter().println(PageGenerator.getPage("game_2.html", pageVariables));
-    }
+    }*/
     @Override
     public void configure(WebSocketServletFactory factory) {
+        System.out.println("GameWebSocketServlet configure");
         factory.getPolicy().setIdleTimeout(IDLE_TIME);
         factory.setCreator(new GameWebSocketCreator(accountService, gameWebSocketService, roomService));
     }

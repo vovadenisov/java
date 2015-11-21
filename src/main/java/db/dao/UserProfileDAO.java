@@ -4,18 +4,17 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 //import db.dataSets.UserDataSet;
-import main.UserProfile;
 import java.sql.SQLException;
 import java.util.List;
-
+import main.UserProfile;
 /**
  * Created by alla on 21.11.15.
  */
-public class UserDataSetDAO {
+public class UserProfileDAO {
 
     private Session session;
 
-    public UserDataSetDAO(Session session) {
+    public UserProfileDAO(Session session) {
         this.session = session;
     }
 
@@ -25,7 +24,7 @@ public class UserDataSetDAO {
     }
 
     public UserProfile read(long id) throws SQLException{
-        return (UserProfile)session.load(UserProfile.class, id);
+        return (UserProfile) session.load(UserProfile.class, id);
     }
 
     public UserProfile readByName(String login) throws SQLException{

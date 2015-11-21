@@ -15,8 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-
-import db.dataSets.UserDataSet;
+import main.UserProfile;
 
 import db.dbServise.DBService;
 /**
@@ -33,36 +32,36 @@ public class Main {
             System.out.append("Starting at port: ").append(portString).append('\n');
             XMLReader xmlReader = new XMLReader();
             AccountService accountService = new AccountService();
-//            try {
-//                UserProfile admin = (UserProfile) xmlReader.readXML("data" + File.separator + "some.xml");
-//                accountService.addUser(admin.getLogin(), admin.getPassword(), admin.getEmail());
-//            }
-//            catch (IOException | ParserConfigurationException | SAXException e) {
-//                e.printStackTrace();
-//                System.out.print("admin not found");
-//            }
-//
-//            try {
-//                UserProfile user = (UserProfile) xmlReader.readXML("data" + File.separator + "user.xml");
-//                accountService.addUser(user.getLogin(), user.getPassword(), user.getEmail());
-//            }
-//            catch (IOException | ParserConfigurationException | SAXException e) {
-//                e.printStackTrace();
-//                System.out.print("user not found");
-//            }
+           try {
+                UserProfile admin = (UserProfile) xmlReader.readXML("data" + File.separator + "some.xml");
+                accountService.addUser(admin.getLogin(), admin.getPassword(), admin.getEmail());
+            }
+            catch (IOException | ParserConfigurationException | SAXException e) {
+                e.printStackTrace();
+                System.out.print("admin not found");
+            }
+
+            try {
+                UserProfile user = (UserProfile) xmlReader.readXML("data" + File.separator + "user.xml");
+                accountService.addUser(user.getLogin(), user.getPassword(), user.getEmail());
+            }
+            catch (IOException | ParserConfigurationException | SAXException e) {
+                e.printStackTrace();
+                System.out.print("user not found");
+            }
 
             /*
             База данных подключение
-*/
-
+            
+           // UserDataSet userDataSet = new UserDataSet(1,"test", "test@mail.ru","12345");
             DBService dbService = new DBService();
             String status = dbService.getLocalStatus();
             System.out.println(status);
           //  dbService.saveUser(userDataSet);
             UserProfile test =  dbService.read(1);
-           // System.out.println(test.getLogin() + " " + test.getEmail());
+            System.out.println(test.getLogin() + " " + test.getEmail());
            dbService.shutdown();
-
+            */
             RoomService roomService = new RoomService();
 
             UsersReadyToGameService usersReadyToGameService = new UsersReadyToGameService();

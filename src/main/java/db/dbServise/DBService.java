@@ -6,10 +6,8 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-//import db.dataSets.UserDataSet;
+import db.dao.UserProfileDAO;
 import main.UserProfile;
-import db.dao.UserDataSetDAO;
-import java.sql.SQLException;
 
 /**
  * Created by alla on 21.11.15.
@@ -55,7 +53,7 @@ public class DBService {
         try {
             Session session = sessionFactory.openSession();
             Transaction transaction = session.beginTransaction();
-            UserDataSetDAO dao = new UserDataSetDAO(session);
+            UserProfileDAO dao = new UserProfileDAO(session);
             dao.save(dataSet);
             transaction.commit();
         }catch (Exception e)
@@ -68,7 +66,7 @@ public class DBService {
     public UserProfile read(long id) {
         try {
             Session session = sessionFactory.openSession();
-            UserDataSetDAO dao = new UserDataSetDAO(session);
+            UserProfileDAO dao = new UserProfileDAO(session);
             return dao.read(id);
         }
        catch (Exception e){
@@ -80,7 +78,7 @@ public class DBService {
     public UserProfile readByName(String name) {
         try {
             Session session = sessionFactory.openSession();
-            UserDataSetDAO dao = new UserDataSetDAO(session);
+            UserProfileDAO dao = new UserProfileDAO(session);
             return dao.readByName(name);
         }
         catch (Exception e){

@@ -1,6 +1,8 @@
 package main;
 import javax.persistence.*;
 
+@Entity
+@Table(name = "users")
 public class UserProfile {
 
     @Id

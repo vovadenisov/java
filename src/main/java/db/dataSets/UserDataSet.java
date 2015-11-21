@@ -1,7 +1,17 @@
-package main;
+package db.dataSets;
+
 import javax.persistence.*;
 
-public class UserProfile {
+/**
+ * Created by alla on 21.11.15.
+ */
+
+/*
+    DataSet ― объект содержащий данные одной строки таблицы На каждую таблицу свой DataSet
+ */
+@Entity
+@Table(name = "users")
+public class UserDataSet {
 
     @Id
     @Column(name = "id")
@@ -17,10 +27,10 @@ public class UserProfile {
     @Column(name = "password")
     private String password;
 
-    public UserProfile() {
+    public UserDataSet() {
     }
 
-    public UserProfile( String login, String password, String email, long id) {
+    public UserDataSet(long id, String login, String email, String password) {
         this.setId(id);
         this.setLogin(login);
         this.setEmail(email);
@@ -56,5 +66,6 @@ public class UserProfile {
     public void setPassword(String password) {
         this.password = password;
     }
+
 
 }

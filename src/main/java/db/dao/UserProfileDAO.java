@@ -21,7 +21,6 @@ public class UserProfileDAO {
 
     public void save(UserProfile dataSet) throws SQLException{
         session.save(dataSet);
-        session.close();
     }
 
     public UserProfile read(long id) throws SQLException{

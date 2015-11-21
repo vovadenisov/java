@@ -68,9 +68,9 @@ public class DBService {
 
 
     public void saveUser(String name, String password, String email) throws SQLException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
         try {
-            Session session = sessionFactory.openSession();
-            Transaction transaction = session.beginTransaction();
             UserProfileDAO dao = new UserProfileDAO(session);
             UserProfile dataSet = new UserProfile(name, password, email);
             System.out.println(dataSet.getLogin());
@@ -81,10 +81,12 @@ public class DBService {
             System.out.print("exit from save");
         }catch (Exception e)
         {
-            System.out.println("ERROR "+e.toString());
+            System.out.println("error in saveUser");
+            System.out.println("ERROR " + e.toString());
             throw e;
+        }finally {
+            session.close();
         }
-
     }
 
     public UserProfile read(long id) {

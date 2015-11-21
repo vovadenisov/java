@@ -33,7 +33,7 @@ public class Main {
             DBService dbService;
             dbService = new DBService(configParser.getDBUser(), configParser.getDBPassword(), configParser.getDBName());
             AccountService accountService = new AccountService(dbService);
-           try {
+    /*       try {
                 UserProfile admin = (UserProfile) xmlReader.readXML("data" + File.separator + "some.xml");
                 accountService.addUser(admin.getLogin(), admin.getPassword(), admin.getEmail());
             }
@@ -50,7 +50,7 @@ public class Main {
                 e.printStackTrace();
                 System.out.print("user not found");
             }
-
+*/
             /*
             База данных подключение
 

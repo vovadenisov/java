@@ -22,12 +22,6 @@ public class AccountService {
             return true;
         }
         return false;
-//        if(users.containsKey(userName)) {
-//           return true;
-//       }
-//       else {
-//           return false;
-//       }
     }
 
     public String getSessinonId(UserProfile requestUser){
@@ -45,7 +39,7 @@ public class AccountService {
     }
 
     public int numberOfRegistered(){
-        return dbService.getCount("user");
+        return dbService.getCount();
     }
 
     public int numberOfSessions(){
@@ -57,7 +51,7 @@ public class AccountService {
             dbService.saveUser(userName, password, email);
             return true;
         }
-        catch (SQLException e){
+        catch (Exception e){
             return false;
         }
     }

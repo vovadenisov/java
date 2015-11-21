@@ -55,17 +55,16 @@ public class DBService {
         return status;
     }
 
-    public Integer getCount(String param){
-        Session session = sessionFactory.openSession();
-        Criteria crit = session.createCriteria(param);
-        crit.add( Restrictions.isNotNull("birthDate"));
-        crit.add(Restrictions.eq("isStudent", true));
-        List<UserProfile> students = crit.list();
-        Integer count = students.size();
-        session.close();
+    public Integer getCount(){
+        Integer count = readAll().size();
         return count;
     }
 
+    public List<UserProfile> readAll() {
+        Session session = sessionFactory.openSession();
+        UserProfileDAO dao = new UserProfileDAO(session);
+        return dao.readAll();
+    }
 
     public void saveUser(String name, String password, String email) throws SQLException {
         Session session = sessionFactory.openSession();
@@ -73,16 +72,12 @@ public class DBService {
         try {
             UserProfileDAO dao = new UserProfileDAO(session);
             UserProfile dataSet = new UserProfile(name, password, email);
-            System.out.println(dataSet.getLogin());
-            System.out.println(dataSet.getEmail());
-            System.out.println(dataSet.getPassword());
             dao.save(dataSet);
             transaction.commit();
             System.out.print("exit from save");
-        }catch (Exception e)
+        }catch (SQLException e)
         {
-            System.out.println("error in saveUser");
-            System.out.println("ERROR " + e.toString());
+            System.out.println("error when you try to save a user named " + name);
             throw e;
         }finally {
             session.close();
@@ -96,20 +91,23 @@ public class DBService {
             return dao.read(id);
         }
        catch (Exception e){
-           System.out.println("ERROR "+e.toString());
+           System.out.println("error when trying to read data about the user id "+ id);
            return null;
        }
     }
 
     public UserProfile readByName(String name) {
+        Session session = sessionFactory.openSession();
+        UserProfileDAO dao = new UserProfileDAO(session);
+        UserProfile userProfile = null;
         try {
-            Session session = sessionFactory.openSession();
-            UserProfileDAO dao = new UserProfileDAO(session);
-            return dao.readByName(name);
+            userProfile = dao.readByName(name);
         }
-        catch (Exception e){
-            System.out.println("ERROR "+e.toString());
-            return null;
+        catch (SQLException e){
+            System.out.println("error when trying to read data about the user named "+ name);
+        }finally {
+            session.close();
+            return userProfile;
         }
     }
     public void shutdown(){

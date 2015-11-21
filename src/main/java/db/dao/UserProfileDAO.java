@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
 import java.sql.SQLException;
+import java.util.List;
 
 //import db.dataSets.UserDataSet;
 /**
@@ -36,4 +37,11 @@ public class UserProfileDAO {
         session.delete(dataSet);
         session.close();
     }
+
+    @SuppressWarnings("unchecked")
+    public List<UserProfile> readAll() {
+        Criteria criteria = session.createCriteria(UserProfile.class);
+        return (List<UserProfile>) criteria.list();
+    }
+
 }

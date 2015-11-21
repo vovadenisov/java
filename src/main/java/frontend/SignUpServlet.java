@@ -42,6 +42,7 @@ public class SignUpServlet extends HttpServlet {
         }
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
+        System.out.println(json.toString());
         response.getWriter().println(json);
     }
 

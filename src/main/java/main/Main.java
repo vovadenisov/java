@@ -11,9 +11,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.xml.sax.SAXException;
 import parser.ConfigParser;
 import parser.XMLReader;
-
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 /**
@@ -51,19 +49,6 @@ public class Main {
                 System.out.print("user not found");
             }
 */
-            /*
-            База данных подключение
-
-           // UserDataSet userDataSet = new UserDataSet(1,"test", "test@mail.ru","12345");
-
-            String status = dbService.getLocalStatus();
-            System.out.println(status);
-          //  dbService.saveUser(userDataSet);
-            UserProfile test =  dbService.read(1);
-            System.out.println(test.getLogin() + " " + test.getEmail());
-
-            */
-
             RoomService roomService = new RoomService();
 
             UsersReadyToGameService usersReadyToGameService = new UsersReadyToGameService();

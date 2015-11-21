@@ -55,6 +55,5 @@ public class IAmServletTest {
         verify(response).setContentType("application/json");
         JSONObject obj = new JSONObject(stringWriter.toString());
         assertEquals("current_user", username, obj.get("current_user"));
-        assertEquals("current_user_id", id, obj.get("current_user_id"));
     }
 }

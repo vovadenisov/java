@@ -35,9 +35,9 @@ public class GameWebSocketService {
             }
         }
     }
-    public void notifyStepGame(UserProfile user){
+    public void notifyStepGame(UserProfile user, String data){
         GameWebSocket gameWebSocket = userSockets.get(user.getLogin());
-        gameWebSocket.stepGame(user);
+        gameWebSocket.stepGame(user, data);
     }
 
     public void notifyStepGameBinary(UserProfile user, byte buf[]){

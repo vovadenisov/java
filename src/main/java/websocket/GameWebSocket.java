@@ -27,7 +27,7 @@ public class GameWebSocket {
     private boolean status = false;
 
     public GameWebSocket( UserProfile user, GameWebSocketService gameWebSocketService, RoomService roomService) {
-        System.out.println("myName " + user.getLogin());
+      //  System.out.println("myName " + user.getLogin());
         this.user = user;
         this.gameWebSocketService = gameWebSocketService;
         this.roomService = roomService;
@@ -44,13 +44,13 @@ public class GameWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) throws IOException{
-        System.out.println("onMessage " + user.getLogin() + data);
-        try {
+   //     System.out.println("onMessage " + user.getLogin() + data);
+    /*    try {
             session.getRemote().sendString(data);
         }catch (Exception e){
             e.printStackTrace();
             throw e;
-        }
+        }*/
         if(status == true){
             room.stepGame(user, data);
         }
@@ -133,9 +133,12 @@ public class GameWebSocket {
             System.out.print(e.toString());
         }
     }
-    public void stepGame(UserProfile user) {
+    public void stepGame(UserProfile user, String data) {
         setStatus(true);
+        System.out.println("RESPONSE");
+        System.out.println(user.getLogin() + " " + data);
         try {
+            session.getRemote().sendString(data);
             JSONObject jsonStart = new JSONObject();
             jsonStart.put("status", "step");
             jsonStart.put("current", user.getLogin());

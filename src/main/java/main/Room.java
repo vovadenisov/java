@@ -22,8 +22,11 @@ public class Room {
      private UserProfile second;
      private UserProfile current;
      public void stepGame(UserProfile user, String data){
-         System.out.println(user.getLogin() + " say " + data);
-         gameWebSocketService.notifyStepGame(user);
+         if(user.equals(first)) {
+             gameWebSocketService.notifyStepGame(second, data);
+         }else {
+             gameWebSocketService.notifyStepGame(first, data);
+         }
      }
 
      public void stepGameBin(UserProfile user, byte buf[]){

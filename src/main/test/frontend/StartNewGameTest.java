@@ -1,22 +1,17 @@
 package frontend;
 
-import main.AccountService;
-import main.UserProfile;
+import main.*;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import main.UsersReadyToGameService;
-import org.json.JSONObject;
-import main.RoomService;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
@@ -31,6 +26,7 @@ public class StartNewGameTest {
     private final StringWriter stringWriter = new StringWriter();
     final PrintWriter writer = new PrintWriter(stringWriter);
     private final HttpSession session = mock(HttpSession.class);
+    private final Context instance = Context.getInstance();
     private StartNewGame startNewGame;
     private UserProfile testUser;
     private UserProfile inviteUser;
@@ -45,10 +41,13 @@ public class StartNewGameTest {
 
     @Before
     public void initialization() throws Exception {
+        instance.add(UsersReadyToGameService.class, (Object)(usersReadyToGameService));
+        instance.add(RoomService.class, (Object)(roomService));
+        instance.add(AccountService.class, (Object)(accountService));
         when(response.getWriter()).thenReturn(writer);
         when(request.getSession()).thenReturn(session);
         testUser = new UserProfile(username, password, email, id);
-        startNewGame = new StartNewGame(usersReadyToGameService, accountService, roomService);
+        startNewGame = new StartNewGame();
     }
     @Test
     public void testDoGetNoUserInRequest() throws Exception {

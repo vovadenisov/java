@@ -18,10 +18,11 @@ public class StartNewGame extends HttpServlet {
     private RoomService roomService;
     public static final String INVITE_URL = "/api/v1/auth/invite";
 
-    public StartNewGame(UsersReadyToGameService usersReadyToGameService, AccountService accountService, RoomService roomService) {
-        this.roomService = roomService;
-        this.usersReadyToGameService = usersReadyToGameService;
-        this.accountService = accountService;
+    public StartNewGame() {
+        Context instance = Context.getInstance();
+        this.accountService = (AccountService)instance.get(AccountService.class);
+        this.roomService = (RoomService)instance.get(RoomService.class);
+        this.usersReadyToGameService = (UsersReadyToGameService)instance.get(UsersReadyToGameService.class);
     }
 
     @Override

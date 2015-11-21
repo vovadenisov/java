@@ -1,6 +1,7 @@
 package frontend;
 
 import main.AccountService;
+import main.Context;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
@@ -13,8 +14,9 @@ import java.util.Objects;
 public class LogoutServlet extends HttpServlet {
     private AccountService accountService;
     public static final String LOGOUT_PAGE_URL = "/api/v1/auth/logout";
-    public LogoutServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public LogoutServlet() {
+        Context instance = Context.getInstance();
+        this.accountService = (AccountService)instance.get(AccountService.class);
     }
     @Override
     public void doGet(HttpServletRequest request,

@@ -1,9 +1,8 @@
 package frontend;
 
-import main.AccountService;
-import main.UserProfile;
+import main.*;
 import org.json.JSONObject;
-import templater.PageGenerator;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,12 +11,8 @@ import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-
-import main.UsersReadyToGameService;
-import main.RoomService;
-import org.junit.Before;
 
 /**
  * Created by alla on 03.11.15.
@@ -27,9 +22,10 @@ public class FindGameServletTest {
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final AccountService accountService = mock(AccountService.class);
-    private final HttpSession session = mock(HttpSession.class);
-    private final RoomService roomService = mock(RoomService.class);
     private final UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
+    private final RoomService roomService = mock(RoomService.class);
+    private final Context instance = Context.getInstance();
+    private final HttpSession session = mock(HttpSession.class);
     private final String username = "test_username";
     private final String password = "test_password";
     private final String email = "test_email@mail";
@@ -40,7 +36,10 @@ public class FindGameServletTest {
 
     @Before
     public void initialization() throws Exception {
-        findGameServlet = new FindGameServlet(accountService, usersReadyToGameService, roomService);
+        instance.add(UsersReadyToGameService.class, (Object)(usersReadyToGameService));
+        instance.add(RoomService.class, (Object)(roomService));
+        instance.add(AccountService.class, (Object)(accountService));
+        findGameServlet = new FindGameServlet();
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
         testUser = new UserProfile(username, password, email, id);

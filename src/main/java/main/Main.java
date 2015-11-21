@@ -29,7 +29,13 @@ public class Main {
             int port = Integer.valueOf(portString);
             System.out.append("Starting at port: ").append(portString).append('\n');
             XMLReader xmlReader = new XMLReader();
+
             AccountService accountService = new AccountService();
+            Context instance = Context.getInstance();
+            instance.add(UsersReadyToGameService.class, (Object)(new UsersReadyToGameService()));
+            instance.add(RoomService.class, (Object)(new RoomService()));
+            instance.add(AccountService.class, (Object)(accountService));
+
             try {
                 UserProfile admin = (UserProfile) xmlReader.readXML("data" + File.separator + "some.xml");
                 accountService.addUser(admin.getLogin(), admin.getPassword(), admin.getEmail());
@@ -47,19 +53,17 @@ public class Main {
                 e.printStackTrace();
                 System.out.print("user not found");
             }
-            RoomService roomService = new RoomService();
-            UsersReadyToGameService usersReadyToGameService = new UsersReadyToGameService();
             ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-            context.addServlet(new ServletHolder(new SignInServlet(accountService)), SignInServlet.SIGNIN_PAGE_URL );
-            context.addServlet(new ServletHolder(new SignUpServlet(accountService)), SignUpServlet.SIGNUP_PAGE_URL );
-            context.addServlet(new ServletHolder(new LogoutServlet(accountService)), LogoutServlet.LOGOUT_PAGE_URL);
-            context.addServlet(new ServletHolder(new GameServlet(accountService, roomService)), GameServlet.GAME_PAGE_URL);
-            context.addServlet(new ServletHolder(new FindGameServlet(accountService, usersReadyToGameService, roomService)), FindGameServlet.FIND_GAME_URL);
-            context.addServlet(new ServletHolder(new AdminServlet(accountService)), AdminServlet.ADMIN_PAGE_URL);
-            context.addServlet(new ServletHolder(new GetReadyUserServlet(usersReadyToGameService, accountService)), GetReadyUserServlet.GET_USER_URL);
-            context.addServlet(new ServletHolder(new StartNewGame(usersReadyToGameService, accountService, roomService)), StartNewGame.INVITE_URL);
-            context.addServlet(new ServletHolder(new GameInfoServlet(accountService, roomService)), GameInfoServlet.GAME_INFO_URL);
-            context.addServlet(new ServletHolder(new IAmServlet(accountService)), IAmServlet.I_AM_URL );
+            context.addServlet(new ServletHolder(new SignInServlet()), SignInServlet.SIGNIN_PAGE_URL );
+            context.addServlet(new ServletHolder(new SignUpServlet()), SignUpServlet.SIGNUP_PAGE_URL );
+            context.addServlet(new ServletHolder(new LogoutServlet()), LogoutServlet.LOGOUT_PAGE_URL);
+            context.addServlet(new ServletHolder(new GameServlet()), GameServlet.GAME_PAGE_URL);
+            context.addServlet(new ServletHolder(new FindGameServlet()), FindGameServlet.FIND_GAME_URL);
+            context.addServlet(new ServletHolder(new AdminServlet()), AdminServlet.ADMIN_PAGE_URL);
+            context.addServlet(new ServletHolder(new GetReadyUserServlet()), GetReadyUserServlet.GET_USER_URL);
+            context.addServlet(new ServletHolder(new StartNewGame()), StartNewGame.INVITE_URL);
+            context.addServlet(new ServletHolder(new GameInfoServlet()), GameInfoServlet.GAME_INFO_URL);
+            context.addServlet(new ServletHolder(new IAmServlet()), IAmServlet.I_AM_URL );
             ResourceHandler resourceHandler = new ResourceHandler();
             resourceHandler.setDirectoriesListed(true);
             resourceHandler.setResourceBase("public_html");
@@ -78,6 +82,9 @@ public class Main {
             server.join();
         }
         catch (IOException e){
+            e.printStackTrace();
+            System.exit(0);
+        } catch (Exception e) {
             e.printStackTrace();
             System.exit(0);
         }

@@ -1,23 +1,21 @@
 package frontend;
 
-import main.AccountService;
+import main.*;
 import org.json.JSONObject;
-import templater.PageGenerator;
 
-import main.Time;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AdminServlet extends HttpServlet {
     private AccountService accountService;
     public static final String ADMIN_PAGE_URL = "/api/v1/auth/admin";
-    public AdminServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public AdminServlet() {
+        Context instance = Context.getInstance();
+
+        this.accountService = (AccountService)instance.get(AccountService.class);
     }
     @Override
     public void doGet(HttpServletRequest request,

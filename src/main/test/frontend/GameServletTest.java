@@ -2,20 +2,19 @@ package frontend;
 
 
 import main.AccountService;
+import main.Context;
+import main.RoomService;
+import main.UsersReadyToGameService;
 import org.junit.Before;
 import org.junit.Test;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import main.UserProfile;
-import static org.junit.Assert.*;
-import main.RoomService;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verify;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by alla on 02.11.15.
@@ -25,7 +24,9 @@ public class GameServletTest {
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final AccountService accountService = mock(AccountService.class);
+    private final UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
     private final RoomService roomService = mock(RoomService.class);
+    private final Context instance = Context.getInstance();
     private final HttpSession session = mock(HttpSession.class);
     private final StringWriter stringWriter = new StringWriter();
     final PrintWriter writer = new PrintWriter(stringWriter);
@@ -33,9 +34,11 @@ public class GameServletTest {
 
     @Before
     public void initialization() throws Exception {
-        when(response.getWriter()).thenReturn(writer);
+        instance.add(UsersReadyToGameService.class, (Object)(usersReadyToGameService));
+        instance.add(RoomService.class, (Object)(roomService));
+        instance.add(AccountService.class, (Object)(accountService));when(response.getWriter()).thenReturn(writer);
         when(request.getSession()).thenReturn(session);
-        gameServlet = new GameServlet(accountService, roomService);
+        gameServlet = new GameServlet();
     }
 
     @Test

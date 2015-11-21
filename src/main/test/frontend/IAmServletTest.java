@@ -37,7 +37,7 @@ public class IAmServletTest {
         when(response.getWriter()).thenReturn(writer);
         when(request.getSession()).thenReturn(session);
         iAmServlet = new IAmServlet(accountService);
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
     }
     @Test
     public void testDoGetFailedSession() throws Exception {

@@ -1,12 +1,13 @@
 package db.dao;
 
+import main.UserProfile;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-//import db.dataSets.UserDataSet;
+
 import java.sql.SQLException;
-import java.util.List;
-import main.UserProfile;
+
+//import db.dataSets.UserDataSet;
 /**
  * Created by alla on 21.11.15.
  */

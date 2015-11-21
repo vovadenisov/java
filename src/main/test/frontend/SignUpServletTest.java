@@ -43,7 +43,7 @@ public class SignUpServletTest {
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
         signUp = new SignUpServlet(accountService);
-        testUser = new UserProfile(username, password, email, 1);
+        testUser = new UserProfile(username, password, email);
     }
     @Test
     public void testDoPostAlreadyExist() throws Exception {

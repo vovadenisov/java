@@ -1,15 +1,11 @@
 package main;
 
-import org.junit.Test;
-import org.junit.After;
+import db.dbServise.DBService;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by alla on 22.10.15.
@@ -17,6 +13,7 @@ import static org.mockito.Mockito.when;
 
 public class AccountServiceTest {
     private AccountService accountService;
+    private DBService dbService = mock(DBService.class);
     private UserProfile testUser;
     private String testSession;
     private final String username = "Test";
@@ -27,8 +24,8 @@ public class AccountServiceTest {
     @Before
     public void initialization() throws Exception {
         testSession = "test_session";
-        accountService  = new AccountService();
-        testUser = new UserProfile(username, password, email, id);
+        accountService  = new AccountService(dbService);
+        testUser = new UserProfile(username, password, email);
         accountService.addUser(username, password, email);
     }
 

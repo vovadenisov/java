@@ -1,9 +1,11 @@
 package frontend;
 
 import main.AccountService;
+import main.RoomService;
 import main.UserProfile;
+import main.UsersReadyToGameService;
 import org.json.JSONObject;
-import templater.PageGenerator;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,12 +14,8 @@ import javax.servlet.http.HttpSession;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-
-import main.UsersReadyToGameService;
-import main.RoomService;
-import org.junit.Before;
 
 /**
  * Created by alla on 03.11.15.
@@ -43,7 +41,7 @@ public class FindGameServletTest {
         findGameServlet = new FindGameServlet(accountService, usersReadyToGameService, roomService);
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
     }
     @Test
     public void testDoGetAnonim() throws Exception {

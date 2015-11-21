@@ -3,13 +3,7 @@ package main;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.servlet.http.HttpSession;
-
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * Created by alla on 02.11.15.
@@ -24,7 +18,7 @@ public class UsersReadyToGameServiceTest {
     @Before
     public void initialization() throws Exception {
         usersReadyToGameService = new UsersReadyToGameService();
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
     }
 
     @Test

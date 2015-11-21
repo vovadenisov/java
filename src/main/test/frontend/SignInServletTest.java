@@ -2,21 +2,18 @@ package frontend;
 
 import main.AccountService;
 import main.UserProfile;
-import org.junit.Test;
-import org.junit.After;
+import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
-
+import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import static org.mockito.Mockito.*;
-
-import static org.junit.Assert.*;
 import java.io.PrintWriter;
-import org.json.JSONObject;
 import java.io.StringWriter;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by alla on 23.10.15.
@@ -46,7 +43,7 @@ public class SignInServletTest {
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
         signIn = new SignInServlet(accountService);
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
     }
     @Test
     public void testDoGetAnonim() throws Exception {

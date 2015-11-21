@@ -1,22 +1,20 @@
 package frontend;
 
 import main.AccountService;
+import main.RoomService;
 import main.UserProfile;
+import main.UsersReadyToGameService;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import main.UsersReadyToGameService;
-import org.json.JSONObject;
-import main.RoomService;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 /**
@@ -47,7 +45,7 @@ public class StartNewGameTest {
     public void initialization() throws Exception {
         when(response.getWriter()).thenReturn(writer);
         when(request.getSession()).thenReturn(session);
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
         startNewGame = new StartNewGame(usersReadyToGameService, accountService, roomService);
     }
     @Test

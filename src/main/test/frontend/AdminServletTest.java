@@ -1,23 +1,20 @@
 package frontend;
 
 import main.AccountService;
-import main.UserProfile;
 import main.Time;
+import main.UserProfile;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import org.json.JSONObject;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by alla on 25.10.15.
@@ -38,7 +35,7 @@ public class AdminServletTest {
     private UserProfile testUser;
     @Before
     public void initialization() throws Exception {
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
         admin = new AdminServlet(accountService);

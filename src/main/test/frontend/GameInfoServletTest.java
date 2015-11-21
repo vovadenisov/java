@@ -48,8 +48,8 @@ public class GameInfoServletTest {
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
         gameInfoServlet = new GameInfoServlet(accountService, roomService);
-        testUser = new UserProfile(username, password, email, id);
-        enemyUser = new UserProfile(enemyUsername, enemyPassword, enemyEmail, enemyId);
+        testUser = new UserProfile(username, password, email);
+        enemyUser = new UserProfile(enemyUsername, enemyPassword, enemyEmail);
         enemy_user = new HashSet<>();
         enemy_user.add(enemyUser);
     }

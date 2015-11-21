@@ -42,7 +42,7 @@ public class GetReadyUserServletTest {
         when(request.getSession()).thenReturn(session);
         getReadyUserServlet = new GetReadyUserServlet(usersReadyToGameService, accountService);
         users_ready = new HashSet<>();
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
     }
 
     @Test

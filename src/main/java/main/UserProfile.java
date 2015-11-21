@@ -22,8 +22,7 @@ public class UserProfile {
     public UserProfile() {
     }
 
-    public UserProfile( String login, String password, String email, long id) {
-        this.setId(id);
+    public UserProfile( String login, String password, String email) {
         this.setLogin(login);
         this.setEmail(email);
         this.setPassword(password);

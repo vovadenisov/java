@@ -1,21 +1,33 @@
 package main;
 
+import db.dbServise.DBService;
+
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class AccountService {
-    private Map<String, UserProfile> users = new HashMap<>();
+//    private Map<String, UserProfile> users = new HashMap<>();
     private Map<String, UserProfile> sessions = new HashMap<>();
+    private DBService dbService;
+
+    public AccountService(DBService dbService){
+        this.dbService = dbService;
+    }
 
     @SuppressWarnings("all")
     public boolean checkUser(String userName){
-       if(users.containsKey(userName)) {
-           return true;
-       }
-       else {
-           return false;
-       }
+        if (dbService.readByName(userName) != null){
+            return true;
+        }
+        return false;
+//        if(users.containsKey(userName)) {
+//           return true;
+//       }
+//       else {
+//           return false;
+//       }
     }
 
     public String getSessinonId(UserProfile requestUser){
@@ -33,21 +45,21 @@ public class AccountService {
     }
 
     public int numberOfRegistered(){
-
-        return users.size();
+        return dbService.getCount("user");
     }
 
     public int numberOfSessions(){
-
         return sessions.size();
     }
 
     public boolean addUser(String userName, String password, String email) {
-        if (users.containsKey(userName))
+        try {
+            dbService.saveUser(userName, password, email);
+            return true;
+        }
+        catch (SQLException e){
             return false;
-        UserProfile userProfile = new UserProfile(userName, password, email, users.size());
-        users.put(userName, userProfile);
-        return true;
+        }
     }
 
     public boolean checkSeassions(String sessionId){
@@ -70,7 +82,7 @@ public class AccountService {
     }
 
     public UserProfile getUser(String userName) {
-        return users.get(userName);
+        return dbService.readByName(userName);
     }
 
     public String userSession(String sessionId) {

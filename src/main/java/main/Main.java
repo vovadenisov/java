@@ -1,5 +1,6 @@
 package main;
 
+import db.dbServise.DBService;
 import frontend.*;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -15,9 +16,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import main.UserProfile;
-
-import db.dbServise.DBService;
 /**
  * Created by alla edited by nastya on 16.09.15.
  *
@@ -28,15 +26,18 @@ public class Main {
         try {
             ConfigParser configParser = new ConfigParser();
             String portString = configParser.getPort();
+
             int port = Integer.valueOf(portString);
             System.out.append("Starting at port: ").append(portString).append('\n');
             XMLReader xmlReader = new XMLReader();
-            AccountService accountService = new AccountService();
+            DBService dbService;
+            dbService = new DBService(configParser.getDBUser(), configParser.getDBPassword(), configParser.getDBName());
+            AccountService accountService = new AccountService(dbService);
            try {
                 UserProfile admin = (UserProfile) xmlReader.readXML("data" + File.separator + "some.xml");
                 accountService.addUser(admin.getLogin(), admin.getPassword(), admin.getEmail());
             }
-            catch (IOException | ParserConfigurationException | SAXException e) {
+            catch (IOException | ParserConfigurationException | SAXException | NullPointerException e) {
                 e.printStackTrace();
                 System.out.print("admin not found");
             }
@@ -45,23 +46,24 @@ public class Main {
                 UserProfile user = (UserProfile) xmlReader.readXML("data" + File.separator + "user.xml");
                 accountService.addUser(user.getLogin(), user.getPassword(), user.getEmail());
             }
-            catch (IOException | ParserConfigurationException | SAXException e) {
+            catch (IOException | ParserConfigurationException | SAXException | NullPointerException e) {
                 e.printStackTrace();
                 System.out.print("user not found");
             }
 
             /*
             База данных подключение
-            
+
            // UserDataSet userDataSet = new UserDataSet(1,"test", "test@mail.ru","12345");
-            DBService dbService = new DBService();
+
             String status = dbService.getLocalStatus();
             System.out.println(status);
           //  dbService.saveUser(userDataSet);
             UserProfile test =  dbService.read(1);
             System.out.println(test.getLogin() + " " + test.getEmail());
-           dbService.shutdown();
+
             */
+
             RoomService roomService = new RoomService();
 
             UsersReadyToGameService usersReadyToGameService = new UsersReadyToGameService();
@@ -92,6 +94,7 @@ public class Main {
                 throw new RuntimeException("error", e);
             }
             server.join();
+            dbService.shutdown();
         }
         catch (IOException e){
             e.printStackTrace();

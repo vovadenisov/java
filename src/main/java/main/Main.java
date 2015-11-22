@@ -29,8 +29,12 @@ public class Main {
             System.out.append("Starting at port: ").append(portString).append('\n');
             XMLReader xmlReader = new XMLReader();
             DBService dbService;
-            dbService = new DBService(configParser.getDBUser(), configParser.getDBPassword(), configParser.getDBName());
-            AccountService accountService = new AccountService(dbService);
+            try {
+                dbService = new DBService(configParser.getDBUser(), configParser.getDBPassword(), configParser.getDBName());
+            }catch (Exception e){
+                System.out.println("Failed to connect to database");
+                throw new RuntimeException("error", e);
+            }
     /*       try {
                 UserProfile admin = (UserProfile) xmlReader.readXML("data" + File.separator + "some.xml");
                 accountService.addUser(admin.getLogin(), admin.getPassword(), admin.getEmail());
@@ -49,8 +53,8 @@ public class Main {
                 System.out.print("user not found");
             }
 */
+            AccountService accountService = new AccountService(dbService);
             RoomService roomService = new RoomService();
-
             UsersReadyToGameService usersReadyToGameService = new UsersReadyToGameService();
             ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
             context.addServlet(new ServletHolder(new SignInServlet(accountService)), SignInServlet.SIGNIN_PAGE_URL );
@@ -82,7 +86,6 @@ public class Main {
             dbService.shutdown();
         }
         catch (IOException e){
-            e.printStackTrace();
             System.exit(0);
         }
     }

@@ -11,4 +11,8 @@ public class Time {
             e.printStackTrace();
         }
     }
+
+    public static void drop(){
+        System.exit(0);
+    }
 }

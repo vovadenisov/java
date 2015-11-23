@@ -11,9 +11,11 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.xml.sax.SAXException;
 import parser.ConfigParser;
 import parser.XMLReader;
+
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.sql.SQLException;
+
 /**
  * Created by alla edited by nastya on 16.09.15.
  *
@@ -29,12 +31,9 @@ public class Main {
             System.out.append("Starting at port: ").append(portString).append('\n');
             XMLReader xmlReader = new XMLReader();
             DBService dbService;
-            try {
-                dbService = new DBService(configParser.getDBUser(), configParser.getDBPassword(), configParser.getDBName());
-            }catch (Exception e){
-                System.out.println("Failed to connect to database");
-                throw new RuntimeException("error", e);
-            }
+            dbService = new DBService(configParser.getDBUser(), configParser.getDBPassword(), configParser.getDBName());
+
+
     /*       try {
                 UserProfile admin = (UserProfile) xmlReader.readXML("data" + File.separator + "some.xml");
                 accountService.addUser(admin.getLogin(), admin.getPassword(), admin.getEmail());
@@ -84,8 +83,9 @@ public class Main {
             }
             server.join();
             dbService.shutdown();
-        }
-        catch (IOException e){
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        } catch (IOException| RuntimeException e){
             System.exit(0);
         }
     }

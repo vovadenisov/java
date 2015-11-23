@@ -44,21 +44,21 @@ public class GameWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) throws IOException{
-   //     System.out.println("onMessage " + user.getLogin() + data);
+      //  System.out.println("Message " + user.getLogin() +" "+ data);
     /*    try {
             session.getRemote().sendString(data);
         }catch (Exception e){
             e.printStackTrace();
             throw e;
         }*/
-        if(status == true){
+      //  if(status == true){
             room.stepGame(user, data);
-        }
+      //  }
     }
 
     @OnWebSocketMessage
     public void onMessageBinary(byte buf[], int offset, int length) throws IOException{
-        System.out.println("onMessageBinary " + user.getLogin());
+     //   System.out.println("onMessageBinary " + user.getLogin());
         for (byte b : buf) {
             System.out.print(b);
         }
@@ -77,7 +77,7 @@ public class GameWebSocket {
 
     @OnWebSocketConnect
     public void onOpen(Session session) {
-        System.out.println("OnOpen " + user.getLogin());
+    //    System.out.println("OnOpen " + user.getLogin());
         setSession(session);
         SetRoom();
         gameWebSocketService.addUser(this);
@@ -99,13 +99,13 @@ public class GameWebSocket {
     }
 
     public void startGame(UserProfile user, String enemy) {
-        System.out.println("startGame");
+  //      System.out.println("startGame");
         try {
             JSONObject jsonStart = new JSONObject();
             jsonStart.put("status", "start");
             jsonStart.put("enemyName", enemy);
             session.getRemote().sendString(jsonStart.toJSONString());
-            System.out.println(jsonStart.toJSONString());
+     //       System.out.println(jsonStart.toJSONString());
         } catch (Exception e) {
             System.out.print(e.toString());
         }
@@ -128,22 +128,23 @@ public class GameWebSocket {
             jsonStart.put("status", "current");
             jsonStart.put("current", currentUser.getLogin());
             session.getRemote().sendString(jsonStart.toJSONString());
-            System.out.println(jsonStart.toJSONString());
+    //        System.out.println(jsonStart.toJSONString());
         } catch (Exception e) {
             System.out.print(e.toString());
         }
     }
     public void stepGame(UserProfile user, String data) {
         setStatus(true);
-        System.out.println("RESPONSE");
-        System.out.println(user.getLogin() + " " + data);
+        // System.out.println("RESPONSE");
+      // System.out.println(user.getLogin());
         try {
+           /* JSONObject jsonStart = new JSONObject();
+            jsonStart.put("status", "recipient");
+            jsonStart.put("recipient", user.getLogin());
+            session.getRemote().sendString(jsonStart.toJSONString());*/
             session.getRemote().sendString(data);
-            JSONObject jsonStart = new JSONObject();
-            jsonStart.put("status", "step");
-            jsonStart.put("current", user.getLogin());
-            session.getRemote().sendString(jsonStart.toJSONString());
-            System.out.println(jsonStart.toJSONString());
+
+       //     System.out.println(jsonStart.toJSONString());
         } catch (Exception e) {
             System.out.print(e.toString());
         }

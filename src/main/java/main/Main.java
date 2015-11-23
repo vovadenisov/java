@@ -70,7 +70,8 @@ public class Main {
 
         try {
             server.start();
-            roomService.Start();
+         //   roomService.Start();
+            roomService.simpleStart();
         } catch(Exception e) {
             throw new RuntimeException("error", e);
         }

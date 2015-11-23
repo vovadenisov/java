@@ -14,9 +14,9 @@ public class GameWebSocketService {
     public int userSocketsSize(){ return userSockets.size();}
 
     public void addUser(GameWebSocket user) {
-     /*   if(userSockets.containsValue(user)){
+        if(userSockets.containsValue(user)){
             return;
-        }*/
+        }
         userSockets.put(user.getUserLogin(), user);
     }
     public void notifyStartGame(UserProfile user, String ememy) {
@@ -35,6 +35,13 @@ public class GameWebSocketService {
             }
         }
     }
+
+    public void allCurrent(){
+        for(Map.Entry<String, GameWebSocket> socket : userSockets.entrySet()){
+                socket.getValue().setStatus(true);
+        }
+    }
+
     public void notifyStepGame(UserProfile user, String data){
         GameWebSocket gameWebSocket = userSockets.get(user.getLogin());
         gameWebSocket.stepGame(user, data);

@@ -125,8 +125,14 @@ public class Room {
          gameWebSocketService.notifyStartGame(this.second, this.first.getLogin());
          this.current = this.first;
          setGame(true);
-         userStep(1);
-         System.out.println(getTime());
+        // userStep(1);
+         usersSteps();
+      //   System.out.println(getTime());
+     }
+
+     public void usersSteps(){
+         setStartTime();
+         gameWebSocketService.allCurrent();
      }
 
      public void userStep(int step){

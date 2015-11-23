@@ -51,7 +51,7 @@ public class GameServlet extends HttpServlet {
                 } else {
                     String room_id = request.getParameter("room_id");
                     JSONArray winners_list = new JSONArray();
-                    if (!roomService.getRoom(Integer.parseInt(room_id)).getStatus()) {
+                  /*  if (!roomService.getRoom(Integer.parseInt(room_id)).getStatus()) {
                         for (UserProfile users : roomService.getRoom(Integer.parseInt(room_id)).getWiner().getMembers()) {
                             winners_list.add(users.getLogin());
                         }
@@ -59,7 +59,7 @@ public class GameServlet extends HttpServlet {
                         json.put("winers", winners_list);
                     } else {
                         json.put("is_game_progress", true);
-                    }
+                    }*/
                     response.getWriter().println(json);
                 }
             }

@@ -1,15 +1,9 @@
 package main;
 
-import org.junit.Test;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by alla on 22.10.15.
@@ -62,12 +56,15 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testAddUser() throws Exception {
+    public void testAddUser() {
         String[] test_user_data = new String[]{"Test1", "test_password1", "test1@mail.ru"};
         int size = accountService.numberOfRegistered();
         assertTrue("testAddUser().User hasn't added!", accountService.addUser(test_user_data[0], test_user_data[1], test_user_data[2]));
         assertFalse("testAddUser().False, User already exists!", accountService.addUser(username, password, email));
-        assertEquals("testAddUser().user is not added", size + 1, accountService.numberOfRegistered());
+        assertEquals("testAddUser().user is not added", size+1, accountService.numberOfRegistered());
+        assertEquals("testAddUser().user is not added", test_user_data[0], accountService.getUser("Test1").getLogin());
+        assertEquals("testAddUser().user is not added", test_user_data[1], accountService.getUser("Test1").getPassword());
+        assertEquals("testAddUser().user is not added", test_user_data[2], accountService.getUser("Test1").getEmail());
     }
 
     @Test
@@ -78,8 +75,9 @@ public class AccountServiceTest {
         assertTrue("testRemoveSeassions().testRemoveSeassions", accountService.removeSeassions(testSession));
         assertEquals("testRemoveSeassions().testRemoveSeassions", 0, accountService.numberOfSessions());
     }
+
     @Test
-    public void testGetUser() throws Exception {
+    public void testGetUser() {
         assertNotNull("testGetUser().function does not give an existing object", accountService.getUser(username));
         assertNull("testGetUser().function gives a non-existent object", accountService.getUser("Test1"));
         assertEquals("testGetUser().not a valid response", testUser.getLogin(), accountService.getUser(username).getLogin());
@@ -94,6 +92,7 @@ public class AccountServiceTest {
         accountService.addSessions(testSession, testUser);
         assertEquals(testSession, accountService.getSessinonId(testUser));
     }
+
     @Test
     public void testCheckSeassions() throws Exception {
         assertFalse(accountService.checkSeassions(testSession));
@@ -106,11 +105,13 @@ public class AccountServiceTest {
         accountService.addSessions(testSession, testUser);
         assertTrue(accountService.checkSeassions(testSession));
     }
+
     @Test
     public void testGetCurrentUser() throws Exception {
         accountService.addSessions(testSession, testUser);
         assertEquals(testUser, accountService.getCurrentUser(testSession));
     }
+
     @Test
     public void testUserSession() throws Exception {
         String  expectLogin = "";
@@ -118,6 +119,7 @@ public class AccountServiceTest {
         accountService.addSessions(testSession, testUser);
         assertEquals(testUser.getLogin(), accountService.userSession(testSession));
     }
+
     @Test
     public void testGetSessions() throws Exception {
         accountService.addSessions(testSession, testUser);

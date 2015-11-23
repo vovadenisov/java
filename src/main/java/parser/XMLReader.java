@@ -12,16 +12,10 @@ import java.io.IOException;
  */
 public class XMLReader {
     public  Object readXML(String fileName) throws IOException, SAXException, ParserConfigurationException {
-        try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser parser = factory.newSAXParser();
-            XmlParser xmlparser = new XmlParser();
-            parser.parse(fileName, xmlparser);
-            return xmlparser.getObject();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            throw e;
-        }
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser parser = factory.newSAXParser();
+        XmlParser xmlparser = new XmlParser();
+        parser.parse(fileName, xmlparser);
+        return xmlparser.getObject();
     }
 }

@@ -25,9 +25,9 @@ public class Main {
     public static void main(String[] args) throws NumberFormatException, InterruptedException, IOException {
         try {
             ConfigParser configParser = new ConfigParser();
-            String portString = configParser.getPort();
-            int port = Integer.valueOf(portString);
-            System.out.append("Starting at port: ").append(portString).append('\n');
+            Integer portString = configParser.getPort();
+            int port = portString;
+            System.out.append("Starting at port: ").append(portString.toString()).append('\n');
             XMLReader xmlReader = new XMLReader();
             AccountService accountService = new AccountService();
             try {
@@ -59,7 +59,7 @@ public class Main {
             context.addServlet(new ServletHolder(new GetReadyUserServlet(usersReadyToGameService, accountService)), GetReadyUserServlet.GET_USER_URL);
             context.addServlet(new ServletHolder(new StartNewGame(usersReadyToGameService, accountService, roomService)), StartNewGame.INVITE_URL);
             context.addServlet(new ServletHolder(new GameInfoServlet(accountService, roomService)), GameInfoServlet.GAME_INFO_URL);
-            context.addServlet(new ServletHolder(new IAmServlet(accountService)), IAmServlet.I_AM_URL );
+            context.addServlet(new ServletHolder(new IAmServlet(accountService)), IAmServlet.I_AM_URL);
             ResourceHandler resourceHandler = new ResourceHandler();
             resourceHandler.setDirectoriesListed(true);
             resourceHandler.setResourceBase("public_html");

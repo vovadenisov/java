@@ -9,7 +9,7 @@ import java.util.Properties;
 public class ConfigParser {
     private static final String CONFIG_FILE = "cfg/server.properties";
     private static String host;
-    private static String port;
+    private static Integer port;
 
     public ConfigParser() throws IOException{
         loadConfig();
@@ -21,7 +21,7 @@ public class ConfigParser {
             Properties properties = new Properties();
             properties.load(fis);
             fis.close();
-            port = properties.getProperty("port");
+            port = Integer.valueOf(properties.getProperty("port"));
             host = properties.getProperty("host");
         } catch (IOException e) {
             e.printStackTrace();
@@ -33,10 +33,10 @@ public class ConfigParser {
         ConfigParser.host = host;
     }
 
-    public static void setPort(String port) {
+    public static void setPort(Integer port) {
         ConfigParser.port = port;
     }
 
-    public String getPort(){ return port;}
+    public Integer getPort(){ return port;}
     public String getHost() {return host; }
 }

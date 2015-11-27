@@ -1,6 +1,7 @@
 package main;
 
 import exceptions.ConfigException;
+import exceptions.XMLReaderException;
 import frontend.*;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -23,7 +24,7 @@ import java.io.IOException;
  */
 
 public class Main {
-    public static void main(String[] args) throws NumberFormatException, InterruptedException, IOException {
+    public static void main(String[] args) throws NumberFormatException {
         try {
             ConfigParser configParser = new ConfigParser();
             Integer portString = configParser.getPort();
@@ -33,26 +34,26 @@ public class Main {
 
             AccountService accountService = new AccountService();
             Context instance = Context.getInstance();
-            instance.add(UsersReadyToGameService.class, (Object)(new UsersReadyToGameService()));
-            instance.add(RoomService.class, (Object)(new RoomService()));
-            instance.add(AccountService.class, (Object)(accountService));
+            instance.add(UsersReadyToGameService.class, new UsersReadyToGameService());
+            instance.add(RoomService.class, new RoomService());
+            instance.add(AccountService.class, accountService);
 
             try {
                 UserProfile admin = (UserProfile) xmlReader.readXML("data" + File.separator + "some.xml");
                 accountService.addUser(admin.getLogin(), admin.getPassword(), admin.getEmail());
             }
-            catch (IOException | ParserConfigurationException | SAXException e) {
-                e.printStackTrace();
-                System.out.print("admin not found");
+            catch (XMLReaderException e) {
+                System.out.println(e.getMessage());
+                System.out.println("admin not found");
             }
 
             try {
                 UserProfile user = (UserProfile) xmlReader.readXML("data" + File.separator + "user.xml");
                 accountService.addUser(user.getLogin(), user.getPassword(), user.getEmail());
             }
-            catch (IOException | ParserConfigurationException | SAXException e) {
-                e.printStackTrace();
-                System.out.print("user not found");
+            catch (XMLReaderException e) {
+                System.out.println(e.getMessage());
+                System.out.println("user not found");
             }
             ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
             context.addServlet(new ServletHolder(new SignInServlet()), SignInServlet.SIGNIN_PAGE_URL );

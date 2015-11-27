@@ -19,6 +19,7 @@ public class XmlParser extends DefaultHandler{
             return fields;
         }
         public Object getObject(){ return object;}
+
         @Override
         public void startDocument() throws SAXException
         {

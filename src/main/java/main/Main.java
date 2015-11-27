@@ -8,14 +8,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.xml.sax.SAXException;
+import org.eclipse.jetty.servlet.ServletHolder;;
 import parser.ConfigParser;
 import parser.XMLReader;
-
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.IOException;
 
 
 /**
@@ -44,7 +40,7 @@ public class Main {
             }
             catch (XMLReaderException e) {
                 System.out.println(e.getMessage());
-                System.out.println("admin not found");
+                System.out.println("Admin not found");
             }
 
             try {
@@ -53,7 +49,7 @@ public class Main {
             }
             catch (XMLReaderException e) {
                 System.out.println(e.getMessage());
-                System.out.println("user not found");
+                System.out.println("User not found");
             }
             ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
             context.addServlet(new ServletHolder(new SignInServlet()), SignInServlet.SIGNIN_PAGE_URL );
@@ -87,7 +83,6 @@ public class Main {
             System.out.println(e.getMessage());
             System.exit(0);
         } catch (Exception e) {
-            //e.printStackTrace();
             System.out.println(e.getMessage());
             System.exit(0);
         }

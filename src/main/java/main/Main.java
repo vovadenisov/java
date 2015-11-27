@@ -1,5 +1,6 @@
 package main;
 
+import exceptions.ConfigException;
 import frontend.*;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -25,9 +26,9 @@ public class Main {
     public static void main(String[] args) throws NumberFormatException, InterruptedException, IOException {
         try {
             ConfigParser configParser = new ConfigParser();
-            String portString = configParser.getPort();
-            int port = Integer.valueOf(portString);
-            System.out.append("Starting at port: ").append(portString).append('\n');
+            Integer portString = configParser.getPort();
+            int port = portString;
+            System.out.append("Starting at port: ").append(portString.toString()).append('\n');
             XMLReader xmlReader = new XMLReader();
 
             AccountService accountService = new AccountService();
@@ -81,11 +82,12 @@ public class Main {
             }
             server.join();
         }
-        catch (IOException e){
-            e.printStackTrace();
+        catch (ConfigException e){
+            System.out.println(e.getMessage());
             System.exit(0);
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println(e.getMessage());
             System.exit(0);
         }
     }

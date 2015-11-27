@@ -13,7 +13,6 @@ import parser.ConfigParser;
 import parser.XMLReader;
 import java.io.File;
 
-
 /**
  * Created by alla edited by nastya on 16.09.15.
  *

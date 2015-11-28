@@ -3,7 +3,6 @@ package frontend;
 import main.*;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,8 +58,8 @@ public class FindGameServletTest {
         when(accountService.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
         when(roomService.userInRoom(testUser)).thenReturn(true);
         findGameServlet.doGet(request, response);
-//        verify(response, never()).setStatus(HttpServletResponse.SC_FOUND);
-//        verify(response).setStatus(HttpServletResponse.SC_OK);
+        verify(response, never()).setStatus(HttpServletResponse.SC_FOUND);
+        verify(response).setStatus(HttpServletResponse.SC_OK);
         JSONObject obj = new JSONObject(stringWriter.toString());
         assertEquals("game_status", 1, obj.get("game_status"));
     }
@@ -87,7 +86,7 @@ public class FindGameServletTest {
         when(accountService.checkSeassions(request.getSession().getId())).thenReturn(true);
         when(accountService.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
         findGameServlet.doPost(request, response);
-//        JSONObject obj = new JSONObject(stringWriter.toString());
-  //      assertEquals("status", "OK", obj.get("status"));
+        JSONObject obj = new JSONObject(stringWriter.toString());
+        assertEquals("status", "OK", obj.get("status"));
     }
 }

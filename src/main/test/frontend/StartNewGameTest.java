@@ -40,9 +40,9 @@ public class StartNewGameTest {
 
     @Before
     public void initialization() throws Exception {
-        instance.add(UsersReadyToGameService.class, (Object)(usersReadyToGameService));
-        instance.add(RoomService.class, (Object)(roomService));
-        instance.add(AccountService.class, (Object)(accountService));
+        instance.add(UsersReadyToGameService.class, usersReadyToGameService);
+        instance.add(RoomService.class, roomService);
+        instance.add(AccountService.class, accountService);
         when(response.getWriter()).thenReturn(writer);
         when(request.getSession()).thenReturn(session);
         testUser = new UserProfile(username, password, email);

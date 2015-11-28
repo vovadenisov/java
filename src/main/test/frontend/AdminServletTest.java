@@ -1,8 +1,6 @@
 package frontend;
 
-import main.AccountService;
-import main.Time;
-import main.UserProfile;
+import main.*;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,22 +21,22 @@ public class AdminServletTest {
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final AccountService accountService = mock(AccountService.class);
+    private final UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
+    private final RoomService roomService = mock(RoomService.class);
+    private final Context instance = Context.getInstance();
     private final Time time = mock(Time.class);
     private final HttpSession session = mock(HttpSession.class);
     private final StringWriter stringWriter = new StringWriter();
     final PrintWriter writer = new PrintWriter(stringWriter);
-    private final String username = "test_username";
-    private final String password = "test_password";
-    private final String email = "test_email@mail";
-    private final Integer id = 1;
     private AdminServlet admin;
-    private UserProfile testUser;
     @Before
     public void initialization() throws Exception {
-        testUser = new UserProfile(username, password, email);
+        instance.add(UsersReadyToGameService.class, (usersReadyToGameService));
+        instance.add(RoomService.class, (roomService));
+        instance.add(AccountService.class, (accountService));
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
-        admin = new AdminServlet(accountService);
+        admin = new AdminServlet();
     }
     @Test
     public void testDoGet() throws Exception {

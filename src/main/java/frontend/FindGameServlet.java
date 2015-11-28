@@ -16,15 +16,17 @@ import java.util.Map;
  * Created by usr on 21.10.15.
  */
 public class FindGameServlet extends HttpServlet {
-    private AccountService accountService;
+    private AccountService  accountService;
     private UsersReadyToGameService usersReadyToGameService;
     private RoomService roomService;
     public static final String FIND_GAME_URL = "/api/v1/auth/find_rival";
 
-    public FindGameServlet(AccountService accountService, UsersReadyToGameService usersReadyToGameService, RoomService roomService) {
-        this.accountService = accountService;
-        this.usersReadyToGameService = usersReadyToGameService;
-        this.roomService = roomService;
+    public FindGameServlet() {
+        Context instance = Context.getInstance();
+
+        this.accountService = (AccountService) instance.get(AccountService.class);
+        this.roomService = (RoomService) instance.get(RoomService.class);
+        this.usersReadyToGameService = (UsersReadyToGameService) instance.get(UsersReadyToGameService.class);
     }
 
     @Override

@@ -30,6 +30,7 @@ public class GameInfoServletTest {
     private final Room room = mock(Room.class);
     private final UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
     private final String username = "test_username";
+    private final Context instance = Context.getInstance();
     private final String password = "test_password";
     private final String email = "test_email@mail";
     private final Integer id = 1;
@@ -47,7 +48,10 @@ public class GameInfoServletTest {
     public void initialization() throws Exception {
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
-        gameInfoServlet = new GameInfoServlet(accountService, roomService);
+        instance.add(UsersReadyToGameService.class, (Object)(usersReadyToGameService));
+        instance.add(RoomService.class, (Object)(roomService));
+        instance.add(AccountService.class, (Object)(accountService));
+        gameInfoServlet = new GameInfoServlet();
         testUser = new UserProfile(username, password, email);
         enemyUser = new UserProfile(enemyUsername, enemyPassword, enemyEmail);
         enemy_user = new HashSet<>();

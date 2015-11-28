@@ -1,6 +1,7 @@
 package frontend;
 
 import main.AccountService;
+import main.Context;
 import org.json.JSONObject;
 
 import javax.servlet.ServletException;
@@ -16,8 +17,9 @@ public class IAmServlet extends HttpServlet {
     private AccountService accountService;
     public static final String I_AM_URL = "/api/v1/auth/curruser";
 
-    public IAmServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public IAmServlet() {
+        Context instance = Context.getInstance();
+        this.accountService = (AccountService)instance.get(AccountService.class);
     }
 
     @Override

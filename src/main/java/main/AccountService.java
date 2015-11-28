@@ -1,8 +1,8 @@
 package main;
 
-import db.dbServise.DBService;
+import database.dbServise.DBService;
+import exceptions.DBException;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,12 +16,17 @@ public class AccountService {
         this.dbService = dbService;
     }
 
-    @SuppressWarnings("all")
+
     public boolean checkUser(String userName){
-        if (dbService.readByName(userName) != null){
-            return true;
+        try {
+            if (dbService.readByName(userName) != null){
+                return true;
+            }
+            return false;
+        }catch (DBException e){
+            System.out.println(e.getMessage());
+            return false;
         }
-        return false;
     }
 
     public String getSessinonId(UserProfile requestUser){
@@ -51,12 +56,14 @@ public class AccountService {
             dbService.saveUser(userName, password, email);
             return true;
         }
-        catch (Exception e){
+        catch (DBException e){
+            System.out.println(e.getMessage());
             return false;
         }
     }
 
     public boolean checkSeassions(String sessionId){
+
         return sessions.containsKey(sessionId);
     }
 
@@ -68,15 +75,22 @@ public class AccountService {
     }
 
     public void addSessions(String sessionId, UserProfile userProfile) {
+
         sessions.put(sessionId, userProfile);
     }
 
     public UserProfile getCurrentUser(String sessionId){
+
         return sessions.get(sessionId);
     }
 
     public UserProfile getUser(String userName) {
-        return dbService.readByName(userName);
+        try {
+            return dbService.readByName(userName);
+        }catch (DBException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     public String userSession(String sessionId) {
@@ -85,6 +99,7 @@ public class AccountService {
         return sessions.get(sessionId).getLogin();
     }
     public UserProfile getSessions(String sessionId) {
+
         return sessions.get(sessionId);
     }
 }

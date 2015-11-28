@@ -1,8 +1,6 @@
 package frontend;
 
-import main.AccountService;
-import main.RoomService;
-import main.UserProfile;
+import main.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,9 +19,11 @@ public class GameInfoServlet extends HttpServlet {
     private RoomService roomService;
     public static final String GAME_INFO_URL = "/api/v1/auth/game_status";
 
-    public GameInfoServlet(AccountService accountService, RoomService roomService) {
-        this.accountService = accountService;
-        this.roomService = roomService;
+    public GameInfoServlet() {
+        Context instance = Context.getInstance();
+
+        this.accountService = (AccountService)instance.get(AccountService.class);
+        this.roomService = (RoomService)instance.get(RoomService.class);
     }
 
     @Override

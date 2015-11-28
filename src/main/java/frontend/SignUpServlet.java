@@ -1,7 +1,6 @@
 package frontend;
 
-import main.AccountService;
-import main.UserProfile;
+import main.*;
 import org.json.JSONObject;
 import templater.PageGenerator;
 
@@ -17,8 +16,9 @@ import java.util.Map;
 public class SignUpServlet extends HttpServlet {
     private AccountService accountService;
     public static final String SIGNUP_PAGE_URL = "/api/v1/auth/signup";
-    public SignUpServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public SignUpServlet() {
+        Context instance = Context.getInstance();
+        this.accountService = (AccountService)instance.get(AccountService.class);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class SignUpServlet extends HttpServlet {
         System.out.println(json.toString());
         response.getWriter().println(json);
     }
-
+/*
     @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
@@ -65,5 +65,5 @@ public class SignUpServlet extends HttpServlet {
             response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));
         }
 
-    }
+    }*/
 }

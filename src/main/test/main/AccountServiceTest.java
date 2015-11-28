@@ -1,12 +1,16 @@
 package main;
 
-import db.dbServise.DBService;
+import database.dbServise.DBService;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.AfterClass;
+import parser.ConfigParser;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 
 /**
  * Created by alla on 22.10.15.
@@ -14,12 +18,25 @@ import static org.mockito.Mockito.when;
 
 public class AccountServiceTest {
     private AccountService accountService;
-    private DBService dbService = mock(DBService.class);
+    private static DBService dbService;
     private UserProfile testUser;
     private String testSession;
     private final String username = "Test";
     private final String password = "test_password";
     private final String email = "test@mail";
+    private static ConfigParser configParser = mock(ConfigParser.class);
+
+    @BeforeClass
+    public static void bedore() throws Exception {
+        when(configParser.getDBName()).thenReturn("testJavaDB");
+        when(configParser.getDBUser()).thenReturn("javaTestUser");
+        when(configParser.getDBPassword()).thenReturn("123456789java");
+        when(configParser.getDBdialect()).thenReturn("org.hibernate.dialect.MySQLDialect");
+        when(configParser.getDBdriver()).thenReturn("com.mysql.jdbc.Driver");
+        when(configParser.getDBinitialization()).thenReturn("create-drop");
+        dbService = new DBService(configParser);
+
+    }
 
     @Before
     public void initialization() throws Exception {
@@ -29,9 +46,9 @@ public class AccountServiceTest {
         accountService.addUser(username, password, email);
     }
 
+
     @Test
     public void testCheckUser() throws Exception {
-        when(dbService.readByName(username)).thenReturn(testUser);
         assertTrue("testCheckUser().Expect true", accountService.checkUser(username));
         assertFalse("testCheckUser().Expect false", accountService.checkUser("Test1"));
     }
@@ -53,17 +70,21 @@ public class AccountServiceTest {
 
     @Test
     public void testNumberOfRegistered() throws Exception {
-        when(dbService.getCount()).thenReturn(1);
+       // when(dbService.getCount()).thenReturn(1);
         assertEquals("testNumberOfRegistered().expect 1", 1, accountService.numberOfRegistered());
     }
 
    @Test
     public void testAddUser() throws Exception {
-        String[] test_user_data = new String[]{"Test1", "test_password1", "test1@mail.ru"};
-        int size = accountService.numberOfRegistered();
-        when(dbService.getCount()).thenReturn(1);
-        assertTrue("testAddUser().User hasn't added!", accountService.addUser(test_user_data[0], test_user_data[1], test_user_data[2]));
-        assertEquals("testAddUser().user is not added", size + 1, accountService.numberOfRegistered());
+       UserProfile test1User = new UserProfile("Test1", "test_password1", "test1@mail.ru");
+       int size = accountService.numberOfRegistered();
+       assertTrue(accountService.addUser(test1User.getLogin(), test1User.getPassword(), test1User.getEmail()));
+       assertFalse("testAddUser().False, User already exists!", accountService.addUser(username, password, email));
+       assertEquals("testAddUser().user is not added", size + 1, accountService.numberOfRegistered());
+       assertEquals("testAddUser().user is not added", test1User.getLogin(), accountService.getUser("Test1").getLogin());
+       assertEquals("testAddUser().user is not added", test1User.getPassword(), accountService.getUser("Test1").getPassword());
+       assertEquals("testAddUser().user is not added", test1User.getEmail(), accountService.getUser("Test1").getEmail());
+       dbService.deleteUser(dbService.readByName("Test1"));
     }
 
     @Test
@@ -74,9 +95,10 @@ public class AccountServiceTest {
         assertTrue("testRemoveSeassions().testRemoveSeassions", accountService.removeSeassions(testSession));
         assertEquals("testRemoveSeassions().testRemoveSeassions", 0, accountService.numberOfSessions());
     }
+
     @Test
     public void testGetUser() throws Exception {
-        when(dbService.readByName(username)).thenReturn(testUser);
+     //   when(dbService.readByName(username)).thenReturn(testUser);
         assertNotNull("testGetUser().function does not give an existing object", accountService.getUser(username));
         assertNull("testGetUser().function gives a non-existent object", accountService.getUser("Test1"));
         assertEquals("testGetUser().not a valid response", testUser.getLogin(), accountService.getUser(username).getLogin());
@@ -91,6 +113,7 @@ public class AccountServiceTest {
         accountService.addSessions(testSession, testUser);
         assertEquals(testSession, accountService.getSessinonId(testUser));
     }
+
     @Test
     public void testCheckSeassions() throws Exception {
         assertFalse(accountService.checkSeassions(testSession));
@@ -103,11 +126,13 @@ public class AccountServiceTest {
         accountService.addSessions(testSession, testUser);
         assertTrue(accountService.checkSeassions(testSession));
     }
+
     @Test
     public void testGetCurrentUser() throws Exception {
         accountService.addSessions(testSession, testUser);
         assertEquals(testUser, accountService.getCurrentUser(testSession));
     }
+
     @Test
     public void testUserSession() throws Exception {
         String  expectLogin = "";
@@ -115,9 +140,16 @@ public class AccountServiceTest {
         accountService.addSessions(testSession, testUser);
         assertEquals(testUser.getLogin(), accountService.userSession(testSession));
     }
+
     @Test
     public void testGetSessions() throws Exception {
         accountService.addSessions(testSession, testUser);
         assertEquals(testUser, accountService.getSessions(testSession));
     }
+
+    @AfterClass
+    public static void close(){
+        dbService.shutdown();
+    }
+
 }

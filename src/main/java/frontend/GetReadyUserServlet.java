@@ -1,8 +1,6 @@
 package frontend;
 
-import main.AccountService;
-import main.UserProfile;
-import main.UsersReadyToGameService;
+import main.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,9 +19,10 @@ public class GetReadyUserServlet extends HttpServlet {
     private UsersReadyToGameService usersReadyToGameService;
     private AccountService accountService;
     public static final String GET_USER_URL = "/api/v1/auth/get_users";
-    public GetReadyUserServlet( UsersReadyToGameService usersReadyToGameService, AccountService accountService) {
-        this.accountService = accountService;
-        this.usersReadyToGameService = usersReadyToGameService;
+    public GetReadyUserServlet() {
+        Context instance = Context.getInstance();
+        this.accountService = (AccountService)instance.get(AccountService.class);
+        this.usersReadyToGameService = (UsersReadyToGameService)instance.get(UsersReadyToGameService.class);
     }
     @Override
     public void doGet(HttpServletRequest request,

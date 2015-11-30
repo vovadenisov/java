@@ -2,12 +2,16 @@ package frontend;
 
 import main.*;
 import org.json.JSONObject;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.BeforeClass;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -21,42 +25,54 @@ public class FindGameServletTest {
     private UserProfile testUser;
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
-    private final AccountService accountService = mock(AccountService.class);
-    private final UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
-    private final RoomService roomService = mock(RoomService.class);
-    private final Context instance = Context.getInstance();
+    private static final AccountService ACCOUNT_SERVICE = mock(AccountService.class);
+    private static final UsersReadyToGameService USERS_READY_TO_GAME_SERVICE = mock(UsersReadyToGameService.class);
+    private static final RoomService ROOM_SERVICE = mock(RoomService.class);
+    private static final Context INSTANCE = Context.getInstance();
     private final HttpSession session = mock(HttpSession.class);
-    private final String username = "test_username";
-    private final String password = "test_password";
-    private final String email = "test_email@mail";
-    private final StringWriter stringWriter = new StringWriter();
-    final PrintWriter writer = new PrintWriter(stringWriter);
-    private FindGameServlet findGameServlet;
+    private StringWriter stringWriter;
+    private static FindGameServlet findGameServlet;
+
+    @BeforeClass
+    public static void before(){
+        INSTANCE.add(UsersReadyToGameService.class, USERS_READY_TO_GAME_SERVICE);
+        INSTANCE.add(RoomService.class, ROOM_SERVICE);
+        INSTANCE.add(AccountService.class, ACCOUNT_SERVICE);
+        findGameServlet = new FindGameServlet();
+
+    }
+    @AfterClass
+    public static void after() throws Exception {
+        INSTANCE.remove(UsersReadyToGameService.class);
+        INSTANCE.remove(RoomService.class);
+        INSTANCE.remove(AccountService.class);
+    }
 
     @Before
-    public void initialization() throws Exception {
-        instance.add(UsersReadyToGameService.class, usersReadyToGameService);
-        instance.add(RoomService.class, roomService);
-        instance.add(AccountService.class, accountService);
-        findGameServlet = new FindGameServlet();
+    public void initialization() throws IOException {
+        stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
+        String username = "test_username";
+        String password = "test_password";
+        String email = "test_email@mail";
         testUser = new UserProfile(username, password, email);
     }
     @Test
-    public void testDoGetAnonim() throws Exception {
-        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(false);
+    public void testDoGetAnonim() throws IOException, ServletException {
+        when(ACCOUNT_SERVICE.checkSeassions(request.getSession().getId())).thenReturn(false);
         findGameServlet.doGet(request, response);
         verify(response).setStatus(HttpServletResponse.SC_FOUND);
         verify(response, never()).setStatus(HttpServletResponse.SC_OK);
     }
 
     @Test
-    public void testDoGetIsGameUserInRoomTrue() throws Exception {
-        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(true);
+    public void testDoGetIsGameUserInRoomTrue() throws IOException, ServletException {
+        when(ACCOUNT_SERVICE.checkSeassions(request.getSession().getId())).thenReturn(true);
         when(request.getParameter("is_game")).thenReturn("game");
-        when(accountService.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
-        when(roomService.userInRoom(testUser)).thenReturn(true);
+        when(ACCOUNT_SERVICE.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
+        when(ROOM_SERVICE.userInRoom(testUser)).thenReturn(true);
         findGameServlet.doGet(request, response);
         verify(response, never()).setStatus(HttpServletResponse.SC_FOUND);
         verify(response).setStatus(HttpServletResponse.SC_OK);
@@ -64,27 +80,27 @@ public class FindGameServletTest {
         assertEquals("game_status", 1, obj.get("game_status"));
     }
     @Test
-    public void testDoGetIsGameUserInRoomFalse() throws Exception {
-        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(true);
+    public void testDoGetIsGameUserInRoomFalse() throws IOException, ServletException {
+        when(ACCOUNT_SERVICE.checkSeassions(request.getSession().getId())).thenReturn(true);
         when(request.getParameter("is_game")).thenReturn("game");
-        when(accountService.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
-        when(roomService.userInRoom(testUser)).thenReturn(false);
+        when(ACCOUNT_SERVICE.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
+        when(ROOM_SERVICE.userInRoom(testUser)).thenReturn(false);
         findGameServlet.doGet(request, response);
-//        JSONObject obj = new JSONObject(stringWriter.toString());
-  //      assertEquals("game_status", 0, obj.get("game_status"));
+        JSONObject obj = new JSONObject(stringWriter.toString());
+        assertEquals("game_status", 0, obj.get("game_status"));
     }
     @Test
-    public void testDoPostAnonim() throws Exception {
-        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(false);
+    public void testDoPostAnonim() throws IOException, ServletException {
+        when(ACCOUNT_SERVICE.checkSeassions(request.getSession().getId())).thenReturn(false);
         findGameServlet.doPost(request, response);
         verify(response).setHeader("location", SignInServlet.SIGNIN_PAGE_URL);
         verify(response, never()).setStatus(HttpServletResponse.SC_OK);
     }
 
     @Test
-    public void testDoPostSuccsess() throws Exception {
-        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(true);
-        when(accountService.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
+    public void testDoPostSuccsess() throws IOException, ServletException {
+        when(ACCOUNT_SERVICE.checkSeassions(request.getSession().getId())).thenReturn(true);
+        when(ACCOUNT_SERVICE.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
         findGameServlet.doPost(request, response);
         JSONObject obj = new JSONObject(stringWriter.toString());
         assertEquals("status", "OK", obj.get("status"));

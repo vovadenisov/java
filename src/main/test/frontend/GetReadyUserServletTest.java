@@ -1,7 +1,9 @@
 package frontend;
 
 import main.*;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +24,9 @@ import static org.mockito.Mockito.*;
 public class GetReadyUserServletTest {
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
-    private final AccountService accountService = mock(AccountService.class);
-    private final UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
-    private final RoomService roomService = mock(RoomService.class);
+    private static AccountService accountService = mock(AccountService.class);
+    private static UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
+    private static RoomService roomService = mock(RoomService.class);
     private final HttpSession session = mock(HttpSession.class);
     private final StringWriter stringWriter = new StringWriter();
     final PrintWriter writer = new PrintWriter(stringWriter);
@@ -32,14 +34,27 @@ public class GetReadyUserServletTest {
     private Set<UserProfile> users_ready;
     private UserProfile testUser;
     private final String username = "test_username";
-    private final Context instance = Context.getInstance();
+    private static Context instance = Context.getInstance();
     private final String password = "test_password";
     private final String email = "test_email@mail";
-    @Before
-    public void initialization() throws Exception {
+
+    @BeforeClass
+    public static void before(){
         instance.add(UsersReadyToGameService.class, usersReadyToGameService);
         instance.add(RoomService.class, roomService);
         instance.add(AccountService.class,(accountService));
+    }
+
+    @AfterClass
+    public static void after() throws Exception {
+        instance.remove(UsersReadyToGameService.class);
+        instance.remove(RoomService.class);
+        instance.remove(AccountService.class);
+    }
+
+
+    @Before
+    public void initialization() throws Exception {
         when(response.getWriter()).thenReturn(writer);
         when(request.getSession()).thenReturn(session);
         getReadyUserServlet = new GetReadyUserServlet();

@@ -42,9 +42,10 @@ public class SignUpServlet extends HttpServlet {
         }
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
+        System.out.println(json.toString());
         response.getWriter().println(json);
     }
-
+/*
     @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
@@ -64,5 +65,5 @@ public class SignUpServlet extends HttpServlet {
             response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));
         }
 
-    }
+    }*/
 }

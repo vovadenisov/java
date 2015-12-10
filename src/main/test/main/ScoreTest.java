@@ -1,13 +1,9 @@
 package main;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-
-import org.junit.Test;
-import org.junit.After;
-import org.junit.Before;
 /**
  * Created by alla on 02.11.15.
  */
@@ -21,7 +17,7 @@ public class ScoreTest {
     private UserProfile testUser;
     @Before
     public void initialization() throws Exception {
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
         team = new Team();
         score = new Score(team);
     }

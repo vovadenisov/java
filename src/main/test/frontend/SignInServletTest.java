@@ -1,13 +1,19 @@
 package frontend;
 
 import main.*;
+import netscape.javascript.JSException;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -23,46 +29,56 @@ public class SignInServletTest {
     private UserProfile testUser;
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
-    private final AccountService accountService = mock(AccountService.class);
-    private final UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
-    private final RoomService roomService = mock(RoomService.class);private final HttpSession session = mock(HttpSession.class);
-    private final Context instance = Context.getInstance();
+    private static final AccountService ACCOUNT_SERVICE = mock(AccountService.class);
+    private static final UsersReadyToGameService USERS_READY_TO_GAME_SERVICE = mock(UsersReadyToGameService.class);
+    private static final RoomService ROOM_SERVICE = mock(RoomService.class);private final HttpSession session = mock(HttpSession.class);
+    private static final Context INSTANCE = Context.getInstance();
     private final String username = "test_username";
     private final String password = "test_password";
-    private final String email = "test_email@mail";
-    private final Integer id = 1;
-    private final StringWriter stringWriter = new StringWriter();
-    final PrintWriter writer = new PrintWriter(stringWriter);
+    private StringWriter stringWriter;
     private SignInServlet signIn;
 
+    @BeforeClass
+    public static void before(){
+        INSTANCE.add(UsersReadyToGameService.class, USERS_READY_TO_GAME_SERVICE);
+        INSTANCE.add(RoomService.class, ROOM_SERVICE);
+        INSTANCE.add(AccountService.class, ACCOUNT_SERVICE);
+    }
+
+    @AfterClass
+    public static void after() throws Exception {
+        INSTANCE.remove(UsersReadyToGameService.class);
+        INSTANCE.remove(RoomService.class);
+        INSTANCE.remove(AccountService.class);
+    }
 
     @Before
-    public void initialization() throws Exception {
-        instance.add(UsersReadyToGameService.class, (Object)(usersReadyToGameService));
-        instance.add(RoomService.class, (Object)(roomService));
-        instance.add(AccountService.class, (Object)(accountService));
+    public void initialization() throws IOException {
+        stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
         when(request.getParameter("name")).thenReturn(username);
         when(request.getParameter("password")).thenReturn(password);
+        String email = "test_email@mail";
         when(request.getParameter("email")).thenReturn(email);
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
         signIn = new SignInServlet();
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
     }
     @Test
-    public void testDoGetAnonim() throws Exception {
-        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(false);
+    public void testDoGetAnonim() throws IOException, ServletException {
+        when(ACCOUNT_SERVICE.checkSeassions(request.getSession().getId())).thenReturn(false);
         signIn.doGet(request, response);
         verify(response).setStatus(HttpServletResponse.SC_OK);
-        verify(accountService, never()).getCurrentUser(request.getSession().getId());
+        verify(ACCOUNT_SERVICE).getCurrentUser(request.getSession().getId());
     }
     @Test
-    public void testDoGetAlreadyLoggedUser() throws Exception {
-        when(accountService.checkSeassions(request.getSession().getId())).thenReturn(true);
-        when(accountService.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
+    public void testDoGetAlreadyLoggedUser() throws IOException, JSONException, ServletException {
+        when(ACCOUNT_SERVICE.checkSeassions(request.getSession().getId())).thenReturn(true);
+        when(ACCOUNT_SERVICE.getCurrentUser(request.getSession().getId())).thenReturn(testUser);
         signIn.doGet(request, response);
         verify(response).setStatus(HttpServletResponse.SC_OK);
-        verify(accountService).getCurrentUser(request.getSession().getId());
+        verify(ACCOUNT_SERVICE).getCurrentUser(request.getSession().getId());
         JSONObject obj = new JSONObject(stringWriter.toString());
         assertEquals("username", username, obj.get("login"));
         assertEquals("password", password, obj.get("password"));
@@ -71,16 +87,16 @@ public class SignInServletTest {
         assertEquals("username", "Already logged", obj.get("error_massage"));
     }
     @Test
-    public void testDoPostAlreadyLoggedUser() throws Exception {
-        when(accountService.checkUser(username)).thenReturn(true);
-        when(accountService.checkUserlogin(testUser)).thenReturn(true);
-        when(accountService.getUser(username)).thenReturn(testUser);
+    public void testDoPostAlreadyLoggedUser() throws IOException, JSONException, ServletException {
+        when(ACCOUNT_SERVICE.checkUser(username)).thenReturn(true);
+        when(ACCOUNT_SERVICE.checkUserlogin(testUser)).thenReturn(true);
+        when(ACCOUNT_SERVICE.getUser(username)).thenReturn(testUser);
         signIn.doPost(request, response);
         verify(request).getParameter("name");
         verify(request).getParameter("password");
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(request, never()).setAttribute("user", testUser);
-        verify(accountService, never()).addSessions(request.getSession().getId(), testUser);
+        verify(ACCOUNT_SERVICE, never()).addSessions(request.getSession().getId(), testUser);
         JSONObject obj = new JSONObject(stringWriter.toString());
         assertEquals("testDoPostAlreadyLoggedUser. Checking username", username, obj.get("login"));
         assertEquals("testDoPostAlreadyLoggedUser. Checking password", password, obj.get("password"));
@@ -90,16 +106,15 @@ public class SignInServletTest {
     }
 
     @Test
-    public void testDoPostDoesNotExist() throws Exception {
-        when(accountService.checkUser(username)).thenReturn(false);
+    public void testDoPostDoesNotExist() throws IOException, JSONException, ServletException {
+        when(ACCOUNT_SERVICE.checkUser(username)).thenReturn(false);
         signIn.doPost(request, response);
         verify(request).getParameter("name");
         verify(request).getParameter("password");
         verify(response).setStatus(HttpServletResponse.SC_OK);
-        verify(accountService, never()).getUser(username);
-        verify(accountService, never()).checkUserlogin(testUser);
+        verify(ACCOUNT_SERVICE, never()).checkUserlogin(testUser);
         verify(request, never()).setAttribute("user", testUser);
-        verify(accountService, never()).addSessions(request.getSession().getId(), testUser);
+        verify(ACCOUNT_SERVICE, never()).addSessions(request.getSession().getId(), testUser);
         JSONObject obj = new JSONObject(stringWriter.toString());
         assertEquals("username", username, obj.get("login"));
         assertEquals("password", password, obj.get("password"));
@@ -108,17 +123,17 @@ public class SignInServletTest {
         assertEquals("username", "User with this name does not exist", obj.get("error_massage"));
     }
     @Test
-    public void testDoPostWrongLoginPassword() throws Exception {
-        when(accountService.checkUser(username)).thenReturn(true);
-        when(accountService.checkUserlogin(testUser)).thenReturn(false);
+    public void testDoPostWrongLoginPassword() throws IOException, JSONException, ServletException {
+        when(ACCOUNT_SERVICE.checkUser(username)).thenReturn(true);
+        when(ACCOUNT_SERVICE.checkUserlogin(testUser)).thenReturn(false);
         when(request.getParameter("password")).thenReturn("wrong_password");
-        when(accountService.getUser(username)).thenReturn(testUser);
+        when(ACCOUNT_SERVICE.getUser(username)).thenReturn(testUser);
         signIn.doPost(request, response);
         verify(request).getParameter("name");
         verify(request).getParameter("password");
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(request, never()).setAttribute("user", testUser);
-        verify(accountService, never()).addSessions(request.getSession().getId(), testUser);
+        verify(ACCOUNT_SERVICE, never()).addSessions(request.getSession().getId(), testUser);
         JSONObject obj = new JSONObject(stringWriter.toString());
         assertEquals("username", username, obj.get("login"));
         assertEquals("status", 200, obj.get("status"));
@@ -126,16 +141,16 @@ public class SignInServletTest {
         assertEquals("username", "Wrong login/password", obj.get("error_massage"));
     }
     @Test
-    public void testDoPostSucsess() throws Exception {
-        when(accountService.checkUser(username)).thenReturn(true);
-        when(accountService.checkUserlogin(testUser)).thenReturn(false);
-        when(accountService.getUser(username)).thenReturn(testUser);
+    public void testDoPostSucsess() throws IOException, JSONException, ServletException {
+        when(ACCOUNT_SERVICE.checkUser(username)).thenReturn(true);
+        when(ACCOUNT_SERVICE.checkUserlogin(testUser)).thenReturn(false);
+        when(ACCOUNT_SERVICE.getUser(username)).thenReturn(testUser);
         signIn.doPost(request, response);
         verify(request).getParameter("name");
         verify(request).getParameter("password");
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(request).setAttribute("user", testUser);
-        verify(accountService).addSessions(request.getSession().getId(), testUser);
+        verify(ACCOUNT_SERVICE).addSessions(request.getSession().getId(), testUser);
         JSONObject obj = new JSONObject(stringWriter.toString());
         assertEquals("username", username, obj.get("login"));
         assertEquals("password", password, obj.get("password"));

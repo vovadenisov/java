@@ -5,7 +5,9 @@ import main.Context;
 import main.RoomService;
 import main.UsersReadyToGameService;
 import org.json.JSONObject;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,21 +27,31 @@ import static org.mockito.Mockito.when;
     public class LogoutServletTest {
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
-    private final AccountService accountService = mock(AccountService.class);
-    private final UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
-    private final RoomService roomService = mock(RoomService.class);
-    private final Context instance = Context.getInstance();
+    private static AccountService accountService = mock(AccountService.class);
+    private static UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
+    private static RoomService roomService = mock(RoomService.class);
+    private static Context instance = Context.getInstance();
     private final HttpSession session = mock(HttpSession.class);
     private final StringWriter stringWriter = new StringWriter();
     final PrintWriter writer = new PrintWriter(stringWriter);
     private LogoutServlet logOut;
     private final String username = "test_username";
+    @BeforeClass
+    public static void before(){
+        instance.add(UsersReadyToGameService.class, usersReadyToGameService);
+        instance.add(RoomService.class, roomService);
+        instance.add(AccountService.class, accountService);
+    }
+
+    @AfterClass
+    public static void after() throws Exception {
+        instance.remove(UsersReadyToGameService.class);
+        instance.remove(RoomService.class);
+        instance.remove(AccountService.class);
+    }
 
     @Before
     public void initialization() throws Exception {
-        instance.add(UsersReadyToGameService.class, (Object)(usersReadyToGameService));
-        instance.add(RoomService.class, (Object)(roomService));
-        instance.add(AccountService.class, (Object)(accountService));
         when(request.getSession()).thenReturn(session);
         when(response.getWriter()).thenReturn(writer);
         logOut = new LogoutServlet();

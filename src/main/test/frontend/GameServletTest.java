@@ -5,7 +5,9 @@ import main.AccountService;
 import main.Context;
 import main.RoomService;
 import main.UsersReadyToGameService;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,20 +25,32 @@ import static org.mockito.Mockito.*;
 public class GameServletTest {
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
-    private final AccountService accountService = mock(AccountService.class);
-    private final UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
-    private final RoomService roomService = mock(RoomService.class);
-    private final Context instance = Context.getInstance();
+    private static AccountService accountService = mock(AccountService.class);
+    private static UsersReadyToGameService usersReadyToGameService = mock(UsersReadyToGameService.class);
+    private static RoomService roomService = mock(RoomService.class);
+    private static Context instance = Context.getInstance();
     private final HttpSession session = mock(HttpSession.class);
     private final StringWriter stringWriter = new StringWriter();
     final PrintWriter writer = new PrintWriter(stringWriter);
     private GameServlet gameServlet;
 
+    @BeforeClass
+    public static void before(){
+        instance.add(UsersReadyToGameService.class, usersReadyToGameService);
+        instance.add(RoomService.class,roomService);
+        instance.add(AccountService.class, (accountService));
+    }
+
+    @AfterClass
+    public static void after() throws Exception {
+        instance.remove(UsersReadyToGameService.class);
+        instance.remove(RoomService.class);
+        instance.remove(AccountService.class);
+    }
+
     @Before
     public void initialization() throws Exception {
-        instance.add(UsersReadyToGameService.class, (Object)(usersReadyToGameService));
-        instance.add(RoomService.class, (Object)(roomService));
-        instance.add(AccountService.class, (Object)(accountService));when(response.getWriter()).thenReturn(writer);
+        when(response.getWriter()).thenReturn(writer);
         when(request.getSession()).thenReturn(session);
         gameServlet = new GameServlet();
     }
@@ -56,51 +70,6 @@ public class GameServletTest {
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(request, never()).getParameter("start");
     }
-
-    /*
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Object> pageVariables = new HashMap<>();
-        System.out.println("in_game");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        JSONObject json = new JSONObject();
-        UserProfile user = accountService.getCurrentUser(request.getSession().getId());
-        if (request.getParameter("push") != null) {
-            String room_id = request.getParameter("room_id");
-            System.out.println(room_id);
-            System.out.println("to int");
-            System.out.println(Integer.parseInt(room_id));
-
-            roomService.pushEvent("push", user, Integer.parseInt(room_id));
-        }
-        if (Objects.equals(request.getParameter("is_game_progress"), "true")){
-            if (!accountService.checkSeassions(request.getSession().getId())){
-                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            }
-            else {
-                String room_id = request.getParameter("room_id");
-                System.out.println(room_id);
-                System.out.println("to int");
-                System.out.println(Integer.parseInt(room_id));
-                JSONArray winners_list = new JSONArray();
-                if (!roomService.getRoom(Integer.parseInt(room_id)).getStatus()) {
-                    for (UserProfile users : roomService.getRoom(Integer.parseInt(room_id)).getWiner().getMembers()) {
-                        winners_list.add(users.getLogin());
-                    }
-                    json.put("is_game_progress", false);
-                    json.put("winers", winners_list);
-                } else {
-                    json.put("is_game_progress", true);
-                }
-                System.out.println("print");
-                System.out.println(json);
-                response.getWriter().println(json);
-            }
-        }
-    }
-
-     */
     @Test
     public void testDoGetRoomExistNoStart() throws Exception {
         when(request.getParameter("room")).thenReturn("1");

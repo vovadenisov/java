@@ -27,7 +27,18 @@ public final class Context {
     }
 
     public Object get(Class<?> clazz){
+
         return context.get(clazz);
+    }
+
+    public boolean remove(Class<?> clazz){
+        if(context.containsKey(clazz)){
+            context.remove(clazz);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 }

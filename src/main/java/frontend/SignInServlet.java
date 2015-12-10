@@ -85,6 +85,7 @@ public class SignInServlet extends HttpServlet {
             json.put("login_status", false);
             json.put("error_massage", "User with this name does not exist");
         }
+        System.out.println(json.toString());
         response.getWriter().println(json);
     }
 }

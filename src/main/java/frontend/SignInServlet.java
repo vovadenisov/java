@@ -1,8 +1,7 @@
 package frontend;
 
-import main.AccountService;
-import main.UserProfile;
-import org.json.simple.JSONObject;
+import main.*;
+import org.json.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -16,8 +15,9 @@ import java.util.Map;
 public class SignInServlet extends HttpServlet {
         public static final String SIGNIN_PAGE_URL = "/api/v1/auth/signin";
         private AccountService accountService;
-        public SignInServlet(AccountService accountService) {
-            this.accountService = accountService;
+        public SignInServlet() {
+            Context instance = Context.getInstance();
+            this.accountService = (AccountService)instance.get(AccountService.class);
         }
         @Override
         public void doGet(HttpServletRequest request,
@@ -87,6 +87,7 @@ public class SignInServlet extends HttpServlet {
             json.put("login_status", false);
             json.put("error_massage", "User with this name does not exist");
         }
+        System.out.println(json.toString());
         response.getWriter().println(json);
     }
 }

@@ -19,9 +19,9 @@ public class UsersReadyToGameService {
     }
 
     public Set<UserProfile> getUserReady(){
-        Set<UserProfile> all_user = new HashSet<>();
-        all_user.addAll(users);
-        return all_user;
+        Set<UserProfile> allUser = new HashSet<>();
+        allUser.addAll(users);
+        return allUser;
     }
 
     public Boolean checkUser(String name){

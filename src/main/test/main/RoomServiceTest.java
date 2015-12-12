@@ -6,7 +6,6 @@ import websocket.GameWebSocketService;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 
 /**
@@ -25,11 +24,11 @@ public class RoomServiceTest {
 
     @Before
     public void initialization() throws Exception {
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
         team = new Team();
         team.addMembers(testUser);
         roomService = new RoomService();
-        room = new Room(team, gameWebSocketService);
+        room = new Room(team);
     }
 
     @Test

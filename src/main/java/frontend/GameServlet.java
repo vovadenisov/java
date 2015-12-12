@@ -1,10 +1,7 @@
 package frontend;
-import main.AccountService;
-import main.RoomService;
-import main.UserProfile;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import main.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,9 +19,10 @@ public class GameServlet extends HttpServlet {
     private AccountService accountService;
     private RoomService roomService;
     public static final String GAME_PAGE_URL = "/api/v1/auth/game";
-    public GameServlet(AccountService accountService, RoomService roomService) {
-        this.accountService = accountService;
-        this.roomService = roomService;
+    public GameServlet() {
+        Context instance = Context.getInstance();
+        this.accountService = (AccountService)instance.get(AccountService.class);
+        this.roomService = (RoomService)instance.get(RoomService.class);
     }
 
 
@@ -42,8 +40,8 @@ public class GameServlet extends HttpServlet {
         else{
             UserProfile user = accountService.getCurrentUser(request.getSession().getId());
             if (request.getParameter("push") != null) {
-                String room_id = request.getParameter("room_id");
-                roomService.pushEvent("push", user, Integer.parseInt(room_id));
+                String roomId = request.getParameter("room_id");
+                roomService.pushEvent("push", user, Integer.parseInt(roomId));
             }
             if (Objects.equals(request.getParameter("is_game_progress"), "true")) {
                 if (!accountService.checkSeassions(request.getSession().getId())) {
@@ -56,7 +54,7 @@ public class GameServlet extends HttpServlet {
                             winners_list.add(users.getLogin());
                         }
                         json.put("is_game_progress", false);
-                        json.put("winers", winners_list);
+                        json.put("winers", winnersList);
                     } else {
                         json.put("is_game_progress", true);
                     }*/
@@ -64,14 +62,5 @@ public class GameServlet extends HttpServlet {
                 }
             }
         }
-    }
-
-    @Override
-    public void doPost(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json");
-        JSONArray array = (JSONArray)JSONValue.parse(request.getParameter("notes"));
     }
 }

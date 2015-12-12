@@ -1,18 +1,18 @@
 package websocket;
 
-import main.UserProfile;
-import org.eclipse.jetty.websocket.api.annotations.*;
-import org.eclipse.jetty.websocket.api.Session;
-
-import org.json.simple.JSONObject;
-import main.RoomService;
+import main.Context;
 import main.Room;
+import main.RoomService;
+import main.UserProfile;
+import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.sql.Blob;
-
-import java.util.Set;
 
 /**
  * Created by alla on 12.11.15.
@@ -26,11 +26,12 @@ public class GameWebSocket {
     private Room room;
     private boolean status = false;
 
-    public GameWebSocket( UserProfile user, GameWebSocketService gameWebSocketService, RoomService roomService) {
+    public GameWebSocket( UserProfile user) {
       //  System.out.println("myName " + user.getLogin());
         this.user = user;
-        this.gameWebSocketService = gameWebSocketService;
-        this.roomService = roomService;
+        Context instance = Context.getInstance();
+        this.gameWebSocketService = (GameWebSocketService)instance.get(GameWebSocketService.class);
+        this.roomService = (RoomService)instance.get(RoomService.class);
     }
 
     private void SetRoom(){

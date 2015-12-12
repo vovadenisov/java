@@ -9,47 +9,47 @@ import java.util.*;
   * Created by usr on 21.10.15.
   */
 public class Room {
-     private Team winer = null;
+    private Team winer = null;
     private Map<Integer, Team> teams = new HashMap<>();
-     private GameWebSocketService gameWebSocketService;
+    private GameWebSocketService gameWebSocketService;
     private Set<Score> score = new HashSet<>();
     private long time = 0;
     private Boolean status = true;
-     private Boolean game = false;
-     private int level;
-     private int step;
-     private UserProfile first;
-     private UserProfile second;
-     private UserProfile current;
-     public void stepGame(UserProfile user, String data){
-         if(user.equals(first)) {
-             gameWebSocketService.notifyStepGame(second, data);
-         }else {
-             gameWebSocketService.notifyStepGame(first, data);
-         }
-     }
+    private Boolean game = false;
+    private int level;
+    private int step;
+    private UserProfile first;
+    private UserProfile second;
+    private UserProfile current;
 
-     public void stepGameBin(UserProfile user, byte buf[]){
-         System.out.println(user.getLogin() + " say " + buf);
-         gameWebSocketService.notifyStepGameBinary(user, buf);
-     }
+    public void stepGame(UserProfile user, String data){
+        if(user.equals(first)) {
+            gameWebSocketService.notifyStepGame(second, data);
+        }else {
+            gameWebSocketService.notifyStepGame(first, data);
+        }
+    }
 
-     public Boolean getGame(){return game;}
-     public void setGame(Boolean game){this.game = game;}
+    public void stepGameBin(UserProfile user, byte buf[]){
+        System.out.println(user.getLogin() + " say " + buf);
+        gameWebSocketService.notifyStepGameBinary(user, buf);
+    }
 
-     public int getStep(){return step;}
-     public void setStep(int step){this.step = step;}
+    public Boolean getGame(){return game;}
+    public void setGame(Boolean game){this.game = game;}
+    public int getStep(){return step;}
+    public void setStep(int step){this.step = step;}
+    public int getLevel(){return this.level;}
+    public void setLevel(int level){this.level = level;}
 
-     public int getLevel(){return this.level;}
-     public void setLevel(int level){this.level = level;}
-
-    public Room(Team team, GameWebSocketService gameWebSocketService ){
+    public Room(Team team){
         Score score = new Score(team);
         teams.put(team.hashCode(), team);
         this.score.add(score);
         step = 0;
         level = 0;
-        this.gameWebSocketService = gameWebSocketService;
+        Context instance = Context.getInstance();
+        this.gameWebSocketService = (GameWebSocketService)instance.get(GameWebSocketService.class);
     }
 
     public boolean getStatus(){
@@ -87,9 +87,9 @@ public class Room {
     }
 
     public void incrimentScore(Team team){
-        for (Score team_score : score) {
-            if (team_score.isTeam(team)) {
-                team_score.incrementScore();
+        for (Score teamScore : score) {
+            if (teamScore.isTeam(team)) {
+                teamScore.incrementScore();
             }
         }
     }
@@ -179,6 +179,15 @@ public class Room {
         }
         return null;
     }
+
+     public Integer getTeamUser(UserProfile user){
+         for (Map.Entry<Integer, Team> teamEntry : teams.entrySet()){
+             if (teamEntry.getValue().getMembers().contains(user)){
+                 return teamEntry.getKey();
+             }
+         }
+         return -1;
+     }
 
     public Set<UserProfile> getEnemyTeamUsers(UserProfile user){
         for (Map.Entry<Integer, Team> team : teams.entrySet()){

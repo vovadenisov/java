@@ -1,35 +1,35 @@
 package main;
 
+import database.dbServise.DBService;
+import exceptions.DBException;
+
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class AccountService {
-    private Map<String, UserProfile> users = new HashMap<>();
     private Map<String, UserProfile> sessions = new HashMap<>();
-    private UserProfile anonim;
-    private static Integer n_anonim = 1;
-    @SuppressWarnings("all")
-    private UserProfile getAnonim(String SessionId){
-        String name = "anonim" + String.valueOf(n_anonim);
-        n_anonim = ++n_anonim;
-        String email = name + "@mail.ru";
-        String pass = "12345";
-        addUser(name, pass, email);
-        addSessions(SessionId, getUser(name));
-        return getCurrentUser(SessionId);
+
+    private DBService dbService;
+
+    public AccountService(DBService dbService){
+        this.dbService = dbService;
     }
+
+
     public boolean checkUser(String userName){
-       if(users.containsKey(userName)) {
-           return true;
-       }
-       else {
-           return false;
-       }
+        try {
+            if (dbService.readByName(userName) != null){
+                return true;
+            }
+            return false;
+        }catch (DBException e){
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
     public String getSessinonId(UserProfile requestUser){
-
         for(Map.Entry<String, UserProfile> entry : sessions.entrySet()) {
             if(entry.getValue().equals(requestUser)){
                 return entry.getKey();
@@ -43,24 +43,26 @@ public class AccountService {
     }
 
     public int numberOfRegistered(){
-
-        return users.size();
+        return dbService.getCount();
     }
 
     public int numberOfSessions(){
-
         return sessions.size();
     }
 
     public boolean addUser(String userName, String password, String email) {
-        if (users.containsKey(userName))
+        try {
+            dbService.saveUser(userName, password, email);
+            return true;
+        }
+        catch (DBException e){
+            System.out.println(e.getMessage());
             return false;
-        UserProfile userProfile = new UserProfile(userName, password, email, users.size());
-        users.put(userName, userProfile);
-        return true;
+        }
     }
 
     public boolean checkSeassions(String sessionId){
+
         return sessions.containsKey(sessionId);
     }
 
@@ -72,18 +74,30 @@ public class AccountService {
     }
 
     public void addSessions(String sessionId, UserProfile userProfile) {
+
         sessions.put(sessionId, userProfile);
     }
 
     public UserProfile getCurrentUser(String sessionId){
-        if(checkSeassions(sessionId)) {
-            return sessions.get(sessionId);
+        return sessions.get(sessionId);
+    }
+
+    public UserProfile getLoginUser(String userName) {
+        for(Map.Entry<String, UserProfile> entry : sessions.entrySet()) {
+            if(entry.getValue().getLogin().equals(userName)){
+                return entry.getValue();
+            }
         }
         return null;
     }
 
     public UserProfile getUser(String userName) {
-        return users.get(userName);
+        try {
+            return dbService.readByName(userName);
+        }catch (DBException e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     public String userSession(String sessionId) {
@@ -92,6 +106,7 @@ public class AccountService {
         return sessions.get(sessionId).getLogin();
     }
     public UserProfile getSessions(String sessionId) {
+
         return sessions.get(sessionId);
     }
 

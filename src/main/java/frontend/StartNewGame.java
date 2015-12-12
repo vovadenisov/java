@@ -2,7 +2,6 @@ package frontend;
 
 import main.*;
 import org.json.simple.JSONObject;
-import websocket.GameWebSocketService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,57 +16,60 @@ public class StartNewGame extends HttpServlet {
     private UsersReadyToGameService usersReadyToGameService;
     private AccountService accountService;
     private RoomService roomService;
-    private GameWebSocketService gameWebSocketService;
     public static final String INVITE_URL = "/api/v1/auth/invite";
 
-    public StartNewGame(UsersReadyToGameService usersReadyToGameService, AccountService accountService, RoomService roomService,
-                         GameWebSocketService gameWebSocketService) {
-        this.roomService = roomService;
-        this.usersReadyToGameService = usersReadyToGameService;
-        this.accountService = accountService;
-        this.gameWebSocketService = gameWebSocketService;
+    public StartNewGame() {
+        Context instance = Context.getInstance();
+        this.roomService = (RoomService)instance.get(RoomService.class);
+        this.usersReadyToGameService = (UsersReadyToGameService)instance.get(UsersReadyToGameService.class);
+        this.accountService = (AccountService)instance.get(AccountService.class);
     }
 
     @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("StartNewGame");
-        String user_name = request.getParameter("user");
-        if (user_name == null){
+        String userName = request.getParameter("user");
+        if (userName == null){
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         else{
-            System.out.println(user_name + " " + request.getSession().getId());
+            System.out.println(userName + " " + request.getSession().getId());
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");
             JSONObject json = new JSONObject();
-            if (usersReadyToGameService.checkUser(user_name)){
+            if (usersReadyToGameService.checkUser(userName)) {
                 json.put("user_status", "request_user_found");
-                UserProfile current_user = accountService.getCurrentUser(request.getSession().getId());
-                UserProfile invite_user = accountService.getUser(user_name);
-                Team current_user_team = new Team();
-                Team invite_user_team = new Team();
-                if (current_user_team.addMembers(current_user) && invite_user_team.addMembers(invite_user)) {
-                    Room game_room = new Room(current_user_team, gameWebSocketService);
-                    if (game_room.addTeam(invite_user_team)) {
-                        roomService.putRoom(game_room);
-                        json.put("game_status", true);
-                        usersReadyToGameService.popUserReady(invite_user);
-                        usersReadyToGameService.popUserReady(current_user);
-                        response.getWriter().println(json);
-                    }
-                    else{
-                        json.put("game_status", "can't_add_team_in_room");
-                        response.getWriter().println(json);
-                    }
-                }
-                else {
+                UserProfile currentUser = accountService.getCurrentUser(request.getSession().getId());
+                UserProfile inviteUser = accountService.getLoginUser(userName);
+//                UserProfile inviteUser = accountService.getUser(userName);
+                if (inviteUser == null) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     json.put("game_status", "can't_add_user_in_team");
                     response.getWriter().println(json);
                 }
+                else{
+                    Team currentUserTeam = new Team();
+                    Team inviteUserTeam = new Team();
+                    if (currentUserTeam.addMembers(currentUser) && inviteUserTeam.addMembers(inviteUser)) {
+                        Room gameRoom = new Room(currentUserTeam);
+                        if (gameRoom.addTeam(inviteUserTeam)) {
+                            roomService.putRoom(gameRoom);
+                            json.put("game_status", true);
+                            usersReadyToGameService.popUserReady(inviteUser);
+                            usersReadyToGameService.popUserReady(currentUser);
+                            response.getWriter().println(json);
+                        } else {
+                            json.put("game_status", "can't_add_team_in_room");
+                            response.getWriter().println(json);
+                        }
+                    } else {
+                        json.put("game_status", "can't_add_user_in_team");
+                        response.getWriter().println(json);
+                    }
+                }
             }
             else{
-                json.put("game_status",false);
+                json.put("game_status", false);
                 response.getWriter().println(json);
             }
         }

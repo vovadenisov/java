@@ -7,9 +7,8 @@ import java.lang.reflect.Field;
 public class Reflection {
     public static Object createObject(String className) {
         try {
-            Constructor c = Class.forName(className).getConstructor(String.class, String.class, String.class, Integer.class);
-            Object object = c.newInstance("", "", "", 1);
-            return object;
+            Constructor c = Class.forName(className).getConstructor(String.class, String.class, String.class, long.class);
+            return c.newInstance("", "", "", 1);
         } catch (Exception e) {
             e.printStackTrace();
         }

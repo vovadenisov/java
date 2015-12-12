@@ -22,7 +22,7 @@ public class TeamTest {
     @Before
     public void initialization() throws Exception {
         team = new Team();
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class TeamTest {
     public void testAddMembers() throws Exception {
         assertTrue("testAddMembers(). Expect true", team.addMembers(testUser));
 //        в комнату не долбавится больше юзеров, чем размер комнаты
-        UserProfile neeUser1 = new UserProfile("new_name", "new_pass", "new_email", 2);
+        UserProfile neeUser1 = new UserProfile("new_name", "new_pass", "new_email");
         team.setTeamSize(1);
         assertFalse("testAddMembers().add_new_member_size_1 Expect false", team.addMembers(neeUser1));
 //        в комнау с размером 2 пытаемся положить уже лежащего там юзера
@@ -73,7 +73,7 @@ public class TeamTest {
         team.addMembers(testUser);
         assertArrayEquals(team.getMembers().toArray(), users.toArray());
         //проверим, что новый добавленный юзер возвращается
-        UserProfile neeUser1 = new UserProfile("new_name", "new_pass", "new_email", 2);
+        UserProfile neeUser1 = new UserProfile("new_name", "new_pass", "new_email");
         team.setTeamSize(2);
         team.addMembers(neeUser1);
         users.add(neeUser1);

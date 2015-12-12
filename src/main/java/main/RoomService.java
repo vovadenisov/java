@@ -4,6 +4,7 @@ import websocket.GameWebSocketService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by usr on 21.10.15.
@@ -18,6 +19,14 @@ public class RoomService {
     private GameWebSocketService gameWebSocketService;
     private Team waiter;
 
+    public Map<Integer, Room> getRooms(){
+        return rooms;
+    }
+
+    public Integer roomSize(){
+        return rooms.size();
+    }
+
     public Integer putRoom(Room newRoom){
         if (rooms.containsValue(newRoom)){
             return -1;
@@ -31,7 +40,7 @@ public class RoomService {
 
     public Boolean pushEvent(String event, UserProfile user, Integer id){
         if (!rooms.isEmpty()) {
-            if (event == "push") {
+            if (Objects.equals(event, "push")) {
                 rooms.get(id).addEvent("push", user);
                 return true;
             }

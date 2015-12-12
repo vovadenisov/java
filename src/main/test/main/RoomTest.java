@@ -4,15 +4,11 @@ import org.junit.Before;
 import org.junit.Test;
 import websocket.GameWebSocketService;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import static org.mockito.Mockito.mock;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
 
 /**
  * Created by alla on 05.11.15.
@@ -32,14 +28,14 @@ public class RoomTest {
 
     @Before
     public void initialization() throws Exception {
-        testUser = new UserProfile(username, password, email, id);
+        testUser = new UserProfile(username, password, email);
         team = new Team();
         team.addMembers(testUser);
-        room = new Room(team, gameWebSocketService);
+        room = new Room(team);
         room.addTeam(team);
         score = new Score(team);
         team2 = new Team();
-        testUser2 = new UserProfile("username", "pass", "email", 1);
+        testUser2 = new UserProfile("username", "pass", "email");
     }
 
     @Test
@@ -57,6 +53,14 @@ public class RoomTest {
 
     }
 
+
+    @Test
+    public void testGetTeamUser() throws Exception {
+        assertNotNull(room.getTeamUser(testUser));
+        UserProfile testUser2 = new UserProfile("username", "pass", "email");
+        Integer response = -1;
+        assertEquals(response, room.getTeamUser(testUser2));
+    }
 
     @Test
     public void testAddTeamFalse() throws Exception {

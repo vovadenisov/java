@@ -1,8 +1,7 @@
 package frontend;
 
-import main.AccountService;
-import main.UserProfile;
-import org.json.simple.JSONObject;
+import main.*;
+import org.json.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -17,8 +16,9 @@ import java.util.Map;
 public class SignUpServlet extends HttpServlet {
     private AccountService accountService;
     public static final String SIGNUP_PAGE_URL = "/api/v1/auth/signup";
-    public SignUpServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public SignUpServlet() {
+        Context instance = Context.getInstance();
+        this.accountService = (AccountService)instance.get(AccountService.class);
     }
 
     @Override
@@ -27,23 +27,14 @@ public class SignUpServlet extends HttpServlet {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
-        Map<String, Object> pageVariables = new HashMap<>();
         JSONObject json = new JSONObject();
         if (accountService.addUser(name, password, email)) {
-            pageVariables.put("name", name == null ? "" : name);
-            pageVariables.put("password", password == null ? "" : password);
-            pageVariables.put("email", email == null ? "" : email);
-            pageVariables.put("signup_status", "New user created name: " + name);
             json.put("login", name == null ? "" : name);
             json.put("password", password == null ? "" : password);
             json.put("status", 200);
             json.put("login_status", "true");
 
         } else {
-            pageVariables.put("name", name == null ? "" : name);
-            pageVariables.put("password", password == null ? "" : password);
-            pageVariables.put("email", email == null ? "" : email);
-            pageVariables.put("signup_status", "User with name: " + name + " already exists");
             json.put("login", name == null ? "" : name);
             json.put("password", password == null ? "" : password);
             json.put("status", 200);
@@ -51,11 +42,10 @@ public class SignUpServlet extends HttpServlet {
         }
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
+        System.out.println(json.toString());
         response.getWriter().println(json);
-        //  response.getWriter().println(PageGenerator.getPage("signupresponse.txt", pageVariables));
-
     }
-
+/*
     @Override
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
@@ -75,5 +65,5 @@ public class SignUpServlet extends HttpServlet {
             response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));
         }
 
-    }
+    }*/
 }

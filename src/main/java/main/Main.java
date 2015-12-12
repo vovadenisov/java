@@ -3,6 +3,8 @@ package main;
 import database.dbServise.DBService;
 import exceptions.ConfigException;
 import frontend.*;
+import websocket.GameWebSocketService;
+import websocket.GameWebSocketServlet;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -10,14 +12,17 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;;
 import parser.ConfigParser;
+import parser.XMLReader;
+import java.io.File;
+import java.io.IOException;
+import java.math.RoundingMode;
+
 
 /**
  * Created by alla edited by nastya on 16.09.15.
  *
  */
-
 public class Main {
-
     public static void main(String[] args) throws NumberFormatException {
         try {
             ConfigParser configParser = new ConfigParser();
@@ -28,12 +33,14 @@ public class Main {
             AccountService accountService = new AccountService(dbService);
 
             Context instance = Context.getInstance();
+            instance.add(GameWebSocketService.class, new GameWebSocketService());
             instance.add(UsersReadyToGameService.class, new UsersReadyToGameService());
             instance.add(RoomService.class, new RoomService());
             instance.add(AccountService.class, accountService);
 
             ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
 
+            context.addServlet(new ServletHolder(new GameWebSocketServlet()), GameWebSocketServlet.GAME_WEB_SOCKET_URL);
             context.addServlet(new ServletHolder(new SignInServlet()), SignInServlet.SIGNIN_PAGE_URL);
             context.addServlet(new ServletHolder(new SignUpServlet()), SignUpServlet.SIGNUP_PAGE_URL);
             context.addServlet(new ServletHolder(new LogoutServlet()), LogoutServlet.LOGOUT_PAGE_URL);
@@ -57,6 +64,8 @@ public class Main {
 
             try {
                 server.start();
+                RoomService roomService = (RoomService)instance.get(RoomService.class);
+                roomService.simpleStart();
             } catch (Exception e) {
                 throw new RuntimeException("error", e);
             }

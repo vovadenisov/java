@@ -25,30 +25,6 @@ public class TeamTest {
         testUser = new UserProfile(username, password, email);
     }
 
-    /*
-    public void setTeamSize(Integer size){
-        teamSize = size;
-    }
-
-    public Integer getTeamSize(){
-        return teamSize;
-    }
-
-    public Boolean addMembers(UserProfile member){
-        if (members.size() < teamSize && !members.contains(member)) {
-            members.add(member);
-            return  true;
-        }
-        return false;
-    }
-
-    public Set<UserProfile> getMembers(){
-        return members;
-    }
-    */
-
-
-
     @Test
     public void testSetTeamSize() throws Exception {
         Integer newTeamSize = 3;

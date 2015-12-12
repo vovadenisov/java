@@ -47,17 +47,17 @@ public class GameServlet extends HttpServlet {
                 if (!accountService.checkSeassions(request.getSession().getId())) {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 } else {
-                    String roomId = request.getParameter("room_id");
-                    JSONArray winnersList = new JSONArray();
-                    if (!roomService.getRoom(Integer.parseInt(roomId)).getStatus()) {
-                        for (UserProfile users : roomService.getRoom(Integer.parseInt(roomId)).getWiner().getMembers()) {
-                            winnersList.put(users.getLogin());
+                    String room_id = request.getParameter("room_id");
+                    JSONArray winners_list = new JSONArray();
+                  /*  if (!roomService.getRoom(Integer.parseInt(room_id)).getStatus()) {
+                        for (UserProfile users : roomService.getRoom(Integer.parseInt(room_id)).getWiner().getMembers()) {
+                            winners_list.add(users.getLogin());
                         }
                         json.put("is_game_progress", false);
                         json.put("winers", winnersList);
                     } else {
                         json.put("is_game_progress", true);
-                    }
+                    }*/
                     response.getWriter().println(json);
                 }
             }

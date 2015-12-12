@@ -1,0 +1,70 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Game</title>
+    <script type="text/javascript">
+        var ws;
+        var started = false;
+        var finished = false;
+
+        var myName = "${myName}";
+        var enemyName = "";
+        var current = "";
+
+        init = function () {
+            ws = new WebSocket("ws://localhost:8080/gameplay");
+
+            ws.onopen = function (event) {
+
+            }
+
+            ws.onmessage = function (event) {
+                 console.log ("Mess", event.data);
+            }
+
+            ws.onclose = function (event) {
+
+            }
+
+        };
+
+        function sendMessage() {
+            var message = myName;
+            ws.send(message);
+        }
+
+    </script>
+</head>
+<body onload="init();">
+<div id="body">
+    <div id="hello">
+        <p>Hello, ${myName}!</p>
+    </div>
+    <p>current
+    </p>
+    <p><div id="current">
+    </div></p>
+
+    <div id="wait">
+        <p>Prepare yourself. Wait for enemy!</p>
+    </div>
+
+    <div id="gameplay" style="display: none">
+        <div id="score">
+            <p>${myName}: <span id="myScore">0</span></p>
+
+            <p><span id="enemyName"></span>: <span id="enemyScore">0</span></p>
+        </div>
+
+        <form name="gamePlay" action="">
+            <input type="button" name="submit" value="Press to win!" onclick="sendMessage();"/>
+        </form>
+    </div>
+
+    <div id="gameOver" style="display: none">
+        <p>Game over!</p>
+    </div>
+
+</div>
+</body>
+</html>

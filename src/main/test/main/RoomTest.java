@@ -2,9 +2,11 @@ package main;
 
 import org.junit.Before;
 import org.junit.Test;
+import websocket.GameWebSocketService;
 
 import java.util.HashSet;
 import java.util.Set;
+import static org.mockito.Mockito.mock;
 
 import static org.junit.Assert.*;
 
@@ -22,6 +24,7 @@ public class RoomTest {
     private final String password = "test_password";
     private final String email = "test@mail";
     private final Integer id = 1;
+    private final GameWebSocketService gameWebSocketService = mock(GameWebSocketService.class);
 
     @Before
     public void initialization() throws Exception {
@@ -50,14 +53,15 @@ public class RoomTest {
 
     }
 
+
     @Test
     public void testGetTeamUser() throws Exception {
         assertNotNull(room.getTeamUser(testUser));
         UserProfile testUser2 = new UserProfile("username", "pass", "email");
         Integer response = -1;
         assertEquals(response, room.getTeamUser(testUser2));
-
     }
+
     @Test
     public void testAddTeamFalse() throws Exception {
         team2.addMembers(testUser);

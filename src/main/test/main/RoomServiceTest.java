@@ -2,6 +2,7 @@ package main;
 
 import org.junit.Before;
 import org.junit.Test;
+import websocket.GameWebSocketService;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -19,6 +20,7 @@ public class RoomServiceTest {
     private final String password = "test_password";
     private final String email = "test_email@mail";
     private final Integer id = 1;
+    private final GameWebSocketService gameWebSocketService = mock(GameWebSocketService.class);
 
     @Before
     public void initialization() throws Exception {

@@ -11,6 +11,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import main.UsersReadyToGameService;
+import main.RoomService;
+import websocket.GameWebSocketService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -33,6 +36,8 @@ public class StartNewGameTest {
     private StartNewGame startNewGame;
     private UserProfile testUser;
     private final String username = "test_username";
+    private final String password = "test_password";
+    private final String email = "test_email@mail";
 
     @BeforeClass
     public  static void before() throws Exception{
@@ -58,6 +63,7 @@ public class StartNewGameTest {
         testUser = new UserProfile(username, password, email);
         startNewGame = new StartNewGame();
     }
+
     @Test
     public void testDoGetNoUserInRequest() throws IOException, ServletException {
         when(request.getParameter("user")).thenReturn(null);

@@ -70,6 +70,7 @@ public class GameServletTest {
         verify(response).setStatus(HttpServletResponse.SC_OK);
         verify(request, never()).getParameter("start");
     }
+
     @Test
     public void testDoGetRoomExistNoStart() throws Exception {
         when(request.getParameter("room")).thenReturn("1");

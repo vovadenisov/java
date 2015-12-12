@@ -147,6 +147,7 @@ public class AccountServiceTest {
         assertEquals(testUser, accountService.getSessions(testSession));
     }
 
+
     @AfterClass
     public static void close(){
         dbService.shutdown();

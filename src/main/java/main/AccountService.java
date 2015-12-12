@@ -8,8 +8,8 @@ import java.util.Map;
 
 
 public class AccountService {
-//    private Map<String, UserProfile> users = new HashMap<>();
     private Map<String, UserProfile> sessions = new HashMap<>();
+
     private DBService dbService;
 
     public AccountService(DBService dbService){
@@ -30,7 +30,6 @@ public class AccountService {
     }
 
     public String getSessinonId(UserProfile requestUser){
-
         for(Map.Entry<String, UserProfile> entry : sessions.entrySet()) {
             if(entry.getValue().equals(requestUser)){
                 return entry.getKey();
@@ -80,8 +79,16 @@ public class AccountService {
     }
 
     public UserProfile getCurrentUser(String sessionId){
-
         return sessions.get(sessionId);
+    }
+
+    public UserProfile getLoginUser(String userName) {
+        for(Map.Entry<String, UserProfile> entry : sessions.entrySet()) {
+            if(entry.getValue().getLogin().equals(userName)){
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
     public UserProfile getUser(String userName) {
@@ -102,4 +109,5 @@ public class AccountService {
 
         return sessions.get(sessionId);
     }
+
 }

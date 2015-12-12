@@ -46,58 +46,16 @@ public class FindGameServlet extends HttpServlet {
                 Boolean find = false;
                 JSONObject json = new JSONObject();
                 for (int counter = 0; counter < 10; counter++) {
-                    System.out.println("not hire login is");
-                    System.out.println(currentUser.getLogin());
-                    System.out.println("in room");
-                    System.out.println(roomService.roomSize());
-                    Room room = roomService.getRoom(roomService.getRoomWithUser(currentUser));
-                    if (room != null) {
-                        System.out.println("in room users:");
-                        for (UserProfile _user : room.getUsers()) {
-                            System.out.println(_user.getLogin());
-                        }
-                    }
-                    else{
-                        System.out.println("empty");
-                        System.out.println("Users:");
-                        Map<Integer, Room> rooms = roomService.getRooms();
-                        for (Map.Entry<Integer, Room> _room : rooms.entrySet()) {
-                            for (UserProfile __user : _room.getValue().getUsers()) {
-                                System.out.println(__user.getLogin());
-                                System.out.println(__user);
-                                System.out.println(currentUser.getLogin());
-                                System.out.println(currentUser);
-                            }
-                        }
-                    }
                     if (roomService.userInRoom(currentUser)){
-                        System.out.println("user in room login is");
-                        System.out.println(currentUser.getLogin());
                         response.setStatus(HttpServletResponse.SC_OK);
                         json.put("game_status", 1);
                         response.getWriter().println(json);
                         find = true;
-                        System.out.println("find = true, login is");
-                        System.out.println(currentUser.getLogin());
-                        System.out.println("in room");
-                        System.out.println(roomService.roomSize());
-                        System.out.println("Users:");
-                        Map<Integer, Room> rooms = roomService.getRooms();
-                        for (Map.Entry<Integer, Room> _room : rooms.entrySet()) {
-                            for (UserProfile __user : _room.getValue().getUsers()) {
-                                System.out.println(__user.getLogin());
-                                System.out.println(__user);
-                                System.out.println(currentUser.getLogin());
-                                System.out.println(currentUser);
-                            }
-                        }
                         break;
                     }
                     Time.sleep(1000);
                 }
                 if (!find){
-                    System.out.println("else hire user is");
-                    System.out.println(currentUser.getLogin());
                     response.setStatus(HttpServletResponse.SC_OK);
                     json.put("game_status",0);
                     response.getWriter().println(json);
